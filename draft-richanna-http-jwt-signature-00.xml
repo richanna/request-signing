@@ -18,13 +18,13 @@
 
     <author fullname="Annabelle Backman" initials="A." role="editor"
             surname="Backman">
+      <organization>Amazon</organization>
       <address>
         <email>richanna@amazon.com</email>
       </address>
-      <organization abbrev="Amazon">Amazon</organization>
     </author>
 
-    <date day="01" month="November" year="2019"/>
+    <date day="06" month="November" year="2019"/>
 
     <!--
     <area>Security</area>
@@ -66,9 +66,8 @@
       "OPTIONAL" in this document are to be interpreted as described in <xref
       target="RFC2119">RFC 2119</xref>.</t>
 
-      <t>Other terms such as "client", "authorization server", "access token",
-      and "protected resource" are inherited from <xref target="RFC6749">OAuth
-      2.0</xref>.</t>
+      <t>Other terms such as "client", "server", "HTTP request", and "protocol element"
+      are inherited from <xref target="RFC7230">HTTP</xref>.</t>
 
       <t>This document uses the term 'sign' (or 'signature') to denote both a keyed
       message digest and a digital signature operation.</t>
@@ -94,6 +93,10 @@
           <t>The below list defines the means of inclusion of various protocol elements, including the JSON
               object member that MUST be used when including the element, and how the element's value should
               be included. When present, each of these members MUST be a top-level member of the JSON object.</t>
+
+          <t>The JSON object MAY contain other top-level members. The syntax and semantics of members not listed
+              below are out of scope of this specification. Implementations SHOULD consider a signature invalid
+              if the JSON object contains members that the implementation does not understand.</t>
 
       <t><list style="hanging">
           <t hangText="ts">RECOMMENDED. The timestamp. This integer provides
@@ -132,6 +135,7 @@
         </list></t>
 
       <t>All hashes SHALL be calculated using the SHA256 algorithm.</t>
+  </section>
 
       <section title="Calculating the query parameter list and hash">
         <t>To generate the query parameter list and hash, the signer creates
@@ -410,7 +414,8 @@ etag: 742-3u8f34-3r2nvv3]]></artwork>
     <section anchor="Acknowledgements" title="Acknowledgements">
       <t>The authors thank the OAuth Working Group for input into this
       work.</t>
-  <t>In particular, the authors thank Justin Richer for his work on <xref target="draft-ietf-oauth-signed-http-request-03"/>, on which this specification is based.</t>
+
+      <t>In particular, the authors thank Justin Richer for his work on <xref target="I-D.ietf-oauth-signed-http-request"/>, on which this specification is based.</t>
     </section>
   </middle>
 
@@ -418,23 +423,19 @@ etag: 742-3u8f34-3r2nvv3]]></artwork>
     <references title="Normative References">
       <?rfc include="reference.RFC.2119"?>
 
-      <?rfc include="reference.RFC.7519"?>
-
       <?rfc include="reference.RFC.3986"?>
 
       <?rfc include="reference.RFC.7515"?>
 
-      <?rfc include="reference.RFC.7159"?>
+      <?rfc include="reference.RFC.7518"?>
 
-      <?rfc include="reference.RFC.7662"?>
-
-      <?rfc include="reference.RFC.6750"?>
-
-      <?rfc include="reference.RFC.6749"?>
+      <?rfc include="reference.RFC.7230"?>
 
       <?rfc include="reference.I-D.ietf-oauth-pop-key-distribution"?>
 
       <?rfc include="reference.I-D.ietf-oauth-pop-architecture"?>
+
+      <?rfc include="reference.I-D.ietf-oauth-signed-http-request"?>
     </references>
   </back>
 </rfc>
