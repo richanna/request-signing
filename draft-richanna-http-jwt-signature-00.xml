@@ -10,10 +10,10 @@
 <?rfc inline="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc category="std" docName="draft-ietf-http-request-signing-jws-00"
+<rfc category="std" docName="draft-richanna-http-jwt-signature-00"
      ipr="trust200902">
   <front>
-    <title abbrev="Signing HTTP Requests via JSON Web Signatures">Signing HTTP Requests via JSON Web Signatures
+    <title abbrev="Signing HTTP Requests via JWS">Signing HTTP Requests via JSON Web Signatures
     </title>
 
     <author fullname="Annabelle Backman" initials="A." role="editor"
@@ -24,7 +24,7 @@
       </address>
     </author>
 
-    <date day="06" month="November" year="2019"/>
+    <date day="19" month="November" year="2019"/>
 
     <!--
     <area>Security</area>
@@ -41,23 +41,39 @@
 
   <middle>
     <section title="Introduction">
-      <t>Furthermore, it is desirable to bind the signature to the HTTP
-      request. Ideally, this should be done without replicating the
-      information already present in the HTTP request more than required.
-      However, many HTTP application frameworks insert extra headers, query
-      parameters, and otherwise manipulate the HTTP request on its way from
-      the web server into the application code itself. It is the goal of this
-      draft to have a signature protection mechanism that is sufficiently
-      robust against such deployment constraints while still providing
-      sufficient security benefits.</t>
+        <t>Digital signatures and MACs are popular cryptographic tools that can be used
+            to address a variety of use cases, such as providing message integrity, or
+            establishing proof of possession of a cryptographic key. While several digital
+            signature algorithms exist, they generally share the constraint that any party
+            wishing to validate a signature must have or be able to produce the exact byte
+            sequence of the message that was signed. Consequently, it is non-trivial to create
+            digital signatures over content that may undergo transformation, such as can occur
+            with HTTP messages as they pass through proxies and software libraries in use by
+            the sender or recipient.</t>
 
-      <t>The key required for this signature calculation is distributed via
-      mechanisms described in companion documents (see <xref
-      target="I-D.ietf-oauth-pop-key-distribution"/> and <xref
-      target="I-D.ietf-oauth-pop-architecture"/>). The JSON Web Signature
-      (JWS) specification <xref target="RFC7515"/> is used for computing a
-      digital signature (which uses asymmetric cryptography) or a keyed
-      message digest (in case of symmetric cryptography).</t>
+        <t>This draft describes a method for generating and validating digital signatures
+            or MACs over a set of protocol elements within an HTTP Request. This method consists of:</t>
+        <t>
+            <list style="bullet">
+                <t>Mechanisms for identifying the protocol elements covered by the signature.</t>
+                <t>Mechanisms for creating canonical representations of protocol elements for the purpose of signing.</t>
+                <t>A mechanism creating and encoding a signature over those canonical representations using <xref target="RFC7515">JSON Web Signatures (JWS)</xref>.</t>
+            </list>
+        </t>
+        <t>Many HTTP application frameworks reorder or insert extra headers, query
+      parameters, and otherwise manipulate the HTTP request on its way from
+      the web server into the application code itself. Such transformations may be
+      applied by the sender and recipient, as well as any proxy through which the
+      message passes. It is the goal of this draft to have a signature protection
+      mechanism that is sufficiently robust against such deployment constraints while
+      still providing sufficient security benefits.</t>
+
+      <t>This draft is concerned specifically with the generation, representation, and
+          validation of signatures over elements within an HTTP request, with the expectation
+          that this draft will be profiled by later drafts that seek to apply these signatures
+          to address specific use cases within a larger application context. Consequently, key
+          distribution, signing algorithm selection, and determination of which elements must be
+          covered by the signature are all out of scope of this draft.</t>
     </section>
 
     <section title="Terminology">
@@ -75,7 +91,7 @@
 
     <section title="Generating a HTTP Request Signature Using JWS">
       <t>This specification uses JSON Web Signature <xref target="RFC7515"/>
-          to sign a subset of protocol elements taken from an HTTP Request. When a
+          to sign a set of protocol elements taken from an HTTP Request. When a
           JWS is created for this purpose, its <spanx style="verb">"typ"</spanx>
           header attribute MUST have the value <spanx style="verb">"http-sig"</spanx>.</t>
 
@@ -219,7 +235,7 @@ etag: 742-3u8f34-3r2nvv3]]></artwork>
       </section>
     </section>
 
-    <section title="Validating the HTTP Message Signature">
+    <section title="Validating the HTTP Request Signature">
       <t>Validation of the signature is done using normal JWS validation
           for the signature and key type. Additionally, in order to trust any of
           the hashed components of the HTTP request, the validator MUST
@@ -430,10 +446,6 @@ etag: 742-3u8f34-3r2nvv3]]></artwork>
       <?rfc include="reference.RFC.7518"?>
 
       <?rfc include="reference.RFC.7230"?>
-
-      <?rfc include="reference.I-D.ietf-oauth-pop-key-distribution"?>
-
-      <?rfc include="reference.I-D.ietf-oauth-pop-architecture"?>
 
       <?rfc include="reference.I-D.ietf-oauth-signed-http-request"?>
     </references>

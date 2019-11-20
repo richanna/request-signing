@@ -380,7 +380,7 @@
 <link href="#rfc.section.3.1" rel="Chapter" title="3.1 Generating the Payload of the JWS">
 <link href="#rfc.section.3.2" rel="Chapter" title="3.2 Calculating the query parameter list and hash">
 <link href="#rfc.section.3.3" rel="Chapter" title="3.3 Calculating the header list and hash">
-<link href="#rfc.section.4" rel="Chapter" title="4 Validating the HTTP Message Signature">
+<link href="#rfc.section.4" rel="Chapter" title="4 Validating the HTTP Request Signature">
 <link href="#rfc.section.4.1" rel="Chapter" title="4.1 Validating the query parameter list and hash">
 <link href="#rfc.section.4.2" rel="Chapter" title="4.2 Validating the header list and hash">
 <link href="#rfc.section.5" rel="Chapter" title="5 IANA Considerations">
@@ -401,8 +401,8 @@
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Backman, A., Ed." />
-  <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-http-request-signing-jws-00" />
-  <meta name="dct.issued" scheme="ISO8601" content="2019-11-06" />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-richanna-http-jwt-signature-00" />
+  <meta name="dct.issued" scheme="ISO8601" content="2019-11-19" />
   <meta name="dct.abstract" content="This document defines a method for generating and validating a digital signature or Message Authentication Code (MAC) over a set of protocol elements within an HTTP Request, using JSON Web Signatures (JWS)." />
   <meta name="description" content="This document defines a method for generating and validating a digital signature or Message Authentication Code (MAC) over a set of protocol elements within an HTTP Request, using JSON Web Signatures (JWS)." />
 
@@ -423,10 +423,10 @@
 </tr>
 <tr>
 <td class="left">Intended status: Standards Track</td>
-<td class="right">November 06, 2019</td>
+<td class="right">November 19, 2019</td>
 </tr>
 <tr>
-<td class="left">Expires: May 9, 2020</td>
+<td class="left">Expires: May 22, 2020</td>
 <td class="right"></td>
 </tr>
 
@@ -435,7 +435,7 @@
   </table>
 
   <p class="title">Signing HTTP Requests via JSON Web Signatures <br />
-  <span class="filename">draft-ietf-http-request-signing-jws-00</span></p>
+  <span class="filename">draft-richanna-http-jwt-signature-00</span></p>
   
   <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
 <p>This document defines a method for generating and validating a digital signature or Message Authentication Code (MAC) over a set of protocol elements within an HTTP Request, using JSON Web Signatures (JWS).</p>
@@ -443,7 +443,7 @@
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on May 9, 2020.</p>
+<p>This Internet-Draft will expire on May 22, 2020.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2019 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -465,7 +465,7 @@
 </li>
 <li>3.3.   <a href="#rfc.section.3.3">Calculating the header list and hash</a>
 </li>
-</ul><li>4.   <a href="#rfc.section.4">Validating the HTTP Message Signature</a>
+</ul><li>4.   <a href="#rfc.section.4">Validating the HTTP Request Signature</a>
 </li>
 <ul><li>4.1.   <a href="#rfc.section.4.1">Validating the query parameter list and hash</a>
 </li>
@@ -501,8 +501,19 @@
 
   <h1 id="rfc.section.1">
 <a href="#rfc.section.1">1.</a> Introduction</h1>
-<p id="rfc.section.1.p.1">Furthermore, it is desirable to bind the signature to the HTTP request. Ideally, this should be done without replicating the information already present in the HTTP request more than required.  However, many HTTP application frameworks insert extra headers, query parameters, and otherwise manipulate the HTTP request on its way from the web server into the application code itself. It is the goal of this draft to have a signature protection mechanism that is sufficiently robust against such deployment constraints while still providing sufficient security benefits.</p>
-<p id="rfc.section.1.p.2">The key required for this signature calculation is distributed via mechanisms described in companion documents (see <a href="#I-D.ietf-oauth-pop-key-distribution" class="xref">[I-D.ietf-oauth-pop-key-distribution]</a> and <a href="#I-D.ietf-oauth-pop-architecture" class="xref">[I-D.ietf-oauth-pop-architecture]</a>). The JSON Web Signature (JWS) specification <a href="#RFC7515" class="xref">[RFC7515]</a> is used for computing a digital signature (which uses asymmetric cryptography) or a keyed message digest (in case of symmetric cryptography).</p>
+<p id="rfc.section.1.p.1">Digital signatures and MACs are popular cryptographic tools that can be used to address a variety of use cases, such as providing message integrity, or establishing proof of possession of a cryptographic key. While several digital signature algorithms exist, they generally share the constraint that any party wishing to validate a signature must have or be able to produce the exact byte sequence of the message that was signed. Consequently, it is non-trivial to create digital signatures over content that may undergo transformation, such as can occur with HTTP messages as they pass through proxies and software libraries in use by the sender or recipient.</p>
+<p id="rfc.section.1.p.2">This draft describes a method for generating and validating digital signatures or MACs over a set of protocol elements within an HTTP Request. This method consists of:</p>
+<p></p>
+
+<ul class="empty">
+<li>Mechanisms for identifying the protocol elements covered by the signature.</li>
+<li>Mechanisms for creating canonical representations of protocol elements for the purpose of signing.</li>
+<li>A mechanism creating and encoding a signature over those canonical representations using <a href="#RFC7515" class="xref">JSON Web Signatures (JWS)</a>.</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.1.p.4">Many HTTP application frameworks reorder or insert extra headers, query parameters, and otherwise manipulate the HTTP request on its way from the web server into the application code itself. Such transformations may be applied by the sender and recipient, as well as any proxy through which the message passes. It is the goal of this draft to have a signature protection mechanism that is sufficiently robust against such deployment constraints while still providing sufficient security benefits.</p>
+<p id="rfc.section.1.p.5">This draft is concerned specifically with the generation, representation, and validation of signatures over elements within an HTTP request, with the expectation that this draft will be profiled by later drafts that seek to apply these signatures to address specific use cases within a larger application context. Consequently, key distribution, signing algorithm selection, and determination of which elements must be covered by the signature are all out of scope of this draft.</p>
 <h1 id="rfc.section.2">
 <a href="#rfc.section.2">2.</a> Terminology</h1>
 <p id="rfc.section.2.p.1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="#RFC2119" class="xref">RFC 2119</a>.</p>
@@ -510,7 +521,7 @@
 <p id="rfc.section.2.p.3">This document uses the term 'sign' (or 'signature') to denote both a keyed message digest and a digital signature operation.</p>
 <h1 id="rfc.section.3">
 <a href="#rfc.section.3">3.</a> Generating a HTTP Request Signature Using JWS</h1>
-<p id="rfc.section.3.p.1">This specification uses JSON Web Signature <a href="#RFC7515" class="xref">[RFC7515]</a> to sign a subset of protocol elements taken from an HTTP Request. When a JWS is created for this purpose, its <samp>"typ"</samp> header attribute MUST have the value <samp>"http-sig"</samp>.</p>
+<p id="rfc.section.3.p.1">This specification uses JSON Web Signature <a href="#RFC7515" class="xref">[RFC7515]</a> to sign a set of protocol elements taken from an HTTP Request. When a JWS is created for this purpose, its <samp>"typ"</samp> header attribute MUST have the value <samp>"http-sig"</samp>.</p>
 <p id="rfc.section.3.p.2">The JWS MUST be signed with a valid algorithm as defined in <a href="#RFC7518" class="xref">[RFC7518]</a>.  The <samp>none</samp> algorithm MUST NOT be used.</p>
 <h1 id="rfc.section.3.1">
 <a href="#rfc.section.3.1">3.1.</a> Generating the Payload of the JWS</h1>
@@ -574,7 +585,7 @@ etag: 742-3u8f34-3r2nvv3</pre>
 <pre>"h": [["content-type", "etag"], 
   "bZA981YJBrPlIzOvplbu3e7ueREXXr38vSkxIBYOaxI"]</pre>
 <h1 id="rfc.section.4">
-<a href="#rfc.section.4">4.</a> Validating the HTTP Message Signature</h1>
+<a href="#rfc.section.4">4.</a> Validating the HTTP Request Signature</h1>
 <p id="rfc.section.4.p.1">Validation of the signature is done using normal JWS validation for the signature and key type. Additionally, in order to trust any of the hashed components of the HTTP request, the validator MUST re-create and verify a hash for each component as described below. This process is a mirror of the process used to create the hashes in the first place, with a mind toward the fact that order may have changed and that elements may have been added or deleted. The protected resource MUST similarly compare the replicated values included in various JSON fields with the corresponding actual values from the request. Failure to do so will allow an attacker to modify the underlying request while at the same time having the application layer verify the signature correctly.</p>
 <h1 id="rfc.section.4.1">
 <a href="#rfc.section.4.1">4.1.</a> Validating the query parameter list and hash</h1>
@@ -649,16 +660,6 @@ etag: 742-3u8f34-3r2nvv3</pre>
 <h1 id="rfc.references">
 <a href="#rfc.references">9.</a> Normative References</h1>
 <table><tbody>
-<tr>
-<td class="reference"><b id="I-D.ietf-oauth-pop-architecture">[I-D.ietf-oauth-pop-architecture]</b></td>
-<td class="top">
-<a>Hunt, P.</a>, <a>Richer, J.</a>, <a>Mills, W.</a>, <a>Mishra, P.</a> and <a>H. Tschofenig</a>, "<a href="https://tools.ietf.org/html/draft-ietf-oauth-pop-architecture-08">OAuth 2.0 Proof-of-Possession (PoP) Security Architecture</a>", Internet-Draft draft-ietf-oauth-pop-architecture-08, July 2016.</td>
-</tr>
-<tr>
-<td class="reference"><b id="I-D.ietf-oauth-pop-key-distribution">[I-D.ietf-oauth-pop-key-distribution]</b></td>
-<td class="top">
-<a>Bradley, J.</a>, <a>Hunt, P.</a>, <a>Jones, M.</a>, <a>Tschofenig, H.</a> and <a>M. Meszaros</a>, "<a href="https://tools.ietf.org/html/draft-ietf-oauth-pop-key-distribution-07">OAuth 2.0 Proof-of-Possession: Authorization Server to Client Key Distribution</a>", Internet-Draft draft-ietf-oauth-pop-key-distribution-07, March 2019.</td>
-</tr>
 <tr>
 <td class="reference"><b id="I-D.ietf-oauth-signed-http-request">[I-D.ietf-oauth-signed-http-request]</b></td>
 <td class="top">

@@ -13,7 +13,7 @@
 <rfc category="std" docName="draft-richanna-oauth-http-signature-pop-00"
      ipr="trust200902">
   <front>
-    <title abbrev="HTTP Signed Messages">Proof-of-Possession Tokens for OAuth Using HTTP Signatures</title>
+    <title abbrev="OAuth PoP Using HTTP Signatures">Proof-of-Possession Tokens for OAuth Using JWS HTTP Signatures</title>
 
     <author fullname="Annabelle Backman" initials="A." role="editor"
             surname="Backman">
@@ -23,11 +23,13 @@
       </address>
     </author>
 
-    <date day="06" month="November" year="2019"/>
+    <date day="19" month="November" year="2019"/>
 
+    <!--
     <area>Security</area>
 
     <workgroup>OAuth Working Group</workgroup>
+    -->
 
     <abstract>
         <t>This document describes a method of generating and validating proof-of-possession
