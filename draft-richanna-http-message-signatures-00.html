@@ -1140,6 +1140,9 @@ aside > p {
               <li class="toc ulEmpty" id="section-toc.1-1.1.2.2">
                 <p id="section-toc.1-1.1.2.2.1"><a href="#section-1.2" class="xref">1.2</a>.  <a href="#name-using-signatures-in-http-resp" class="xref">Using Signatures in HTTP Responses</a><a href="#section-toc.1-1.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
+              <li class="toc ulEmpty" id="section-toc.1-1.1.2.3">
+                <p id="section-toc.1-1.1.2.3.1"><a href="#section-1.3" class="xref">1.3</a>.  <a href="#name-conventions-and-terminology-2" class="xref">Conventions and Terminology</a><a href="#section-toc.1-1.1.2.3.1" class="pilcrow">¶</a></p>
+</li>
             </ul>
 </li>
           <li class="toc ulEmpty" id="section-toc.1-1.2">
@@ -1302,6 +1305,14 @@ aside > p {
 <p id="section-1.2-1">HTTP messages are routinely altered as they traverse the infrastructure of the Internet, for mostly benign reasons.  Gateways and proxies add, remove and alter headers for operational reasons, so a sender cannot rely on the recipient receiving exactly the message transmitted.  By allowing a sender to sign specified headers, and recipient or intermediate system can confirm that the original intent of the sender is preserved, and including a Digest header can also verify the message body is not modified.  This allows any recipient to easily confirm both the sender's identity, and any incidental or malicious changes that alter the content or meaning of the message.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="terms">
+<section id="section-1.3">
+        <h3 id="name-conventions-and-terminology-2">
+<a href="#section-1.3" class="section-number selfRef">1.3. </a><a href="#name-conventions-and-terminology-2" class="section-name selfRef">Conventions and Terminology</a>
+        </h3>
+<p id="section-1.3-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <span><a href="#RFC2119" class="xref">BCP14</a> [<a href="#RFC2119" class="xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="xref">RFC8174</a>]</span> when, and only when, they appear in all capitals, as shown here.<a href="#section-1.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="components">
@@ -1321,7 +1332,7 @@ aside > p {
           <h4 id="name-keyid-2">
 <a href="#section-2.1.1" class="section-number selfRef">2.1.1. </a><a href="#name-keyid-2" class="section-name selfRef">keyId</a>
           </h4>
-<p id="section-2.1.1-1">REQUIRED.  The <code>keyId</code> field is an opaque string that the server can use to look up the component they need to validate the signature.  It could be an SSH key fingerprint, a URL to machine-readable key data, an LDAP DN, etc.  Management of keys and assignment of <code>keyId</code> is out of scope for this document.  Implementations MUST be able to discover metadata about the key from the <code>keyId</code> such that they can determine the type of digital signature algorithm to employ when creating or verifying signatures.<a href="#section-2.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.1.1-1"><span class="bcp14">REQUIRED</span>.  The <code>keyId</code> field is an opaque string that the server can use to look up the component they need to validate the signature.  It could be an SSH key fingerprint, a URL to machine-readable key data, an LDAP DN, etc.  Management of keys and assignment of <code>keyId</code> is out of scope for this document.  Implementations <span class="bcp14">MUST</span> be able to discover metadata about the key from the <code>keyId</code> such that they can determine the type of digital signature algorithm to employ when creating or verifying signatures.<a href="#section-2.1.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="signature">
@@ -1329,7 +1340,7 @@ aside > p {
           <h4 id="name-signature-2">
 <a href="#section-2.1.2" class="section-number selfRef">2.1.2. </a><a href="#name-signature-2" class="section-name selfRef">signature</a>
           </h4>
-<p id="section-2.1.2-1">REQUIRED.  The <code>signature</code> parameter is a base 64 encoded digital signature, as described in <span>RFC 4648 [<a href="#RFC4648" class="xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-4" class="relref">Section 4</a></span>.  The client uses the <code>algorithm</code> and <code>headers</code> Signature Parameters to form a canonicalized <code>signing string</code>.  This <code>signing string</code> is then signed using the key associated with the <code>keyId</code> according to its digital signature algorithm.  The <code>signature</code> parameter is then set to the base 64 encoding of the signature.<a href="#section-2.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.1.2-1"><span class="bcp14">REQUIRED</span>.  The <code>signature</code> parameter is a base 64 encoded digital signature, as described in <span>RFC 4648 [<a href="#RFC4648" class="xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-4" class="relref">Section 4</a></span>.  The client uses the <code>algorithm</code> and <code>headers</code> Signature Parameters to form a canonicalized <code>signing string</code>.  This <code>signing string</code> is then signed using the key associated with the <code>keyId</code> according to its digital signature algorithm.  The <code>signature</code> parameter is then set to the base 64 encoding of the signature.<a href="#section-2.1.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="algorithm">
@@ -1337,7 +1348,7 @@ aside > p {
           <h4 id="name-algorithm-2">
 <a href="#section-2.1.3" class="section-number selfRef">2.1.3. </a><a href="#name-algorithm-2" class="section-name selfRef">algorithm</a>
           </h4>
-<p id="section-2.1.3-1">RECOMMENDED.  The <code>algorithm</code> parameter is used to specify the signature string construction mechanism.  Valid values for this parameter can be found in the <a href="#hsa-registry" class="xref">HTTP Signatures Algorithms Registry</a> (<a href="#hsa-registry" class="xref">Section 5.2</a>) and MUST NOT be marked "deprecated".  Implementers SHOULD derive the digital signature algorithm used by an implementation from the key metadata identified by the <code>keyId</code> rather than from this field.  If <code>algorithm</code> is provided and differs from the key metadata identified by the <code>keyId</code>, for example <code>rsa-sha256</code> but an EdDSA key is identified via <code>keyId</code>, then an implementation MUST produce an error.  Implementers should note that previous versions of the <code>algorithm</code> parameter did not use the key information to derive the digital signature type and thus could be utilized by attackers to expose security vulnerabilities.<a href="#section-2.1.3-1" class="pilcrow">¶</a></p>
+<p id="section-2.1.3-1"><span class="bcp14">RECOMMENDED</span>.  The <code>algorithm</code> parameter is used to specify the signature string construction mechanism.  Valid values for this parameter can be found in the <a href="#hsa-registry" class="xref">HTTP Signatures Algorithms Registry</a> (<a href="#hsa-registry" class="xref">Section 5.2</a>) and <span class="bcp14">MUST NOT</span> be marked "deprecated".  Implementers <span class="bcp14">SHOULD</span> derive the digital signature algorithm used by an implementation from the key metadata identified by the <code>keyId</code> rather than from this field.  If <code>algorithm</code> is provided and differs from the key metadata identified by the <code>keyId</code>, for example <code>rsa-sha256</code> but an EdDSA key is identified via <code>keyId</code>, then an implementation <span class="bcp14">MUST</span> produce an error.  Implementers should note that previous versions of the <code>algorithm</code> parameter did not use the key information to derive the digital signature type and thus could be utilized by attackers to expose security vulnerabilities.<a href="#section-2.1.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="created">
@@ -1345,7 +1356,7 @@ aside > p {
           <h4 id="name-created-2">
 <a href="#section-2.1.4" class="section-number selfRef">2.1.4. </a><a href="#name-created-2" class="section-name selfRef">created</a>
           </h4>
-<p id="section-2.1.4-1">RECOMMENDED.  The <code>created</code> field expresses when the signature was created.  The value MUST be a Unix timestamp integer value.  A signature with a <code>created</code> timestamp value that is in the future MUST NOT be processed.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as RFC3339.  Subsecond precision is not supported.  This value is useful when clients are not capable of controlling the <code>Date</code> HTTP Header such as when operating in certain web browser environments.<a href="#section-2.1.4-1" class="pilcrow">¶</a></p>
+<p id="section-2.1.4-1"><span class="bcp14">RECOMMENDED</span>.  The <code>created</code> field expresses when the signature was created.  The value <span class="bcp14">MUST</span> be a Unix timestamp integer value.  A signature with a <code>created</code> timestamp value that is in the future <span class="bcp14">MUST NOT</span> be processed.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as RFC3339.  Subsecond precision is not supported.  This value is useful when clients are not capable of controlling the <code>Date</code> HTTP Header such as when operating in certain web browser environments.<a href="#section-2.1.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="expires">
@@ -1353,7 +1364,7 @@ aside > p {
           <h4 id="name-expires-2">
 <a href="#section-2.1.5" class="section-number selfRef">2.1.5. </a><a href="#name-expires-2" class="section-name selfRef">expires</a>
           </h4>
-<p id="section-2.1.5-1">OPTIONAL.  The <code>expires</code> field expresses when the signature ceases to be valid.  The value MUST be a Unix timestamp integer value.  A signature with an <code>expires</code> timestamp value that is in the past MUST NOT be processed.  Using a Unix timestamp simplifies processing and avoid timezone management existing in RFC3339.  Subsecod precision is allowed using decimal notation.<a href="#section-2.1.5-1" class="pilcrow">¶</a></p>
+<p id="section-2.1.5-1"><span class="bcp14">OPTIONAL</span>.  The <code>expires</code> field expresses when the signature ceases to be valid.  The value <span class="bcp14">MUST</span> be a Unix timestamp integer value.  A signature with an <code>expires</code> timestamp value that is in the past <span class="bcp14">MUST NOT</span> be processed.  Using a Unix timestamp simplifies processing and avoid timezone management existing in RFC3339.  Subsecod precision is allowed using decimal notation.<a href="#section-2.1.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="headers">
@@ -1361,11 +1372,11 @@ aside > p {
           <h4 id="name-headers-2">
 <a href="#section-2.1.6" class="section-number selfRef">2.1.6. </a><a href="#name-headers-2" class="section-name selfRef">headers</a>
           </h4>
-<p id="section-2.1.6-1">OPTIONAL.  The <code>headers</code> parameter is used to specify the list of HTTP headers included when generating the signature for the message.  If specified, it SHOULD be a lowercased, quoted list of HTTP header fields, separated by a single space character.  If not specified, implementations MUST operate as if the field were specified with a single value, <code>(created)</code>, in the list of HTTP headers.  Note:<a href="#section-2.1.6-1" class="pilcrow">¶</a></p>
+<p id="section-2.1.6-1"><span class="bcp14">OPTIONAL</span>.  The <code>headers</code> parameter is used to specify the list of HTTP headers included when generating the signature for the message.  If specified, it <span class="bcp14">SHOULD</span> be a lowercased, quoted list of HTTP header fields, separated by a single space character.  If not specified, implementations <span class="bcp14">MUST</span> operate as if the field were specified with a single value, <code>(created)</code>, in the list of HTTP headers.  Note:<a href="#section-2.1.6-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal" id="section-2.1.6-2">
-            <li id="section-2.1.6-2.1">The list order is important, and MUST be specified in the order the HTTP header field-value pairs are concatenated together during <a href="#canonicalization" class="xref">Signature String Construction</a> (<a href="#canonicalization" class="xref">Section 2.3</a>) used during signing and verifying.<a href="#section-2.1.6-2.1" class="pilcrow">¶</a>
+            <li id="section-2.1.6-2.1">The list order is important, and <span class="bcp14">MUST</span> be specified in the order the HTTP header field-value pairs are concatenated together during <a href="#canonicalization" class="xref">Signature String Construction</a> (<a href="#canonicalization" class="xref">Section 2.3</a>) used during signing and verifying.<a href="#section-2.1.6-2.1" class="pilcrow">¶</a>
 </li>
-            <li id="section-2.1.6-2.2">A zero-length <code>headers</code> parameter value MUST NOT be used, since it results in a signature of an empty string.<a href="#section-2.1.6-2.2" class="pilcrow">¶</a>
+            <li id="section-2.1.6-2.2">A zero-length <code>headers</code> parameter value <span class="bcp14">MUST NOT</span> be used, since it results in a signature of an empty string.<a href="#section-2.1.6-2.2" class="pilcrow">¶</a>
 </li>
           </ol>
 </section>
@@ -1377,7 +1388,7 @@ aside > p {
         <h3 id="name-ambiguous-parameters-2">
 <a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-ambiguous-parameters-2" class="section-name selfRef">Ambiguous Parameters</a>
         </h3>
-<p id="section-2.2-1">If any of the parameters listed above are erroneously duplicated in the associated header field, then the the signature MUST NOT be processed.  Any parameter that is not recognized as a parameter, or is not well-formed, MUST be ignored.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.2-1">If any of the parameters listed above are erroneously duplicated in the associated header field, then the the signature <span class="bcp14">MUST NOT</span> be processed.  Any parameter that is not recognized as a parameter, or is not well-formed, <span class="bcp14">MUST</span> be ignored.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="canonicalization">
@@ -1387,25 +1398,25 @@ aside > p {
         </h3>
 <p id="section-2.3-1">A signed HTTP message needs to be tolerant of some trivial alterations during transmission as it goes through gateways, proxies, and other entities.  These changes are often of little consequence and very benign, but also often not visible to or detectable by either the sender or the recipient.  Simply signing the entire message that was transmitted by the sender is therefore not feasible: Even very minor changes would result in a signature which cannot be verified.<a href="#section-2.3-1" class="pilcrow">¶</a></p>
 <p id="section-2.3-2">This specification allows the sender to select which headers are meaningful by including their names in the <code>headers</code> Signature Parameter.  The headers appearing in this parameter are then used to construct the intermediate Signature String, which is the data that is actually signed.<a href="#section-2.3-2" class="pilcrow">¶</a></p>
-<p id="section-2.3-3">In order to generate the string that is signed with a key, the client MUST use the values of each HTTP header field in the <code>headers</code> Signature Parameter, in the order they appear in the <code>headers</code> Signature Parameter.  It is out of scope for this document to dictate what header fields an application will want to enforce, but implementers SHOULD at minimum include the <code>(request-target)</code> and <code>(created)</code> header fields if <code>algorithm</code> does not start with <code>rsa</code>, <code>hmac</code>, or <code>ecdsa</code>.  Otherwise, <code>(request-target)</code> and <code>date</code> SHOULD be included in the signature.<a href="#section-2.3-3" class="pilcrow">¶</a></p>
+<p id="section-2.3-3">In order to generate the string that is signed with a key, the client <span class="bcp14">MUST</span> use the values of each HTTP header field in the <code>headers</code> Signature Parameter, in the order they appear in the <code>headers</code> Signature Parameter.  It is out of scope for this document to dictate what header fields an application will want to enforce, but implementers <span class="bcp14">SHOULD</span> at minimum include the <code>(request-target)</code> and <code>(created)</code> header fields if <code>algorithm</code> does not start with <code>rsa</code>, <code>hmac</code>, or <code>ecdsa</code>.  Otherwise, <code>(request-target)</code> and <code>date</code> <span class="bcp14">SHOULD</span> be included in the signature.<a href="#section-2.3-3" class="pilcrow">¶</a></p>
 <p id="section-2.3-4">To include the HTTP request target in the signature calculation, use the special <code>(request-target)</code> header field name.  To include the signature creation time, use the special <code>(created)</code> header field name.  To include the signature expiration time, use the special <code>(expires)</code> header field name.<a href="#section-2.3-4" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal" id="section-2.3-5">
           <li id="section-2.3-5.1">If the header field name is <code>(request-target)</code> then generate the header field value by concatenating the lowercased :method, an ASCII space, and the :path pseudo-headers (as specified in <span>HTTP/2 [<a href="#RFC7540" class="xref">RFC7540</a>], <a href="https://rfc-editor.org/rfc/rfc7540#section-8.1.2.3" class="relref">Section 8.1.2.3</a></span>).  Note: For the avoidance of doubt, lowercasing only applies to the :method pseudo-header and not to the :path pseudo-header.<a href="#section-2.3-5.1" class="pilcrow">¶</a>
 </li>
-          <li id="section-2.3-5.2">If the header field name is <code>(created)</code> and the <code>algorithm</code> parameter starts with <code>rsa</code>, <code>hmac</code>, or <code>ecdsa</code> an implementation MUST produce an error.  If the <code>created</code> Signature Parameter is not specified, or is not an integer, an implementation MUST produce an error.  Otherwise, the header field value is the integer expressed by the <code>created</code> signature parameter.<a href="#section-2.3-5.2" class="pilcrow">¶</a>
+          <li id="section-2.3-5.2">If the header field name is <code>(created)</code> and the <code>algorithm</code> parameter starts with <code>rsa</code>, <code>hmac</code>, or <code>ecdsa</code> an implementation <span class="bcp14">MUST</span> produce an error.  If the <code>created</code> Signature Parameter is not specified, or is not an integer, an implementation <span class="bcp14">MUST</span> produce an error.  Otherwise, the header field value is the integer expressed by the <code>created</code> signature parameter.<a href="#section-2.3-5.2" class="pilcrow">¶</a>
 </li>
-          <li id="section-2.3-5.3">If the header field name is <code>(expires)</code> and the <code>algorithm</code> parameter starts with <code>rsa</code>, <code>hmac</code>, or <code>ecdsa</code> an implementation MUST produce an error.  If the <code>expires</code> Signature Parameter is not specified, or is not an integer, an implementation MUST produce an error.  Otherwise, the header field value is the integer expressed by the <code>created</code> signature parameter.<a href="#section-2.3-5.3" class="pilcrow">¶</a>
+          <li id="section-2.3-5.3">If the header field name is <code>(expires)</code> and the <code>algorithm</code> parameter starts with <code>rsa</code>, <code>hmac</code>, or <code>ecdsa</code> an implementation <span class="bcp14">MUST</span> produce an error.  If the <code>expires</code> Signature Parameter is not specified, or is not an integer, an implementation <span class="bcp14">MUST</span> produce an error.  Otherwise, the header field value is the integer expressed by the <code>created</code> signature parameter.<a href="#section-2.3-5.3" class="pilcrow">¶</a>
 </li>
           <li id="section-2.3-5.4">
-            <p id="section-2.3-5.4.1">Create the header field string by concatenating the lowercased header field name followed with an ASCII colon <code>:</code>, an ASCII space <code> </code>, and the header field value.  Leading and trailing optional whitespace (OWS) in the header field value MUST be omitted (as specified in <span>[<a href="#RFC7230" class="xref">RFC7230</a>], <a href="https://rfc-editor.org/rfc/rfc7230#section-3.2.4" class="relref">Section 3.2.4</a></span>).<a href="#section-2.3-5.4.1" class="pilcrow">¶</a></p>
+            <p id="section-2.3-5.4.1">Create the header field string by concatenating the lowercased header field name followed with an ASCII colon <code>:</code>, an ASCII space <code> </code>, and the header field value.  Leading and trailing optional whitespace (OWS) in the header field value <span class="bcp14">MUST</span> be omitted (as specified in <span>[<a href="#RFC7230" class="xref">RFC7230</a>], <a href="https://rfc-editor.org/rfc/rfc7230#section-3.2.4" class="relref">Section 3.2.4</a></span>).<a href="#section-2.3-5.4.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal" id="section-2.3-5.4.2">
-              <li id="section-2.3-5.4.2.1">If there are multiple instances of the same header field, all header field values associated with the header field MUST be concatenated, separated by a ASCII comma and an ASCII space <code>, </code>, and used in the order in which they will appear in the transmitted HTTP message.<a href="#section-2.3-5.4.2.1" class="pilcrow">¶</a>
+              <li id="section-2.3-5.4.2.1">If there are multiple instances of the same header field, all header field values associated with the header field <span class="bcp14">MUST</span> be concatenated, separated by a ASCII comma and an ASCII space <code>, </code>, and used in the order in which they will appear in the transmitted HTTP message.<a href="#section-2.3-5.4.2.1" class="pilcrow">¶</a>
 </li>
               <li id="section-2.3-5.4.2.2">If the header value (after removing leading and trailing whitespace) is a zero-length string, the signature string line correlating with that header will simply be the (lowercased) header name, an ASCII colon <code>:</code>, and an ASCII space <code> </code>.<a href="#section-2.3-5.4.2.2" class="pilcrow">¶</a>
 </li>
-              <li id="section-2.3-5.4.2.3">Any other modification to the header field value MUST NOT be made.<a href="#section-2.3-5.4.2.3" class="pilcrow">¶</a>
+              <li id="section-2.3-5.4.2.3">Any other modification to the header field value <span class="bcp14">MUST NOT</span> be made.<a href="#section-2.3-5.4.2.3" class="pilcrow">¶</a>
 </li>
-              <li id="section-2.3-5.4.2.4">If a header specified in the headers parameter is malformed or cannot be matched with a provided header in the message, the implementation MUST produce an error.<a href="#section-2.3-5.4.2.4" class="pilcrow">¶</a>
+              <li id="section-2.3-5.4.2.4">If a header specified in the headers parameter is malformed or cannot be matched with a provided header in the message, the implementation <span class="bcp14">MUST</span> produce an error.<a href="#section-2.3-5.4.2.4" class="pilcrow">¶</a>
 </li>
             </ol>
 </li>
@@ -1442,7 +1453,7 @@ x-example: Example header with some whitespace.</pre><a href="#section-2.3-9" cl
         <h3 id="name-creating-a-signature-2">
 <a href="#section-2.4" class="section-number selfRef">2.4. </a><a href="#name-creating-a-signature-2" class="section-name selfRef">Creating a Signature</a>
         </h3>
-<p id="section-2.4-1">In order to create a signature, a client MUST:<a href="#section-2.4-1" class="pilcrow">¶</a></p>
+<p id="section-2.4-1">In order to create a signature, a client <span class="bcp14">MUST</span>:<a href="#section-2.4-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal" id="section-2.4-2">
           <li id="section-2.4-2.1">Use the <code>headers</code> and <code>algorithm</code> values as well as the contents of the HTTP message, to create the signature string.<a href="#section-2.4-2.1" class="pilcrow">¶</a>
 </li>
@@ -1459,14 +1470,14 @@ x-example: Example header with some whitespace.</pre><a href="#section-2.3-9" cl
         <h3 id="name-verifying-a-signature-2">
 <a href="#section-2.5" class="section-number selfRef">2.5. </a><a href="#name-verifying-a-signature-2" class="section-name selfRef">Verifying a Signature</a>
         </h3>
-<p id="section-2.5-1">In order to verify a signature, a server MUST:<a href="#section-2.5-1" class="pilcrow">¶</a></p>
+<p id="section-2.5-1">In order to verify a signature, a server <span class="bcp14">MUST</span>:<a href="#section-2.5-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal" id="section-2.5-2">
           <li id="section-2.5-2.1">Use the received HTTP message, the <code>headers</code> value, and the <a href="#canonicalization" class="xref">Signature String Construction</a> (<a href="#canonicalization" class="xref">Section 2.3</a>) algorithm to recreate the signature.<a href="#section-2.5-2.1" class="pilcrow">¶</a>
 </li>
-          <li id="section-2.5-2.2">The <code>algorithm</code>, <code>keyId</code>, and base 64 decoded <code>signature</code> listed in the Signature Parameters are then used to verify the authenticity of the digital signature.  Note: The application verifying the signature MUST derive the digital signature algorithm from the metadata associated with the <code>keyId</code> and MUST NOT use the value of <code>algorithm</code> from the signed message.<a href="#section-2.5-2.2" class="pilcrow">¶</a>
+          <li id="section-2.5-2.2">The <code>algorithm</code>, <code>keyId</code>, and base 64 decoded <code>signature</code> listed in the Signature Parameters are then used to verify the authenticity of the digital signature.  Note: The application verifying the signature <span class="bcp14">MUST</span> derive the digital signature algorithm from the metadata associated with the <code>keyId</code> and <span class="bcp14">MUST NOT</span> use the value of <code>algorithm</code> from the signed message.<a href="#section-2.5-2.2" class="pilcrow">¶</a>
 </li>
         </ol>
-<p id="section-2.5-3">If a header specified in the <code>headers</code> value of the Signature Parameters (or the default item <code>(created)</code> where the <code>headers</code> value is not supplied) is absent from the message, the implementation MUST produce an error.<a href="#section-2.5-3" class="pilcrow">¶</a></p>
+<p id="section-2.5-3">If a header specified in the <code>headers</code> value of the Signature Parameters (or the default item <code>(created)</code> where the <code>headers</code> value is not supplied) is absent from the message, the implementation <span class="bcp14">MUST</span> produce an error.<a href="#section-2.5-3" class="pilcrow">¶</a></p>
 <p id="section-2.5-4">For example, assume that the <code>algorithm</code> value was "hs2019" and and the <code>keyId</code> refers to an EdDSA public key.  This would signal to the application that the signature string construction mechanism is the one defined in <a href="#canonicalization" class="xref">Section 2.3</a>: <a href="#canonicalization" class="xref">Signature String Construction</a>, the signature string hashing function is SHA-512, and the signing algorithm is Ed25519 as defined in <span>RFC 8032 [<a href="#RFC8032" class="xref">RFC8032</a>], <a href="https://rfc-editor.org/rfc/rfc8032#section-5.1" class="relref">Section 5.1</a></span>: Ed25519ph, Ed25519ctx, and Ed25519.  The result of the signature verification algorithm should result in a successful verification unless the headers protected by the signature were tampered with in transit.<a href="#section-2.5-4" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1768,6 +1779,9 @@ Notes (optional): The Signature scheme is designed for clients to authenticate t
 <a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-normative-references-2" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
 <dt id="RFC4648">[RFC4648]</dt>
         <dd>
 <span class="refAuthor">Josefsson, S.</span>, <span class="refTitle">"The Base16, Base32, and Base64 Data Encodings"</span>, <span class="seriesInfo">RFC 4648</span>, <span class="seriesInfo">DOI 10.17487/RFC4648</span>, <time datetime="2006-10">October 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc4648">https://www.rfc-editor.org/info/rfc4648</a>&gt;</span>. </dd>
@@ -1778,8 +1792,11 @@ Notes (optional): The Signature scheme is designed for clients to authenticate t
         <dd>
 <span class="refAuthor">Fielding, R., Ed.</span><span class="refAuthor"> and J. Reschke, Ed.</span>, <span class="refTitle">"Hypertext Transfer Protocol (HTTP/1.1): Authentication"</span>, <span class="seriesInfo">RFC 7235</span>, <span class="seriesInfo">DOI 10.17487/RFC7235</span>, <time datetime="2014-06">June 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7235">https://www.rfc-editor.org/info/rfc7235</a>&gt;</span>. </dd>
 <dt id="RFC7540">[RFC7540]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Belshe, M.</span><span class="refAuthor">, Peon, R.</span><span class="refAuthor">, and M. Thomson, Ed.</span>, <span class="refTitle">"Hypertext Transfer Protocol Version 2 (HTTP/2)"</span>, <span class="seriesInfo">RFC 7540</span>, <span class="seriesInfo">DOI 10.17487/RFC7540</span>, <time datetime="2015-05">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7540">https://www.rfc-editor.org/info/rfc7540</a>&gt;</span>. </dd>
+<dt id="RFC8174">[RFC8174]</dt>
+      <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>
 </dl>
 </section>
 <section id="section-7.2">
@@ -1826,7 +1843,7 @@ Notes (optional): The Signature scheme is designed for clients to authenticate t
 <a href="#section-appendix.a" class="section-number selfRef">Appendix A. </a><a href="#name-extensions-2" class="section-name selfRef">Extensions</a>
       </h2>
 <p id="section-appendix.a-1">This specification was designed to be simple, modular, and extensible.  There are a number of other specifications that build on this one.  For example, the <span><a href="#WP-HTTP-Sig-Nonces" class="xref">HTTP Signature Nonces</a> [<a href="#WP-HTTP-Sig-Nonces" class="xref">WP-HTTP-Sig-Nonces</a>]</span> specification details how to use HTTP Signatures over a non-secured channel like HTTP and the <span><a href="#WP-HTTP-Sig-Trailers" class="xref">HTTP Signature Trailers</a> [<a href="#WP-HTTP-Sig-Trailers" class="xref">WP-HTTP-Sig-Trailers</a>]</span> specification explains how to apply HTTP Signatures to streaming content.  Developers that desire more functionality than this specification provides are urged to ensure that an extension specification doesn't already exist before implementing a proprietary extension.<a href="#section-appendix.a-1" class="pilcrow">¶</a></p>
-<p id="section-appendix.a-2">If extensions to this specification are made by adding new Signature Parameters, those extension parameters MUST be registered in the Signature Authentication Scheme Registry.  The registry will be created and maintained at (the suggested URI) <span><a href="https://www.iana.org/assignments/http-auth-scheme-signature">https://www.iana.org/assignments/http-auth-scheme-signature</a></span>.<a href="#section-appendix.a-2" class="pilcrow">¶</a></p>
+<p id="section-appendix.a-2">If extensions to this specification are made by adding new Signature Parameters, those extension parameters <span class="bcp14">MUST</span> be registered in the Signature Authentication Scheme Registry.  The registry will be created and maintained at (the suggested URI) <span><a href="https://www.iana.org/assignments/http-auth-scheme-signature">https://www.iana.org/assignments/http-auth-scheme-signature</a></span>.<a href="#section-appendix.a-2" class="pilcrow">¶</a></p>
 <p id="section-appendix.a-3">An example entry in this registry is included below:<a href="#section-appendix.a-3" class="pilcrow">¶</a></p>
 <div id="section-appendix.a-4">
 <pre class="sourcecode">

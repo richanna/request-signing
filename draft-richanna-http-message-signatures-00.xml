@@ -83,6 +83,10 @@
                 <name>Using Signatures in HTTP Responses</name>
                 <t>HTTP messages are routinely altered as they traverse the infrastructure of the Internet, for mostly benign reasons.  Gateways and proxies add, remove and alter headers for operational reasons, so a sender cannot rely on the recipient receiving exactly the message transmitted.  By allowing a sender to sign specified headers, and recipient or intermediate system can confirm that the original intent of the sender is preserved, and including a Digest header can also verify the message body is not modified.  This allows any recipient to easily confirm both the sender's identity, and any incidental or malicious changes that alter the content or meaning of the message.</t>
             </section>
+            <section anchor="terms">
+                <name>Conventions and Terminology</name>
+                <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119">BCP14</xref> <xref target="RFC8174"/> when, and only when, they appear in all capitals, as shown here.</t>
+            </section>
         </section>
         <section anchor="components">
             <name>The Components of a Signature</name>
@@ -92,57 +96,57 @@
                 <t>The following section details the Signature Parameters.</t>
                 <section anchor="keyId">
                     <name>keyId</name>
-                    <t>REQUIRED.  The <tt>keyId</tt> field is an opaque string that the server can use to look up the component they need to validate the signature.  It could be an SSH key fingerprint, a URL to machine-readable key data, an LDAP DN, etc.  Management of keys and assignment of <tt>keyId</tt> is out of scope for this document.  Implementations MUST be able to discover metadata about the key from the <tt>keyId</tt> such that they can determine the type of digital signature algorithm to employ when creating or verifying signatures.</t>
+                    <t><bcp14>REQUIRED</bcp14>.  The <tt>keyId</tt> field is an opaque string that the server can use to look up the component they need to validate the signature.  It could be an SSH key fingerprint, a URL to machine-readable key data, an LDAP DN, etc.  Management of keys and assignment of <tt>keyId</tt> is out of scope for this document.  Implementations <bcp14>MUST</bcp14> be able to discover metadata about the key from the <tt>keyId</tt> such that they can determine the type of digital signature algorithm to employ when creating or verifying signatures.</t>
                 </section>
                 <section anchor="signature">
                     <name>signature</name>
-                    <t>REQUIRED.  The <tt>signature</tt> parameter is a base 64 encoded digital signature, as described in <xref target="RFC4648" section="4" sectionFormat="comma">RFC 4648</xref>.  The client uses the <tt>algorithm</tt> and <tt>headers</tt> Signature Parameters to form a canonicalized <tt>signing string</tt>.  This <tt>signing string</tt> is then signed using the key associated with the <tt>keyId</tt> according to its digital signature algorithm.  The <tt>signature</tt> parameter is then set to the base 64 encoding of the signature.</t>
+                    <t><bcp14>REQUIRED</bcp14>.  The <tt>signature</tt> parameter is a base 64 encoded digital signature, as described in <xref target="RFC4648" section="4" sectionFormat="comma">RFC 4648</xref>.  The client uses the <tt>algorithm</tt> and <tt>headers</tt> Signature Parameters to form a canonicalized <tt>signing string</tt>.  This <tt>signing string</tt> is then signed using the key associated with the <tt>keyId</tt> according to its digital signature algorithm.  The <tt>signature</tt> parameter is then set to the base 64 encoding of the signature.</t>
                 </section>
                 <section anchor="algorithm">
                     <name>algorithm</name>
-                    <t>RECOMMENDED.  The <tt>algorithm</tt> parameter is used to specify the signature string construction mechanism.  Valid values for this parameter can be found in the <xref target="hsa-registry" format="title"/> (<xref target="hsa-registry"/>) and MUST NOT be marked "deprecated".  Implementers SHOULD derive the digital signature algorithm used by an implementation from the key metadata identified by the <tt>keyId</tt> rather than from this field.  If <tt>algorithm</tt> is provided and differs from the key metadata identified by the <tt>keyId</tt>, for example <tt>rsa-sha256</tt> but an EdDSA key is identified via <tt>keyId</tt>, then an implementation MUST produce an error.  Implementers should note that previous versions of the <tt>algorithm</tt> parameter did not use the key information to derive the digital signature type and thus could be utilized by attackers to expose security vulnerabilities.</t>
+                    <t><bcp14>RECOMMENDED</bcp14>.  The <tt>algorithm</tt> parameter is used to specify the signature string construction mechanism.  Valid values for this parameter can be found in the <xref target="hsa-registry" format="title"/> (<xref target="hsa-registry"/>) and <bcp14>MUST NOT</bcp14> be marked "deprecated".  Implementers <bcp14>SHOULD</bcp14> derive the digital signature algorithm used by an implementation from the key metadata identified by the <tt>keyId</tt> rather than from this field.  If <tt>algorithm</tt> is provided and differs from the key metadata identified by the <tt>keyId</tt>, for example <tt>rsa-sha256</tt> but an EdDSA key is identified via <tt>keyId</tt>, then an implementation <bcp14>MUST</bcp14> produce an error.  Implementers should note that previous versions of the <tt>algorithm</tt> parameter did not use the key information to derive the digital signature type and thus could be utilized by attackers to expose security vulnerabilities.</t>
                 </section>
                 <section anchor="created">
                     <name>created</name>
-                    <t>RECOMMENDED.  The <tt>created</tt> field expresses when the signature was created.  The value MUST be a Unix timestamp integer value.  A signature with a <tt>created</tt> timestamp value that is in the future MUST NOT be processed.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as RFC3339.  Subsecond precision is not supported.  This value is useful when clients are not capable of controlling the <tt>Date</tt> HTTP Header such as when operating in certain web browser environments.</t>
+                    <t><bcp14>RECOMMENDED</bcp14>.  The <tt>created</tt> field expresses when the signature was created.  The value <bcp14>MUST</bcp14> be a Unix timestamp integer value.  A signature with a <tt>created</tt> timestamp value that is in the future <bcp14>MUST NOT</bcp14> be processed.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as RFC3339.  Subsecond precision is not supported.  This value is useful when clients are not capable of controlling the <tt>Date</tt> HTTP Header such as when operating in certain web browser environments.</t>
                 </section>
                 <section anchor="expires">
                     <name>expires</name>
-                    <t>OPTIONAL.  The <tt>expires</tt> field expresses when the signature ceases to be valid.  The value MUST be a Unix timestamp integer value.  A signature with an <tt>expires</tt> timestamp value that is in the past MUST NOT be processed.  Using a Unix timestamp simplifies processing and avoid timezone management existing in RFC3339.  Subsecod precision is allowed using decimal notation.</t>
+                    <t><bcp14>OPTIONAL</bcp14>.  The <tt>expires</tt> field expresses when the signature ceases to be valid.  The value <bcp14>MUST</bcp14> be a Unix timestamp integer value.  A signature with an <tt>expires</tt> timestamp value that is in the past <bcp14>MUST NOT</bcp14> be processed.  Using a Unix timestamp simplifies processing and avoid timezone management existing in RFC3339.  Subsecod precision is allowed using decimal notation.</t>
                 </section>
                 <section anchor="headers">
                     <name>headers</name>
-                    <t>OPTIONAL.  The <tt>headers</tt> parameter is used to specify the list of HTTP headers included when generating the signature for the message.  If specified, it SHOULD be a lowercased, quoted list of HTTP header fields, separated by a single space character.  If not specified, implementations MUST operate as if the field were specified with a single value, <tt>(created)</tt>, in the list of HTTP headers.  Note:
+                    <t><bcp14>OPTIONAL</bcp14>.  The <tt>headers</tt> parameter is used to specify the list of HTTP headers included when generating the signature for the message.  If specified, it <bcp14>SHOULD</bcp14> be a lowercased, quoted list of HTTP header fields, separated by a single space character.  If not specified, implementations <bcp14>MUST</bcp14> operate as if the field were specified with a single value, <tt>(created)</tt>, in the list of HTTP headers.  Note:
                     </t>
                     <ol>
-                        <li>The list order is important, and MUST be specified in the order the HTTP header field-value pairs are concatenated together during <xref target="canonicalization" format="title"/> (<xref target="canonicalization"/>) used during signing and verifying.</li>
-                        <li>A zero-length <tt>headers</tt> parameter value MUST NOT be used, since it results in a signature of an empty string.</li>
+                        <li>The list order is important, and <bcp14>MUST</bcp14> be specified in the order the HTTP header field-value pairs are concatenated together during <xref target="canonicalization" format="title"/> (<xref target="canonicalization"/>) used during signing and verifying.</li>
+                        <li>A zero-length <tt>headers</tt> parameter value <bcp14>MUST NOT</bcp14> be used, since it results in a signature of an empty string.</li>
                     </ol>
                 </section>
             </section>
             <section anchor="ambiguity">
                 <name>Ambiguous Parameters</name>
-                <t>If any of the parameters listed above are erroneously duplicated in the associated header field, then the the signature MUST NOT be processed.  Any parameter that is not recognized as a parameter, or is not well-formed, MUST be ignored.</t>
+                <t>If any of the parameters listed above are erroneously duplicated in the associated header field, then the the signature <bcp14>MUST NOT</bcp14> be processed.  Any parameter that is not recognized as a parameter, or is not well-formed, <bcp14>MUST</bcp14> be ignored.</t>
             </section>
             <section anchor="canonicalization">
                 <name>Signature String Construction</name>
                 <t>A signed HTTP message needs to be tolerant of some trivial alterations during transmission as it goes through gateways, proxies, and other entities.  These changes are often of little consequence and very benign, but also often not visible to or detectable by either the sender or the recipient.  Simply signing the entire message that was transmitted by the sender is therefore not feasible: Even very minor changes would result in a signature which cannot be verified.</t>
                 <t>This specification allows the sender to select which headers are meaningful by including their names in the <tt>headers</tt> Signature Parameter.  The headers appearing in this parameter are then used to construct the intermediate Signature String, which is the data that is actually signed.</t>
-                <t>In order to generate the string that is signed with a key, the client MUST use the values of each HTTP header field in the <tt>headers</tt> Signature Parameter, in the order they appear in the <tt>headers</tt> Signature Parameter.  It is out of scope for this document to dictate what header fields an application will want to enforce, but implementers SHOULD at minimum include the <tt>(request-target)</tt> and <tt>(created)</tt> header fields if <tt>algorithm</tt> does not start with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt>.  Otherwise, <tt>(request-target)</tt> and <tt>date</tt> SHOULD be included in the signature.</t>
+                <t>In order to generate the string that is signed with a key, the client <bcp14>MUST</bcp14> use the values of each HTTP header field in the <tt>headers</tt> Signature Parameter, in the order they appear in the <tt>headers</tt> Signature Parameter.  It is out of scope for this document to dictate what header fields an application will want to enforce, but implementers <bcp14>SHOULD</bcp14> at minimum include the <tt>(request-target)</tt> and <tt>(created)</tt> header fields if <tt>algorithm</tt> does not start with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt>.  Otherwise, <tt>(request-target)</tt> and <tt>date</tt> <bcp14>SHOULD</bcp14> be included in the signature.</t>
                 <t>To include the HTTP request target in the signature calculation, use the special <tt>(request-target)</tt> header field name.  To include the signature creation time, use the special <tt>(created)</tt> header field name.  To include the signature expiration time, use the special <tt>(expires)</tt> header field name.
                 </t>
                 <ol>
                     <li>If the header field name is <tt>(request-target)</tt> then generate the header field value by concatenating the lowercased :method, an ASCII space, and the :path pseudo-headers (as specified in <xref target="RFC7540" section="8.1.2.3" sectionFormat="comma">HTTP/2</xref>).  Note: For the avoidance of doubt, lowercasing only applies to the :method pseudo-header and not to the :path pseudo-header.</li>
-                    <li>If the header field name is <tt>(created)</tt> and the <tt>algorithm</tt> parameter starts with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt> an implementation MUST produce an error.  If the <tt>created</tt> Signature Parameter is not specified, or is not an integer, an implementation MUST produce an error.  Otherwise, the header field value is the integer expressed by the <tt>created</tt> signature parameter.</li>
-                    <li>If the header field name is <tt>(expires)</tt> and the <tt>algorithm</tt> parameter starts with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt> an implementation MUST produce an error.  If the <tt>expires</tt> Signature Parameter is not specified, or is not an integer, an implementation MUST produce an error.  Otherwise, the header field value is the integer expressed by the <tt>created</tt> signature parameter.</li>
+                    <li>If the header field name is <tt>(created)</tt> and the <tt>algorithm</tt> parameter starts with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt> an implementation <bcp14>MUST</bcp14> produce an error.  If the <tt>created</tt> Signature Parameter is not specified, or is not an integer, an implementation <bcp14>MUST</bcp14> produce an error.  Otherwise, the header field value is the integer expressed by the <tt>created</tt> signature parameter.</li>
+                    <li>If the header field name is <tt>(expires)</tt> and the <tt>algorithm</tt> parameter starts with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt> an implementation <bcp14>MUST</bcp14> produce an error.  If the <tt>expires</tt> Signature Parameter is not specified, or is not an integer, an implementation <bcp14>MUST</bcp14> produce an error.  Otherwise, the header field value is the integer expressed by the <tt>created</tt> signature parameter.</li>
                     <li>
-                        <t>Create the header field string by concatenating the lowercased header field name followed with an ASCII colon <tt>:</tt>, an ASCII space <tt> </tt>, and the header field value.  Leading and trailing optional whitespace (OWS) in the header field value MUST be omitted (as specified in <xref target="RFC7230" section="3.2.4" sectionFormat="comma"/>).
+                        <t>Create the header field string by concatenating the lowercased header field name followed with an ASCII colon <tt>:</tt>, an ASCII space <tt> </tt>, and the header field value.  Leading and trailing optional whitespace (OWS) in the header field value <bcp14>MUST</bcp14> be omitted (as specified in <xref target="RFC7230" section="3.2.4" sectionFormat="comma"/>).
                         </t>
                         <ol>
-                            <li>If there are multiple instances of the same header field, all header field values associated with the header field MUST be concatenated, separated by a ASCII comma and an ASCII space <tt>, </tt>, and used in the order in which they will appear in the transmitted HTTP message.</li>
+                            <li>If there are multiple instances of the same header field, all header field values associated with the header field <bcp14>MUST</bcp14> be concatenated, separated by a ASCII comma and an ASCII space <tt>, </tt>, and used in the order in which they will appear in the transmitted HTTP message.</li>
                             <li>If the header value (after removing leading and trailing whitespace) is a zero-length string, the signature string line correlating with that header will simply be the (lowercased) header name, an ASCII colon <tt>:</tt>, and an ASCII space <tt> </tt>.</li>
-                            <li>Any other modification to the header field value MUST NOT be made.</li>
-                            <li>If a header specified in the headers parameter is malformed or cannot be matched with a provided header in the message, the implementation MUST produce an error.</li>
+                            <li>Any other modification to the header field value <bcp14>MUST NOT</bcp14> be made.</li>
+                            <li>If a header specified in the headers parameter is malformed or cannot be matched with a provided header in the message, the implementation <bcp14>MUST</bcp14> produce an error.</li>
                         </ol>
                     </li>
                     <li>If value is not the last value then append an ASCII newline <tt>\n</tt>.</li>
@@ -169,7 +173,7 @@ x-example: Example header with some whitespace.]]></sourcecode>
             </section>
             <section anchor="create">
                 <name>Creating a Signature</name>
-                <t>In order to create a signature, a client MUST:
+                <t>In order to create a signature, a client <bcp14>MUST</bcp14>:
                 </t>
                 <ol>
                     <li>Use the <tt>headers</tt> and <tt>algorithm</tt> values as well as the contents of the HTTP message, to create the signature string.</li>
@@ -180,13 +184,13 @@ x-example: Example header with some whitespace.]]></sourcecode>
             </section>
             <section anchor="verify">
                 <name>Verifying a Signature</name>
-                <t>In order to verify a signature, a server MUST:
+                <t>In order to verify a signature, a server <bcp14>MUST</bcp14>:
                 </t>
                 <ol>
                     <li>Use the received HTTP message, the <tt>headers</tt> value, and the <xref target="canonicalization" format="title"/> (<xref target="canonicalization"/>) algorithm to recreate the signature.</li>
-                    <li>The <tt>algorithm</tt>, <tt>keyId</tt>, and base 64 decoded <tt>signature</tt> listed in the Signature Parameters are then used to verify the authenticity of the digital signature.  Note: The application verifying the signature MUST derive the digital signature algorithm from the metadata associated with the <tt>keyId</tt> and MUST NOT use the value of <tt>algorithm</tt> from the signed message.</li>
+                    <li>The <tt>algorithm</tt>, <tt>keyId</tt>, and base 64 decoded <tt>signature</tt> listed in the Signature Parameters are then used to verify the authenticity of the digital signature.  Note: The application verifying the signature <bcp14>MUST</bcp14> derive the digital signature algorithm from the metadata associated with the <tt>keyId</tt> and <bcp14>MUST NOT</bcp14> use the value of <tt>algorithm</tt> from the signed message.</li>
                 </ol>
-                <t>If a header specified in the <tt>headers</tt> value of the Signature Parameters (or the default item <tt>(created)</tt> where the <tt>headers</tt> value is not supplied) is absent from the message, the implementation MUST produce an error.</t>
+                <t>If a header specified in the <tt>headers</tt> value of the Signature Parameters (or the default item <tt>(created)</tt> where the <tt>headers</tt> value is not supplied) is absent from the message, the implementation <bcp14>MUST</bcp14> produce an error.</t>
                 <t>For example, assume that the <tt>algorithm</tt> value was "hs2019" and and the <tt>keyId</tt> refers to an EdDSA public key.  This would signal to the application that the signature string construction mechanism is the one defined in <xref target="canonicalization"/>: <xref target="canonicalization" format="title"/>, the signature string hashing function is SHA-512, and the signing algorithm is Ed25519 as defined in <xref target="RFC8032" section="5.1" sectionFormat="comma">RFC 8032</xref>: Ed25519ph, Ed25519ctx, and Ed25519.  The result of the signature verification algorithm should result in a successful verification unless the headers protected by the signature were tampered with in transit.</t>
             </section>
         </section>
@@ -384,10 +388,12 @@ Notes (optional): The Signature scheme is designed for clients to authenticate t
             <name>References</name>
             <references>
                 <name>Normative References</name>
+                <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4648.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7230.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7235.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7540.xml"/>
+                <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
             </references>
             <references>
                 <name>Informative References</name>
@@ -424,7 +430,7 @@ Notes (optional): The Signature scheme is designed for clients to authenticate t
         <section anchor="appendix-a">
             <name>Extensions</name>
             <t>This specification was designed to be simple, modular, and extensible.  There are a number of other specifications that build on this one.  For example, the <xref target="WP-HTTP-Sig-Nonces">HTTP Signature Nonces</xref> specification details how to use HTTP Signatures over a non-secured channel like HTTP and the <xref target="WP-HTTP-Sig-Trailers">HTTP Signature Trailers</xref> specification explains how to apply HTTP Signatures to streaming content.  Developers that desire more functionality than this specification provides are urged to ensure that an extension specification doesn't already exist before implementing a proprietary extension.</t>
-            <t>If extensions to this specification are made by adding new Signature Parameters, those extension parameters MUST be registered in the Signature Authentication Scheme Registry.  The registry will be created and maintained at (the suggested URI) <eref target="https://www.iana.org/assignments/http-auth-scheme-signature"/>.</t>
+            <t>If extensions to this specification are made by adding new Signature Parameters, those extension parameters <bcp14>MUST</bcp14> be registered in the Signature Authentication Scheme Registry.  The registry will be created and maintained at (the suggested URI) <eref target="https://www.iana.org/assignments/http-auth-scheme-signature"/>.</t>
             <t keepWithNext="true">An example entry in this registry is included below:</t>
             <sourcecode><![CDATA[
 Signature Parameter: nonce
