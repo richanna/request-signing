@@ -89,7 +89,7 @@
 
             <t>This specification presents two mechanisms with distinct purposes:
                 <list style="numbers">
-                    <t>The "Signature" scheme which is intended primarily to allow a sender to assert the contents of the message sent are correct and have not been altered during transmission or storage in a way that alters the meaning expressed in the original message as signed. Any party reading the message (the verifier) may independently confirm the validity of the message signature. This scheme is agnostic to the client/server direction and can be used to verify the contents of either HTTP requests, HTTP reponses, or both.</t>
+                    <t>The "Signature" scheme which is intended primarily to allow a sender to assert the contents of the message sent are correct and have not been altered during transmission or storage in a way that alters the meaning expressed in the original message as signed. Any party reading the message (the verifier) may independently confirm the validity of the message signature. This scheme is agnostic to the client/server direction and can be used to verify the contents of either HTTP requests, HTTP responses, or both.</t>
                     <t>The "Authorization" scheme which is intended primarily to allow a sender to request access to a resource or resources by proving that they control a secret key. This specification allows for this both with a shared secret (using HMAC) or with public/private keys. The "Authorization" scheme is typically used in authentication processes and not directly for message signing.  As a consequence `Authorization` header is normally generated (and the message signed) by the HTTP client and the message verified by the HTTP server.</t>
                 </list>
             </t>
@@ -108,7 +108,7 @@
         </section>
 
         <section anchor="components" title="The Components of a Signature">
-            <t>There are a number of components in a signature that are common between the 'Signature' HTTP Authentication Scheme and the 'Signature' HTTP Header. This section details the components of the digital signature paremeters common to both schemes.</t>
+            <t>There are a number of components in a signature that are common between the 'Signature' HTTP Authentication Scheme and the 'Signature' HTTP Header. This section details the components of the digital signature parameters common to both schemes.</t>
 
             <section anchor="params" title="Signature Parameters">
                 <t>The following section details the Signature Parameters.</t>
