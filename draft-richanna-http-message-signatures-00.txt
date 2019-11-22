@@ -187,8 +187,8 @@ Internet-Draft            Signing HTTP Messages            November 2019
    integrity assurances without the need for shared secrets.  They also
    do not require a round-trip in order to authenticate the client, and
    allow the integrity of a message to be verified independently of the
-   transport (e.g.  TLS).  A server need only have an understanding of
-   the key (e.g. through a mapping between the key being used to sign
+   transport (e.g., TLS).  A server need only have an understanding of
+   the key (e.g., through a mapping between the key being used to sign
    the content and the authorized entity) to verify that a message was
    signed by that entity.
 
@@ -246,7 +246,7 @@ Internet-Draft            Signing HTTP Messages            November 2019
    REQUIRED.  The `signature` parameter is a base 64 encoded digital
    signature, as described in RFC 4648 [RFC4648], Section 4 [1].  The
    client uses the `algorithm` and `headers` Signature Parameters to
-   form a canonicalized `signing string`. This `signing string` is then
+   form a canonicalized `signing string`.  This `signing string` is then
    signed using the key associated with the `keyId` according to its
    digital signature algorithm.  The `signature` parameter is then set
    to the base 64 encoding of the signature.
@@ -351,7 +351,7 @@ Internet-Draft            Signing HTTP Messages            November 2019
    what header fields an application will want to enforce, but
    implementers SHOULD at minimum include the `(request-target)` and
    `(created)` header fields if `algorithm` does not start with `rsa`,
-   `hmac`, or `ecdsa`. Otherwise, `(request-target)` and `date` SHOULD
+   `hmac`, or `ecdsa`.  Otherwise, `(request-target)` and `date` SHOULD
    be included in the signature.
 
    To include the HTTP request target in the signature calculation, use
@@ -642,7 +642,7 @@ Internet-Draft            Signing HTTP Messages            November 2019
    signature.  By including the "Digest" header with a properly
    formatted digest, the message body can also be linked to the
    signature.  The signature is generated and verified either using a
-   shared secret (e.g.  HMAC) or public/private keys (e.g.  RSA, EC).
+   shared secret (e.g., HMAC) or public/private keys (e.g., RSA, EC).
    This allows the receiver and/or any intermediate system to
    immediately or later verify the integrity of the message.  When the
    signature is generated with a private key it can also provide a
