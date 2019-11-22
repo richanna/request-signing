@@ -398,19 +398,19 @@
 <link href="#rfc.section.4.1" rel="Chapter" title="4.1 Signature Header">
 <link href="#rfc.section.4.1.1" rel="Chapter" title="4.1.1 RSA Example">
 <link href="#rfc.section.4.1.2" rel="Chapter" title="4.1.2 HMAC Example">
-<link href="#rfc.references" rel="Chapter" title="5 References">
-<link href="#rfc.references.1" rel="Chapter" title="5.1 Normative References">
-<link href="#rfc.references.2" rel="Chapter" title="5.2 Informative References">
-<link href="#rfc.appendix.A" rel="Chapter" title="A Security Considerations">
-<link href="#rfc.appendix.B" rel="Chapter" title="B Extensions">
-<link href="#rfc.appendix.C" rel="Chapter" title="C Test Values">
-<link href="#rfc.appendix.C.1" rel="Chapter" title="C.1 Default Test">
-<link href="#rfc.appendix.C.2" rel="Chapter" title="C.2 Basic Test">
-<link href="#rfc.appendix.C.3" rel="Chapter" title="C.3 All Headers Test">
-<link href="#rfc.appendix.D" rel="Chapter" title="D Acknowledgements">
-<link href="#rfc.appendix.E" rel="Chapter" title="E IANA Considerations">
-<link href="#rfc.appendix.E.1" rel="Chapter" title="E.1 Signature Authentication Scheme">
-<link href="#rfc.appendix.E.2" rel="Chapter" title="E.2 HTTP Signatures Algorithms Registry">
+<link href="#rfc.section.5" rel="Chapter" title="5 IANA Considerations">
+<link href="#rfc.section.5.1" rel="Chapter" title="5.1 Signature Authentication Scheme">
+<link href="#rfc.section.5.2" rel="Chapter" title="5.2 HTTP Signatures Algorithms Registry">
+<link href="#rfc.section.6" rel="Chapter" title="6 Security Considerations">
+<link href="#rfc.references" rel="Chapter" title="7 References">
+<link href="#rfc.references.1" rel="Chapter" title="7.1 Normative References">
+<link href="#rfc.references.2" rel="Chapter" title="7.2 Informative References">
+<link href="#rfc.appendix.A" rel="Chapter" title="A Extensions">
+<link href="#rfc.appendix.B" rel="Chapter" title="B Test Values">
+<link href="#rfc.appendix.B.1" rel="Chapter" title="B.1 Default Test">
+<link href="#rfc.appendix.B.2" rel="Chapter" title="B.2 Basic Test">
+<link href="#rfc.appendix.B.3" rel="Chapter" title="B.3 All Headers Test">
+<link href="#rfc.appendix.C" rel="Chapter" title="C Acknowledgements">
 <link href="#rfc.authors" rel="Chapter">
 
 
@@ -530,33 +530,33 @@
 </li>
 <li>4.1.2.   <a href="#rfc.section.4.1.2">HMAC Example</a>
 </li>
-</ul></ul><li>5.   <a href="#rfc.references">References</a>
+</ul></ul><li>5.   <a href="#rfc.section.5">IANA Considerations</a>
 </li>
-<ul><li>5.1.   <a href="#rfc.references.1">Normative References</a>
+<ul><li>5.1.   <a href="#rfc.section.5.1">Signature Authentication Scheme</a>
 </li>
-<li>5.2.   <a href="#rfc.references.2">Informative References</a>
+<li>5.2.   <a href="#rfc.section.5.2">HTTP Signatures Algorithms Registry</a>
 </li>
-</ul><li>Appendix A.   <a href="#rfc.appendix.A">Security Considerations</a>
+</ul><li>6.   <a href="#rfc.section.6">Security Considerations</a>
 </li>
-<li>Appendix B.   <a href="#rfc.appendix.B">Extensions</a>
+<li>7.   <a href="#rfc.references">References</a>
 </li>
-<li>Appendix C.   <a href="#rfc.appendix.C">Test Values</a>
+<ul><li>7.1.   <a href="#rfc.references.1">Normative References</a>
 </li>
-<ul><li>C.1.   <a href="#rfc.appendix.C.1">Default Test</a>
+<li>7.2.   <a href="#rfc.references.2">Informative References</a>
 </li>
-<li>C.2.   <a href="#rfc.appendix.C.2">Basic Test</a>
+</ul><li>Appendix A.   <a href="#rfc.appendix.A">Extensions</a>
 </li>
-<li>C.3.   <a href="#rfc.appendix.C.3">All Headers Test</a>
+<li>Appendix B.   <a href="#rfc.appendix.B">Test Values</a>
 </li>
-</ul><li>Appendix D.   <a href="#rfc.appendix.D">Acknowledgements</a>
+<ul><li>B.1.   <a href="#rfc.appendix.B.1">Default Test</a>
 </li>
-<li>Appendix E.   <a href="#rfc.appendix.E">IANA Considerations</a>
+<li>B.2.   <a href="#rfc.appendix.B.2">Basic Test</a>
 </li>
-<ul><li>E.1.   <a href="#rfc.appendix.E.1">Signature Authentication Scheme</a>
+<li>B.3.   <a href="#rfc.appendix.B.3">All Headers Test</a>
 </li>
-<li>E.2.   <a href="#rfc.appendix.E.2">HTTP Signatures Algorithms Registry</a>
+</ul><li>Appendix C.   <a href="#rfc.appendix.C">Acknowledgements</a>
 </li>
-</ul><li><a href="#rfc.authors">Authors' Addresses</a>
+<li><a href="#rfc.authors">Authors' Addresses</a>
 </li>
 
 
@@ -864,10 +864,32 @@ host: example.org\n
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
 content-length: 18
                             </pre>
+<h1 id="rfc.section.5">
+<a href="#rfc.section.5">5.</a> <a href="#iana" id="iana">IANA Considerations</a>
+</h1>
+<h1 id="rfc.section.5.1">
+<a href="#rfc.section.5.1">5.1.</a> <a href="#iana-scheme" id="iana-scheme">Signature Authentication Scheme</a>
+</h1>
+<p id="rfc.section.5.1.p.1">The following entry should be added to the Authentication Scheme Registry located at <a href="https://www.iana.org/assignments/http-authschemes">https://www.iana.org/assignments/http-authschemes</a></p>
+<p id="rfc.section.5.1.p.2">Authentication Scheme Name: Signature<br> Reference: [RFC_THIS_DOCUMENT], Section 2.<br> Notes (optional): The Signature scheme is designed for clients to authenticate themselves with a server.</p>
+<h1 id="rfc.section.5.2">
+<a href="#rfc.section.5.2">5.2.</a> <a href="#hsa-registry" id="hsa-registry">HTTP Signatures Algorithms Registry</a>
+</h1>
+<p id="rfc.section.5.2.p.1">The following initial entries should be added to the Canonicalization Algorithms Registry to be created and maintained at (the suggested URI) <a href="https://www.iana.org/assignments/shm-algorithms">https://www.iana.org/assignments/shm-algorithms</a>:</p>
+<p id="rfc.section.5.2.p.2">Editor's note: The references in this section are problematic as many of the specifications that they refer to are too implementation specific, rather than just pointing to the proper signature and hashing specifications.  A better approach might be just specifying the signature and hashing function specifications, leaving implementers to connect the dots (which are not that hard to connect).</p>
+<p id="rfc.section.5.2.p.3">Algorithm Name: hs2019<br> Status: active<br> Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <a href="#canonicalization">Section 2.3: Signature String Construction</a><br> Hash Algorithm: <a href="#RFC6234" class="xref">RFC 6234</a>, SHA-512 (SHA-2 with 512-bits of digest output)<br> Digital Signature Algorithm: Derived from metadata associated with `keyId`.  Recommend support for <a href="#RFC8017" class="xref">RFC 8017</a>, Section 8.1: RSASSA-PSS, <a href="#RFC6234" class="xref">RFC 6234</a>, Section 7.1: SHA-Based HMACs, ANSI X9.62-2005 ECDSA, P-256, and <a href="#RFC8032" class="xref">RFC 8032</a>, Section 5.1: Ed25519ph, Ed25519ctx, and Ed25519.</p>
+<p id="rfc.section.5.2.p.4">Algorithm Name: rsa-sha1<br> Status: deprecated, SHA-1 not secure.<br> Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <a href="#canonicalization">Section 2.3: Signature String Construction</a><br> Hash Algorithm: <a href="#RFC6234" class="xref">RFC 6234</a>, SHA-1 (SHA-1 with 160-bits of digest output)<br> Digital Signature Algorithm: <a href="#RFC8017" class="xref">RFC 8017</a>,  Section 8.2: RSASSA-PKCS1-v1_5<br></p>
+<p id="rfc.section.5.2.p.5">Algorithm Name: rsa-sha256<br> Status: deprecated, specifying signature algorithm enables attack vector.<br> Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <a href="#canonicalization">Section 2.3: Signature String Construction</a><br> Hash Algorithm: <a href="#RFC6234" class="xref">RFC 6234</a>, SHA-256 (SHA-2 with 256-bits of digest output)<br> Digital Signature Algorithm: <a href="#RFC8017" class="xref">RFC 8017</a>,  Section 8.2: RSASSA-PKCS1-v1_5<br></p>
+<p id="rfc.section.5.2.p.6">Algorithm Name: hmac-sha256<br> Status: deprecated, specifying signature algorithm enables attack vector.<br> Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <a href="#canonicalization">Section 2.3: Signature String Construction</a><br> Hash Algorithm: <a href="#RFC6234" class="xref">RFC 6234</a>, SHA-256 (SHA-2 with 256-bits of digest output)<br> Message Authentication Code Algorithm: <a href="#RFC6234" class="xref">RFC 6234</a>, Section 7.1: SHA-Based HMACs<br></p>
+<p id="rfc.section.5.2.p.7">Algorithm Name: ecdsa-sha256<br> Status: deprecated, specifying signature algorithm enables attack vector.<br> Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <a href="#canonicalization">Section 2.3: Signature String Construction</a><br> Hash Algorithm: <a href="#RFC6234" class="xref">RFC 6234</a>, SHA-256 (SHA-2 with 256-bits of digest output)<br> Digital Signature Algorithm: ANSI X9.62-2005 ECDSA, P-256<br></p>
+<h1 id="rfc.section.6">
+<a href="#rfc.section.6">6.</a> <a href="#security" id="security">Security Considerations</a>
+</h1>
+<p id="rfc.section.6.p.1">There are a number of security considerations to take into account when implementing or utilizing this specification.  A thorough security analysis of this protocol, including its strengths and weaknesses, can be found in <a href="https://web-payments.org/specs/source/http-signatures-audit/">Security Considerations for HTTP Signatures</a>.</p>
 <h1 id="rfc.references">
-<a href="#rfc.references">5.</a> References</h1>
+<a href="#rfc.references">7.</a> References</h1>
 <h1 id="rfc.references.1">
-<a href="#rfc.references.1">5.1.</a> Normative References</h1>
+<a href="#rfc.references.1">7.1.</a> Normative References</h1>
 <table><tbody>
 <tr>
 <td class="reference"><b id="RFC4648">[RFC4648]</b></td>
@@ -886,7 +908,7 @@ content-length: 18
 </tr>
 </tbody></table>
 <h1 id="rfc.references.2">
-<a href="#rfc.references.2">5.2.</a> Informative References</h1>
+<a href="#rfc.references.2">7.2.</a> Informative References</h1>
 <table><tbody>
 <tr>
 <td class="reference"><b id="RFC2617">[RFC2617]</b></td>
@@ -925,14 +947,10 @@ content-length: 18
 </tr>
 </tbody></table>
 <h1 id="rfc.appendix.A">
-<a href="#rfc.appendix.A">Appendix A.</a> <a href="#appendix-a" id="appendix-a">Security Considerations</a>
+<a href="#rfc.appendix.A">Appendix A.</a> <a href="#appendix-a" id="appendix-a">Extensions</a>
 </h1>
-<p id="rfc.section.A.p.1">There are a number of security considerations to take into account when implementing or utilizing this specification.  A thorough security analysis of this protocol, including its strengths and weaknesses, can be found in <a href="https://web-payments.org/specs/source/http-signatures-audit/">Security Considerations for HTTP Signatures</a>.</p>
-<h1 id="rfc.appendix.B">
-<a href="#rfc.appendix.B">Appendix B.</a> <a href="#appendix-b" id="appendix-b">Extensions</a>
-</h1>
-<p id="rfc.section.B.p.1">This specification was designed to be simple, modular, and extensible.  There are a number of other specifications that build on this one.  For example, the <a href="https://web-payments.org/specs/source/http-signature-nonces/">HTTP Signature Nonces</a> specification details how to use HTTP Signatures over a non-secured channel like HTTP and the <a href="https://web-payments.org/specs/source/http-signature-trailers/">HTTP Signature Trailers</a> specification explains how to apply HTTP Signatures to streaming content.  Developers that desire more functionality than this specification provides are urged to ensure that an extension specification doesn't already exist before implementing a proprietary extension.</p>
-<p id="rfc.section.B.p.2">If extensions to this specification are made by adding new Signature Parameters, those extension parameters MUST be registered in the Signature Authentication Scheme Registry.  The registry will be created and maintained at (the suggested URI) <a href="https://www.iana.org/assignments/http-auth-scheme-signature">https://www.iana.org/assignments/http-auth-scheme-signature</a>.</p>
+<p id="rfc.section.A.p.1">This specification was designed to be simple, modular, and extensible.  There are a number of other specifications that build on this one.  For example, the <a href="https://web-payments.org/specs/source/http-signature-nonces/">HTTP Signature Nonces</a> specification details how to use HTTP Signatures over a non-secured channel like HTTP and the <a href="https://web-payments.org/specs/source/http-signature-trailers/">HTTP Signature Trailers</a> specification explains how to apply HTTP Signatures to streaming content.  Developers that desire more functionality than this specification provides are urged to ensure that an extension specification doesn't already exist before implementing a proprietary extension.</p>
+<p id="rfc.section.A.p.2">If extensions to this specification are made by adding new Signature Parameters, those extension parameters MUST be registered in the Signature Authentication Scheme Registry.  The registry will be created and maintained at (the suggested URI) <a href="https://www.iana.org/assignments/http-auth-scheme-signature">https://www.iana.org/assignments/http-auth-scheme-signature</a>.</p>
 <p></p>
 
 <p>An example entry in this registry is included below:</p>
@@ -942,10 +960,10 @@ Reference to specification: [HTTP_AUTH_SIGNATURE_NONCE], Section XYZ.
 Notes (optional): The HTTP Signature Nonces specification details
 how to use HTTP Signatures over a unsecured channel like HTTP.
                     </pre>
-<h1 id="rfc.appendix.C">
-<a href="#rfc.appendix.C">Appendix C.</a> <a href="#appendix-c" id="appendix-c">Test Values</a>
+<h1 id="rfc.appendix.B">
+<a href="#rfc.appendix.B">Appendix B.</a> <a href="#appendix-b" id="appendix-b">Test Values</a>
 </h1>
-<p id="rfc.section.C.p.1">WARNING: THESE TEST VECTORS ARE OLD AND POSSIBLY WRONG.  THE NEXT VERSION OF THIS SPECIFICATION WILL CONTAIN THE PROPER TEST VECTORS.</p>
+<p id="rfc.section.B.p.1">WARNING: THESE TEST VECTORS ARE OLD AND POSSIBLY WRONG.  THE NEXT VERSION OF THIS SPECIFICATION WILL CONTAIN THE PROPER TEST VECTORS.</p>
 <p></p>
 
 <p>The following test data uses the following RSA 2048-bit keys, which we will refer to as `keyId=Test` in the following samples:</p>
@@ -986,8 +1004,8 @@ Content-Length: 18
 
 {"hello": "world"}
                     </pre>
-<h1 id="rfc.appendix.C.1">
-<a href="#rfc.appendix.C.1">C.1.</a> <a href="#default-test" id="default-test">Default Test</a>
+<h1 id="rfc.appendix.B.1">
+<a href="#rfc.appendix.B.1">B.1.</a> <a href="#default-test" id="default-test">Default Test</a>
 </h1>
 <p></p>
 
@@ -1010,8 +1028,8 @@ Signature: keyId="Test",algorithm="rsa-sha256",
 signature="SjWJWbWN7i0wzBvtPl8rbASWz5xQW6mcJmn+ibttBqtifLN7Sazz
 6m79cNfwwb8DMJ5cou1s7uEGKKCs+FLEEaDV5lp7q25WqS+lavg7T8hc0GppauB
 6hbgEKTwblDHYGEtbGmtdHgVCk9SuS13F0hZ8FD0k/5OxEPXe5WozsbM="</pre>
-<h1 id="rfc.appendix.C.2">
-<a href="#rfc.appendix.C.2">C.2.</a> <a href="#basic-test" id="basic-test">Basic Test</a>
+<h1 id="rfc.appendix.B.2">
+<a href="#rfc.appendix.B.2">B.2.</a> <a href="#basic-test" id="basic-test">Basic Test</a>
 </h1>
 <p></p>
 
@@ -1031,8 +1049,8 @@ Authorization: Signature keyId="Test",algorithm="rsa-sha256",
   2mg2+SbrQDMCJypxBLSPQR2aAjn7ndmw2iicw3HMbe8VfEdKFYRqzic+efkb3
   nndiv/x1xSHDJWeSWkx3ButlYSuBskLu6kd9Fswtemr3lgdDEmn04swr2Os0="
                         </pre>
-<h1 id="rfc.appendix.C.3">
-<a href="#rfc.appendix.C.3">C.3.</a> <a href="#all-headers-test" id="all-headers-test">All Headers Test</a>
+<h1 id="rfc.appendix.B.3">
+<a href="#rfc.appendix.B.3">B.3.</a> <a href="#all-headers-test" id="all-headers-test">All Headers Test</a>
 </h1>
 <p></p>
 
@@ -1066,29 +1084,11 @@ Signature: keyId="Test",algorithm="rsa-sha256",
   signature="vSdrb+dS3EceC9bcwHSo4MlyKS59iFIrhgYkz8+oVLEEzmYZZvRs
     8rgOp+63LEM3v+MFHB32NfpB2bEKBIvB1q52LaEUHFv120V01IL+TAD48XaERZF
     ukWgHoBTLMhYS2Gb51gWxpeIq8knRmPnYePbF5MOkR0Zkly4zKH7s1dE="</pre>
-<h1 id="rfc.appendix.D">
-<a href="#rfc.appendix.D">Appendix D.</a> <a href="#acknowledgements" id="acknowledgements">Acknowledgements</a>
+<h1 id="rfc.appendix.C">
+<a href="#rfc.appendix.C">Appendix C.</a> <a href="#acknowledgements" id="acknowledgements">Acknowledgements</a>
 </h1>
-<p id="rfc.section.D.p.1">This specification is based on the draft-cavage-http-signatures draft.  The editor would like to thank the authors of that draft, Mark Cavage and Manu Sporny, for their work on that draft and their continuing contributions.</p>
-<p id="rfc.section.D.p.2">The editor would also like to thank the following individuals for feedback on and implementations of the draft-cavage-http-signatures draft (in alphabetical order): Mark Adamcin, Mark Allen, Paul Annesley, Karl B&#246;hlmark, St&#233;phane Bortzmeyer, Sarven Capadisli, Liam Dennehy, ductm54, Stephen Farrell, Phillip Hallam-Baker, Eric Holmes, Andrey Kislyuk, Adam Knight, Dave Lehn, Dave Longley, James H. Manger, Ilari Liusvaara, Mark Nottingham, Yoav Nir, Adrian Palmer, Lucas Pardue, Roberto Polli, Julian Reschke, Michael Richardson, Wojciech Rygielski, Adam Scarr, Cory J. Slep, Dirk Stein, Henry Story, Lukasz Szewc, Chris Webber, and Jeffrey Yasskin </p>
-<h1 id="rfc.appendix.E">
-<a href="#rfc.appendix.E">Appendix E.</a> <a href="#appendix-d" id="appendix-d">IANA Considerations</a>
-</h1>
-<h1 id="rfc.appendix.E.1">
-<a href="#rfc.appendix.E.1">E.1.</a> <a href="#iana-scheme" id="iana-scheme">Signature Authentication Scheme</a>
-</h1>
-<p id="rfc.section.E.1.p.1">The following entry should be added to the Authentication Scheme Registry located at <a href="https://www.iana.org/assignments/http-authschemes">https://www.iana.org/assignments/http-authschemes</a></p>
-<p id="rfc.section.E.1.p.2">Authentication Scheme Name: Signature<br> Reference: [RFC_THIS_DOCUMENT], Section 2.<br> Notes (optional): The Signature scheme is designed for clients to authenticate themselves with a server.</p>
-<h1 id="rfc.appendix.E.2">
-<a href="#rfc.appendix.E.2">E.2.</a> <a href="#hsa-registry" id="hsa-registry">HTTP Signatures Algorithms Registry</a>
-</h1>
-<p id="rfc.section.E.2.p.1">The following initial entries should be added to the Canonicalization Algorithms Registry to be created and maintained at (the suggested URI) <a href="https://www.iana.org/assignments/shm-algorithms">https://www.iana.org/assignments/shm-algorithms</a>:</p>
-<p id="rfc.section.E.2.p.2">Editor's note: The references in this section are problematic as many of the specifications that they refer to are too implementation specific, rather than just pointing to the proper signature and hashing specifications.  A better approach might be just specifying the signature and hashing function specifications, leaving implementers to connect the dots (which are not that hard to connect).</p>
-<p id="rfc.section.E.2.p.3">Algorithm Name: hs2019<br> Status: active<br> Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <a href="#canonicalization">Section 2.3: Signature String Construction</a><br> Hash Algorithm: <a href="#RFC6234" class="xref">RFC 6234</a>, SHA-512 (SHA-2 with 512-bits of digest output)<br> Digital Signature Algorithm: Derived from metadata associated with `keyId`.  Recommend support for <a href="#RFC8017" class="xref">RFC 8017</a>, Section 8.1: RSASSA-PSS, <a href="#RFC6234" class="xref">RFC 6234</a>, Section 7.1: SHA-Based HMACs, ANSI X9.62-2005 ECDSA, P-256, and <a href="#RFC8032" class="xref">RFC 8032</a>, Section 5.1: Ed25519ph, Ed25519ctx, and Ed25519.</p>
-<p id="rfc.section.E.2.p.4">Algorithm Name: rsa-sha1<br> Status: deprecated, SHA-1 not secure.<br> Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <a href="#canonicalization">Section 2.3: Signature String Construction</a><br> Hash Algorithm: <a href="#RFC6234" class="xref">RFC 6234</a>, SHA-1 (SHA-1 with 160-bits of digest output)<br> Digital Signature Algorithm: <a href="#RFC8017" class="xref">RFC 8017</a>,  Section 8.2: RSASSA-PKCS1-v1_5<br></p>
-<p id="rfc.section.E.2.p.5">Algorithm Name: rsa-sha256<br> Status: deprecated, specifying signature algorithm enables attack vector.<br> Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <a href="#canonicalization">Section 2.3: Signature String Construction</a><br> Hash Algorithm: <a href="#RFC6234" class="xref">RFC 6234</a>, SHA-256 (SHA-2 with 256-bits of digest output)<br> Digital Signature Algorithm: <a href="#RFC8017" class="xref">RFC 8017</a>,  Section 8.2: RSASSA-PKCS1-v1_5<br></p>
-<p id="rfc.section.E.2.p.6">Algorithm Name: hmac-sha256<br> Status: deprecated, specifying signature algorithm enables attack vector.<br> Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <a href="#canonicalization">Section 2.3: Signature String Construction</a><br> Hash Algorithm: <a href="#RFC6234" class="xref">RFC 6234</a>, SHA-256 (SHA-2 with 256-bits of digest output)<br> Message Authentication Code Algorithm: <a href="#RFC6234" class="xref">RFC 6234</a>, Section 7.1: SHA-Based HMACs<br></p>
-<p id="rfc.section.E.2.p.7">Algorithm Name: ecdsa-sha256<br> Status: deprecated, specifying signature algorithm enables attack vector.<br> Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <a href="#canonicalization">Section 2.3: Signature String Construction</a><br> Hash Algorithm: <a href="#RFC6234" class="xref">RFC 6234</a>, SHA-256 (SHA-2 with 256-bits of digest output)<br> Digital Signature Algorithm: ANSI X9.62-2005 ECDSA, P-256<br></p>
+<p id="rfc.section.C.p.1">This specification is based on the draft-cavage-http-signatures draft.  The editor would like to thank the authors of that draft, Mark Cavage and Manu Sporny, for their work on that draft and their continuing contributions.</p>
+<p id="rfc.section.C.p.2">The editor would also like to thank the following individuals for feedback on and implementations of the draft-cavage-http-signatures draft (in alphabetical order): Mark Adamcin, Mark Allen, Paul Annesley, Karl B&#246;hlmark, St&#233;phane Bortzmeyer, Sarven Capadisli, Liam Dennehy, ductm54, Stephen Farrell, Phillip Hallam-Baker, Eric Holmes, Andrey Kislyuk, Adam Knight, Dave Lehn, Dave Longley, James H. Manger, Ilari Liusvaara, Mark Nottingham, Yoav Nir, Adrian Palmer, Lucas Pardue, Roberto Polli, Julian Reschke, Michael Richardson, Wojciech Rygielski, Adam Scarr, Cory J. Slep, Dirk Stein, Henry Story, Lukasz Szewc, Chris Webber, and Jeffrey Yasskin </p>
 <h1 id="rfc.authors"><a href="#rfc.authors">Authors' Addresses</a></h1>
 <div class="avoidbreak">
   <address class="vcard">

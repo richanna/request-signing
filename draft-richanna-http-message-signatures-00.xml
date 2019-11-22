@@ -430,6 +430,54 @@ content-length: 18
                 </section>
             </section>
         </section>
+        <section anchor="iana" title="IANA Considerations">
+            <section anchor="iana-scheme" title="Signature Authentication Scheme">
+                <t>The following entry should be added to the Authentication Scheme Registry located at <eref target="https://www.iana.org/assignments/http-authschemes">https://www.iana.org/assignments/http-authschemes</eref></t>
+                <t>Authentication Scheme Name: Signature<vspace/>
+Reference: [RFC_THIS_DOCUMENT], Section 2.<vspace/>
+Notes (optional): The Signature scheme is designed for clients to authenticate themselves with a server.</t>
+            </section>
+
+            <section anchor="hsa-registry" title="HTTP Signatures Algorithms Registry">
+                <t>The following initial entries should be added to the Canonicalization Algorithms Registry to be created and maintained at (the suggested URI) <eref target="https://www.iana.org/assignments/shm-algorithms">https://www.iana.org/assignments/shm-algorithms</eref>:</t>
+
+                <t>Editor's note: The references in this section are problematic as many of the specifications that they refer to are too implementation specific, rather than just pointing to the proper signature and hashing specifications.  A better approach might be just specifying the signature and hashing function specifications, leaving implementers to connect the dots (which are not that hard to connect).</t>
+
+                <t>Algorithm Name: hs2019<vspace/>
+Status: active<vspace/>
+Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <eref target="#canonicalization">Section 2.3: Signature String Construction</eref><vspace/>
+Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-512 (SHA-2 with 512-bits of digest output)<vspace/>
+Digital Signature Algorithm: Derived from metadata associated with `keyId`.  Recommend support for <xref target="RFC8017">RFC 8017</xref>, Section 8.1: RSASSA-PSS, <xref target="RFC6234">RFC 6234</xref>, Section 7.1: SHA-Based HMACs, ANSI X9.62-2005 ECDSA, P-256, and <xref target="RFC8032">RFC 8032</xref>, Section 5.1: Ed25519ph, Ed25519ctx,
+and Ed25519.</t>
+
+                <t>Algorithm Name: rsa-sha1<vspace/>
+Status: deprecated, SHA-1 not secure.<vspace/>
+Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <eref target="#canonicalization">Section 2.3: Signature String Construction</eref><vspace/>
+Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-1 (SHA-1 with 160-bits of digest output)<vspace/> Digital Signature Algorithm:
+  <xref target="RFC8017">RFC 8017</xref>,  Section 8.2: RSASSA-PKCS1-v1_5<vspace/></t>
+
+                <t>Algorithm Name: rsa-sha256<vspace/>
+Status: deprecated, specifying signature algorithm enables attack vector.<vspace/>
+Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <eref target="#canonicalization">Section 2.3: Signature String Construction</eref><vspace/>
+Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)<vspace/>
+Digital Signature Algorithm: <xref target="RFC8017">RFC 8017</xref>,  Section 8.2: RSASSA-PKCS1-v1_5<vspace/></t>
+
+                <t>Algorithm Name: hmac-sha256<vspace/>
+Status: deprecated, specifying signature algorithm enables attack vector.<vspace/>
+Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <eref target="#canonicalization">Section 2.3: Signature String Construction</eref><vspace/>
+Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)<vspace/>
+Message Authentication Code Algorithm: <xref target="RFC6234">RFC 6234</xref>, Section 7.1: SHA-Based HMACs<vspace/></t>
+
+                <t>Algorithm Name: ecdsa-sha256<vspace/>
+Status: deprecated, specifying signature algorithm enables attack vector.<vspace/>
+Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <eref target="#canonicalization">Section 2.3: Signature String Construction</eref><vspace/>
+Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)<vspace/>
+Digital Signature Algorithm: ANSI X9.62-2005 ECDSA, P-256<vspace/></t>
+            </section>
+        </section>
+        <section anchor="security" title="Security Considerations">
+            <t>There are a number of security considerations to take into account when implementing or utilizing this specification.  A thorough security analysis of this protocol, including its strengths and weaknesses, can be found in <eref target="https://web-payments.org/specs/source/http-signatures-audit/">Security Considerations for HTTP Signatures</eref>.</t>
+        </section>
     </middle>
 
     <back>
@@ -448,11 +496,7 @@ content-length: 18
             &rfc8032;
         </references>
 
-        <section anchor="appendix-a" title="Security Considerations">
-            <t>There are a number of security considerations to take into account when implementing or utilizing this specification.  A thorough security analysis of this protocol, including its strengths and weaknesses, can be found in <eref target="https://web-payments.org/specs/source/http-signatures-audit/">Security Considerations for HTTP Signatures</eref>.</t>
-        </section>
-
-        <section anchor="appendix-b" title="Extensions">
+        <section anchor="appendix-a" title="Extensions">
             <t>This specification was designed to be simple, modular, and extensible.  There are a number of other specifications that build on this one.  For example, the <eref target="https://web-payments.org/specs/source/http-signature-nonces/">HTTP Signature Nonces</eref> specification details how to use HTTP Signatures over a non-secured channel like HTTP and the <eref target="https://web-payments.org/specs/source/http-signature-trailers/">HTTP Signature Trailers</eref> specification explains how to apply HTTP Signatures to streaming content.  Developers that desire more functionality than this specification provides are urged to ensure that an extension specification doesn't already exist before implementing a proprietary extension.</t>
 
             <t>If extensions to this specification are made by adding new Signature Parameters, those extension parameters MUST be registered in the Signature Authentication Scheme Registry.  The registry will be created and maintained at (the suggested URI) <eref target="https://www.iana.org/assignments/http-auth-scheme-signature">https://www.iana.org/assignments/http-auth-scheme-signature</eref>.</t>
@@ -469,7 +513,7 @@ how to use HTTP Signatures over a unsecured channel like HTTP.
             </t>
         </section>
 
-        <section anchor="appendix-c" title="Test Values">
+        <section anchor="appendix-b" title="Test Values">
             <t>WARNING: THESE TEST VECTORS ARE OLD AND POSSIBLY WRONG.  THE NEXT VERSION OF THIS SPECIFICATION WILL CONTAIN THE PROPER TEST VECTORS.</t>
 
             <t>
@@ -659,50 +703,5 @@ Jeffrey Yasskin
             </t>
         </section>
 
-        <section anchor="appendix-d" title="IANA Considerations">
-            <section anchor="iana-scheme" title="Signature Authentication Scheme">
-                <t>The following entry should be added to the Authentication Scheme Registry located at <eref target="https://www.iana.org/assignments/http-authschemes">https://www.iana.org/assignments/http-authschemes</eref></t>
-                <t>Authentication Scheme Name: Signature<vspace/>
-Reference: [RFC_THIS_DOCUMENT], Section 2.<vspace/>
-Notes (optional): The Signature scheme is designed for clients to authenticate themselves with a server.</t>
-            </section>
-
-            <section anchor="hsa-registry" title="HTTP Signatures Algorithms Registry">
-                <t>The following initial entries should be added to the Canonicalization Algorithms Registry to be created and maintained at (the suggested URI) <eref target="https://www.iana.org/assignments/shm-algorithms">https://www.iana.org/assignments/shm-algorithms</eref>:</t>
-
-                <t>Editor's note: The references in this section are problematic as many of the specifications that they refer to are too implementation specific, rather than just pointing to the proper signature and hashing specifications.  A better approach might be just specifying the signature and hashing function specifications, leaving implementers to connect the dots (which are not that hard to connect).</t>
-
-                <t>Algorithm Name: hs2019<vspace/>
-Status: active<vspace/>
-Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <eref target="#canonicalization">Section 2.3: Signature String Construction</eref><vspace/>
-Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-512 (SHA-2 with 512-bits of digest output)<vspace/>
-Digital Signature Algorithm: Derived from metadata associated with `keyId`.  Recommend support for <xref target="RFC8017">RFC 8017</xref>, Section 8.1: RSASSA-PSS, <xref target="RFC6234">RFC 6234</xref>, Section 7.1: SHA-Based HMACs, ANSI X9.62-2005 ECDSA, P-256, and <xref target="RFC8032">RFC 8032</xref>, Section 5.1: Ed25519ph, Ed25519ctx,
-and Ed25519.</t>
-
-                <t>Algorithm Name: rsa-sha1<vspace/>
-Status: deprecated, SHA-1 not secure.<vspace/>
-Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <eref target="#canonicalization">Section 2.3: Signature String Construction</eref><vspace/>
-Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-1 (SHA-1 with 160-bits of digest output)<vspace/> Digital Signature Algorithm:
-  <xref target="RFC8017">RFC 8017</xref>,  Section 8.2: RSASSA-PKCS1-v1_5<vspace/></t>
-
-                <t>Algorithm Name: rsa-sha256<vspace/>
-Status: deprecated, specifying signature algorithm enables attack vector.<vspace/>
-Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <eref target="#canonicalization">Section 2.3: Signature String Construction</eref><vspace/>
-Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)<vspace/>
-Digital Signature Algorithm: <xref target="RFC8017">RFC 8017</xref>,  Section 8.2: RSASSA-PKCS1-v1_5<vspace/></t>
-
-                <t>Algorithm Name: hmac-sha256<vspace/>
-Status: deprecated, specifying signature algorithm enables attack vector.<vspace/>
-Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <eref target="#canonicalization">Section 2.3: Signature String Construction</eref><vspace/>
-Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)<vspace/>
-Message Authentication Code Algorithm: <xref target="RFC6234">RFC 6234</xref>, Section 7.1: SHA-Based HMACs<vspace/></t>
-
-                <t>Algorithm Name: ecdsa-sha256<vspace/>
-Status: deprecated, specifying signature algorithm enables attack vector.<vspace/>
-Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <eref target="#canonicalization">Section 2.3: Signature String Construction</eref><vspace/>
-Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)<vspace/>
-Digital Signature Algorithm: ANSI X9.62-2005 ECDSA, P-256<vspace/></t>
-            </section>
-        </section>
     </back>
 </rfc>
