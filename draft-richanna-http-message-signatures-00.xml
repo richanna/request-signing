@@ -300,45 +300,61 @@ content-length: 18]]></sourcecode>
                 <name>HTTP Signatures Algorithms Registry</name>
                 <t>The following initial entries should be added to the Canonicalization Algorithms Registry to be created and maintained at (the suggested URI) <eref target="https://www.iana.org/assignments/shm-algorithms"/>:</t>
                 <t>Editor's note: The references in this section are problematic as many of the specifications that they refer to are too implementation specific, rather than just pointing to the proper signature and hashing specifications.  A better approach might be just specifying the signature and hashing function specifications, leaving implementers to connect the dots (which are not that hard to connect).</t>
-                <ul spacing="compact" empty="true">
-                    <li>Algorithm Name: hs2019</li>
-                    <li>Status: active</li>
-                    <li>Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <xref target="canonicalization"/>: <xref target="canonicalization" format="title"/></li> 
-                    <li>Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-512 (SHA-2 with 512-bits of digest output)</li>
-                    <li>Digital Signature Algorithm: Derived from metadata associated with <tt>keyId</tt>.  Recommend support for <xref target="RFC8017" section="8.1" sectionFormat="comma">RFC 8017</xref>: RSASSA-PSS, <xref target="RFC6234" section="7.1" sectionFormat="comma">RFC 6234</xref>: SHA-Based HMACs, ANSI X9.62-2005 ECDSA, P-256, and <xref target="RFC8032" section="5.1" sectionFormat="comma">RFC 8032</xref>: Ed25519ph, Ed25519ctx, and Ed25519.</li>
-                </ul>
 
-                <ul spacing="compact" empty="true">
-                    <li>Algorithm Name: rsa-sha1</li>
-                    <li>Status: deprecated, SHA-1 not secure.</li>
-                    <li>Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <xref target="canonicalization"/>: <xref target="canonicalization" format="title"/></li> 
-                    <li>Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-1 (SHA-1 with 160-bits of digest output)</li>
-                    <li>Digital Signature Algorithm: <xref target="RFC8017" section="8.2" sectionFormat="comma">RFC 8017</xref>: RSASSA-PKCS1-v1_5</li>
-                </ul>
+                <section numbered="false">
+                    <name><tt>hs2019</tt></name>
+                    <ul spacing="compact" empty="true">
+                        <li>Algorithm Name: hs2019</li>
+                        <li>Status: active</li>
+                        <li>Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <xref target="canonicalization"/>: <xref target="canonicalization" format="title"/></li> 
+                        <li>Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-512 (SHA-2 with 512-bits of digest output)</li>
+                        <li>Digital Signature Algorithm: Derived from metadata associated with <tt>keyId</tt>.  Recommend support for <xref target="RFC8017" section="8.1" sectionFormat="comma">RFC 8017</xref>: RSASSA-PSS, <xref target="RFC6234" section="7.1" sectionFormat="comma">RFC 6234</xref>: SHA-Based HMACs, ANSI X9.62-2005 ECDSA, P-256, and <xref target="RFC8032" section="5.1" sectionFormat="comma">RFC 8032</xref>: Ed25519ph, Ed25519ctx, and Ed25519.</li>
+                    </ul>
+                </section>
 
-                <ul spacing="compact" empty="true">
-                    <li>Algorithm Name: rsa-sha256</li>
-                    <li>Status: deprecated, specifying signature algorithm enables attack vector.</li>
-                    <li>Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <xref target="canonicalization"/>: <xref target="canonicalization" format="title"/></li>
-                    <li>Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)</li>
-                    <li>Digital Signature Algorithm: <xref target="RFC8017" section="8.2" sectionFormat="comma">RFC 8017</xref>: RSASSA-PKCS1-v1_5</li>
-                </ul>
+                <section numbered="false">
+                    <name><tt>rsa-sha1</tt></name>
+                    <ul spacing="compact" empty="true">
+                        <li>Algorithm Name: rsa-sha1</li>
+                        <li>Status: deprecated, SHA-1 not secure.</li>
+                        <li>Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <xref target="canonicalization"/>: <xref target="canonicalization" format="title"/></li> 
+                        <li>Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-1 (SHA-1 with 160-bits of digest output)</li>
+                        <li>Digital Signature Algorithm: <xref target="RFC8017" section="8.2" sectionFormat="comma">RFC 8017</xref>: RSASSA-PKCS1-v1_5</li>
+                    </ul>
+                </section>
 
-                <ul spacing="compact" empty="true">
-                    <li>Algorithm Name: hmac-sha256</li>
-                    <li>Status: deprecated, specifying signature algorithm enables attack vector.</li>
-                    <li>Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <xref target="canonicalization"/>: <xref target="canonicalization" format="title"/></li>
-                    <li>Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)</li>
-                    <li>Message Authentication Code Algorithm: <xref target="RFC6234" section="7.1" sectionFormat="comma">RFC 6234</xref>: SHA-Based HMACs</li>
-                </ul>
+                <section numbered="false">
+                    <name><tt>rsa-sha256</tt></name>
+                    <ul spacing="compact" empty="true">
+                        <li>Algorithm Name: rsa-sha256</li>
+                        <li>Status: deprecated, specifying signature algorithm enables attack vector.</li>
+                        <li>Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <xref target="canonicalization"/>: <xref target="canonicalization" format="title"/></li>
+                        <li>Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)</li>
+                        <li>Digital Signature Algorithm: <xref target="RFC8017" section="8.2" sectionFormat="comma">RFC 8017</xref>: RSASSA-PKCS1-v1_5</li>
+                    </ul>
+                </section>
 
-                <ul spacing="compact" empty="true">
-                    <li>Algorithm Name: ecdsa-sha256</li>
-                    <li>Status: deprecated, specifying signature algorithm enables attack vector.</li>
-                    <li>Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <xref target="canonicalization"/>: <xref target="canonicalization" format="title"/></li>
-                    <li>Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)</li>
-                    <li>Digital Signature Algorithm: ANSI X9.62-2005 ECDSA, P-256</li>
-                </ul>
+                <section numbered="false">
+                    <name><tt>hmac-sha256</tt></name>
+                    <ul spacing="compact" empty="true">
+                        <li>Algorithm Name: hmac-sha256</li>
+                        <li>Status: deprecated, specifying signature algorithm enables attack vector.</li>
+                        <li>Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <xref target="canonicalization"/>: <xref target="canonicalization" format="title"/></li>
+                        <li>Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)</li>
+                        <li>Message Authentication Code Algorithm: <xref target="RFC6234" section="7.1" sectionFormat="comma">RFC 6234</xref>: SHA-Based HMACs</li>
+                    </ul>
+                </section>
+
+                <section numbered="false">
+                    <name><tt>ecdsa-sha256</tt></name>
+                    <ul spacing="compact" empty="true">
+                        <li>Algorithm Name: ecdsa-sha256</li>
+                        <li>Status: deprecated, specifying signature algorithm enables attack vector.</li>
+                        <li>Canonicalization Algorithm: [RFC_THIS_DOCUMENT], <xref target="canonicalization"/>: <xref target="canonicalization" format="title"/></li>
+                        <li>Hash Algorithm: <xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)</li>
+                        <li>Digital Signature Algorithm: ANSI X9.62-2005 ECDSA, P-256</li>
+                    </ul>
+                </section>
             </section>
         </section>
 
