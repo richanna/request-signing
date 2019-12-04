@@ -5,10 +5,10 @@
 HTTPbis Working Group                                    A. Backman, Ed.
 Internet-Draft                                                    Amazon
 Intended status: Standards Track                               J. Richer
-Expires: 1 June 2020                                                    
+Expires: 6 June 2020                                                    
                                                                M. Sporny
                                                           Digital Bazaar
-                                                        29 November 2019
+                                                         4 December 2019
 
 
                          Signing HTTP Messages
@@ -38,7 +38,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 June 2020.
+   This Internet-Draft will expire on 6 June 2020.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Backman, et al.            Expires 1 June 2020                  [Page 1]
+Backman, et al.            Expires 6 June 2020                  [Page 1]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
    extracted from this document must include Simplified BSD License text
@@ -104,14 +104,14 @@ Table of Contents
      B.2.  Basic Test  . . . . . . . . . . . . . . . . . . . . . . .  21
      B.3.  All Headers Test  . . . . . . . . . . . . . . . . . . . .  21
    Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  22
+   Document History  . . . . . . . . . . . . . . . . . . . . . . . .  22
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  22
 
 
 
-
-Backman, et al.            Expires 1 June 2020                  [Page 2]
+Backman, et al.            Expires 6 June 2020                  [Page 2]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
 1.  Introduction
@@ -165,9 +165,9 @@ Internet-Draft            Signing HTTP Messages            November 2019
 
 
 
-Backman, et al.            Expires 1 June 2020                  [Page 3]
+Backman, et al.            Expires 6 June 2020                  [Page 3]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
    *  Addition of header fields that indicate control options [RFC7230]
@@ -221,9 +221,9 @@ Internet-Draft            Signing HTTP Messages            November 2019
 
 
 
-Backman, et al.            Expires 1 June 2020                  [Page 4]
+Backman, et al.            Expires 6 June 2020                  [Page 4]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
 1.3.  Using Signatures in HTTP Requests
@@ -277,9 +277,9 @@ Internet-Draft            Signing HTTP Messages            November 2019
 
 
 
-Backman, et al.            Expires 1 June 2020                  [Page 5]
+Backman, et al.            Expires 6 June 2020                  [Page 5]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
 3.  The Components of a Signature
@@ -333,9 +333,9 @@ Internet-Draft            Signing HTTP Messages            November 2019
 
 
 
-Backman, et al.            Expires 1 June 2020                  [Page 6]
+Backman, et al.            Expires 6 June 2020                  [Page 6]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
 3.1.4.  created
@@ -389,9 +389,9 @@ Internet-Draft            Signing HTTP Messages            November 2019
 
 
 
-Backman, et al.            Expires 1 June 2020                  [Page 7]
+Backman, et al.            Expires 6 June 2020                  [Page 7]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
 3.3.  Signature String Construction
@@ -445,9 +445,9 @@ Internet-Draft            Signing HTTP Messages            November 2019
 
 
 
-Backman, et al.            Expires 1 June 2020                  [Page 8]
+Backman, et al.            Expires 6 June 2020                  [Page 8]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
    3.  If the header field name is "(expires)" and the "algorithm"
@@ -501,9 +501,9 @@ Internet-Draft            Signing HTTP Messages            November 2019
 
 
 
-Backman, et al.            Expires 1 June 2020                  [Page 9]
+Backman, et al.            Expires 6 June 2020                  [Page 9]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
    For the HTTP request headers above, the corresponding signature
@@ -557,9 +557,9 @@ Internet-Draft            Signing HTTP Messages            November 2019
 
 
 
-Backman, et al.            Expires 1 June 2020                 [Page 10]
+Backman, et al.            Expires 6 June 2020                 [Page 10]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
    If a header specified in the "headers" value of the Signature
@@ -613,9 +613,9 @@ Internet-Draft            Signing HTTP Messages            November 2019
 
 
 
-Backman, et al.            Expires 1 June 2020                 [Page 11]
+Backman, et al.            Expires 6 June 2020                 [Page 11]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
    message in the signature.  The following sections also assume that
@@ -669,9 +669,9 @@ Internet-Draft            Signing HTTP Messages            November 2019
 
 
 
-Backman, et al.            Expires 1 June 2020                 [Page 12]
+Backman, et al.            Expires 6 June 2020                 [Page 12]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
    Authorization: Signature keyId="rsa-key-1",algorithm="hs2019",
@@ -725,9 +725,9 @@ Internet-Draft            Signing HTTP Messages            November 2019
 
 
 
-Backman, et al.            Expires 1 June 2020                 [Page 13]
+Backman, et al.            Expires 6 June 2020                 [Page 13]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
 5.1.  Signature Header
@@ -781,9 +781,9 @@ Internet-Draft            Signing HTTP Messages            November 2019
 
 
 
-Backman, et al.            Expires 1 June 2020                 [Page 14]
+Backman, et al.            Expires 6 June 2020                 [Page 14]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
    For an RSA-based signature, the authorization header and signature
@@ -837,9 +837,9 @@ Internet-Draft            Signing HTTP Messages            November 2019
 
 
 
-Backman, et al.            Expires 1 June 2020                 [Page 15]
+Backman, et al.            Expires 6 June 2020                 [Page 15]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
    implementers to connect the dots (which are not that hard to
@@ -893,9 +893,9 @@ Internet-Draft            Signing HTTP Messages            November 2019
 
 
 
-Backman, et al.            Expires 1 June 2020                 [Page 16]
+Backman, et al.            Expires 6 June 2020                 [Page 16]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
       Canonicalization Algorithm: [RFC_THIS_DOCUMENT], Section 3.3:
@@ -949,9 +949,9 @@ Internet-Draft            Signing HTTP Messages            November 2019
 
 
 
-Backman, et al.            Expires 1 June 2020                 [Page 17]
+Backman, et al.            Expires 6 June 2020                 [Page 17]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
    [RFC3230]  Mogul, J. and A. Van Hoff, "Instance Digests in HTTP",
@@ -1005,9 +1005,9 @@ Internet-Draft            Signing HTTP Messages            November 2019
 
 
 
-Backman, et al.            Expires 1 June 2020                 [Page 18]
+Backman, et al.            Expires 6 June 2020                 [Page 18]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
 Appendix A.  Extensions
@@ -1061,9 +1061,9 @@ Appendix B.  Test Values
 
 
 
-Backman, et al.            Expires 1 June 2020                 [Page 19]
+Backman, et al.            Expires 6 June 2020                 [Page 19]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
    -----BEGIN PUBLIC KEY-----
@@ -1117,9 +1117,9 @@ B.1.  Default Test
 
 
 
-Backman, et al.            Expires 1 June 2020                 [Page 20]
+Backman, et al.            Expires 6 June 2020                 [Page 20]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
    The Signature header would be:
@@ -1173,9 +1173,9 @@ B.3.  All Headers Test
 
 
 
-Backman, et al.            Expires 1 June 2020                 [Page 21]
+Backman, et al.            Expires 6 June 2020                 [Page 21]
 
-Internet-Draft            Signing HTTP Messages            November 2019
+Internet-Draft            Signing HTTP Messages            December 2019
 
 
    Signature: keyId="Test",algorithm="rsa-sha256",
@@ -1204,7 +1204,35 @@ Acknowledgements
    Wojciech Rygielski, Adam Scarr, Cory J.  Slep, Dirk Stein, Henry
    Story, Lukasz Szewc, Chris Webber, and Jeffrey Yasskin
 
+Document History
+
+   This section is to be removed before publishing as an RFC.
+
+   *  *draft-richanna-http-message-signatures*
+
+      -  *-00*
+
+         o  Converted to xml2rfc v3 and reformatted to comply with RFC
+            style guides.
+
+         o  Rewrote abstract and introduction to focus on general
+            purpose signing and avoid specific use cases.
+
+         o  Added intro sections on challenges with HTTP message
+            signing, and listing innocuous transformations that the
+            signing mechanism must tolerate.
+
+         o  Added Document History section.
+
 Authors' Addresses
+
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 22]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
 
    Annabelle Backman (editor)
    Amazon
@@ -1225,15 +1253,6 @@ Authors' Addresses
    Digital Bazaar
    203 Roanoke Street W.
    Blacksburg, VA 24060
-
-
-
-
-Backman, et al.            Expires 1 June 2020                 [Page 22]
-
-Internet-Draft            Signing HTTP Messages            November 2019
-
-
    United States of America
 
    Phone: +1 540 961 4469
@@ -1266,23 +1285,4 @@ Internet-Draft            Signing HTTP Messages            November 2019
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Backman, et al.            Expires 1 June 2020                 [Page 23]
+Backman, et al.            Expires 6 June 2020                 [Page 23]

@@ -51,7 +51,7 @@
                 <uri>https://manu.sporny.org/</uri>
             </address>
         </author>
-        <date day="29" month="November" year="2019"/>
+        <date day="04" month="12" year="2019"/>
         <area>Applications</area>
         <workgroup>HTTPbis Working Group</workgroup>
         <keyword>HTTP</keyword>
@@ -606,6 +606,25 @@ Lukasz Szewc,
 Chris Webber, and
 Jeffrey Yasskin
             </t>
+        </section>
+        <section numbered="false" removeInRFC="true">
+            <name>Document History</name>
+            <ul>
+                <li>
+                    <t><strong>draft-richanna-http-message-signatures</strong></t>
+                    <ul>
+                        <li>
+                            <t><strong>-00</strong></t>
+                            <ul>
+                                <li>Converted to xml2rfc v3 and reformatted to comply with RFC style guides.</li>
+                                <li>Rewrote abstract and introduction to focus on general purpose signing and avoid specific use cases.</li>
+                                <li>Added intro sections on challenges with HTTP message signing, and listing innocuous transformations that the signing mechanism must tolerate.</li>
+                                <li>Added Document History section.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </section>
     </back>
 </rfc>
