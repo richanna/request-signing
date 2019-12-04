@@ -232,86 +232,9 @@ x-example: Example header with some whitespace.]]></sourcecode>
             </section>
         </section>
 
-        <section anchor="auth-scheme">
-            <name>The 'Signature' HTTP Authentication Scheme</name>
-            <t>The "Signature" authentication scheme is based on the model that the client must authenticate itself with a digital signature produced by either a private asymmetric key (e.g., RSA) or a shared symmetric key (e.g., HMAC).</t>
-            <t>The scheme is parameterized enough such that it is not bound to any particular key type or signing algorithm.</t>
-
-            <section anchor="auth-header">
-                <name>Authorization Header</name>
-                <t>The client is expected to send an Authorization header (as defined in <xref target="RFC7235" section="2.1" sectionFormat="comma">RFC 7235</xref>) where the "auth-scheme" is "Signature" and the "auth-param" parameters meet the requirements listed in Section 2: The Components of a Signature.</t>
-                <t keepWithNext="true">The rest of this section uses the following HTTP request as an example.</t>
-                <sourcecode><![CDATA[
-POST /foo HTTP/1.1
-Host: example.org
-Date: Tue, 07 Jun 2014 20:51:35 GMT
-Content-Type: application/json
-Digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
-Content-Length: 18
-
-{"hello": "world"}]]></sourcecode>
-                <t>Note that the use of the <tt>Digest</tt> header field is per <xref target="RFC3230" section="4.3.2" sectionFormat="comma">RFC 3230</xref> and is included merely as a demonstration of how an implementer could include information about the body of the message in the signature.  The following sections also assume that the "rsa-key-1" keyId asserted by the client is an identifier meaningful to the server.</t>
-
-                <section anchor="auth-isa">
-                    <name>Initiating Signature Authorization</name>
-                    <t>A server may notify a client when a resource is protected by requiring a signature.
-                        To initiate this process, the server will request that the client authenticate itself via a 401 response code (<xref target="RFC7235" section="3.1"/>).  The server may optionally specify which HTTP headers it expects to be signed by specifying the <tt>headers</tt> parameter in the WWW-Authenticate header.</t>
-                    <t keepWithNext="true">For example:</t>
-                    <sourcecode><![CDATA[
-HTTP/1.1 401 Unauthorized
-Date: Thu, 08 Jun 2014 18:32:30 GMT
-Content-Length: 1234
-Content-Type: text/html
-WWW-Authenticate: Signature
-    realm="Example",headers="(request-target) (created)"
-
-...]]></sourcecode>
-                </section>
-
-                <section anchor="auth-rsa-example">
-                    <name>RSA Example</name>
-                    <t keepWithNext="true">The authorization header and signature would be generated as:</t>
-                    <sourcecode><![CDATA[
-Authorization: Signature keyId="rsa-key-1",algorithm="hs2019",
-    headers="(request-target) (created) host digest content-length",
-    signature="Base64(RSA-SHA512(signing string))"]]></sourcecode>
-                    <t keepWithNext="true">The client would compose the signing string as:</t>
-                    <sourcecode><![CDATA[
-(request-target): post /foo\n
-(created): 1402174295
-host: example.org\n
-digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
-content-length: 18]]></sourcecode>
-                    <t>Note that the '\n' symbols above are included to demonstrate where the new line character should be inserted.  There is no new line on the final line of the signing string.  Each HTTP header above is displayed on a new line to provide better readability of the example.</t>
-                    <t keepWithNext="true">For an RSA-based signature, the authorization header and signature would then be generated as:</t>
-                    <sourcecode><![CDATA[
-Authorization: Signature keyId="rsa-key-1",algorithm="hs2019",
-headers="(request-target) (created) host digest content-length",
-signature="Base64(RSA-SHA512(signing string))"]]></sourcecode>
-                </section>
-
-                <section anchor="auth-hmac-example">
-                    <name>HMAC Example</name>
-                    <t keepWithNext="true">For an HMAC-based signature without a list of headers specified, the authorization header and signature would be generated as:</t>
-                    <sourcecode><![CDATA[
-Authorization: Signature keyId="hmac-key-1",algorithm="hs2019",
-headers="(request-target) (created) host digest content-length",
-signature="Base64(HMAC-SHA512(signing string))"]]></sourcecode>
-                    <t keepWithNext="true">The only difference between the RSA Example and the HMAC Example is the digital signature algorithm that is used.  The client would compose the signing string in the same way as the RSA Example above:</t>
-                    <sourcecode><![CDATA[
-(request-target): post /foo\n
-(created): 1402174295
-host: example.org\n
-digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
-content-length: 18]]></sourcecode>
-                </section>
-            </section>
-        </section>
-
         <section anchor="sig">
             <name>The 'Signature' HTTP Header</name>
             <t>The "Signature" HTTP Header provides a mechanism to link the headers of a message (client request or server response) to a digital signature.  By including the "Digest" header with a properly formatted digest, the message body can also be linked to the signature.  The signature is generated and verified either using a shared secret (e.g., HMAC) or public/private keys (e.g., RSA, EC).  This allows the receiver and/or any intermediate system to immediately or later verify the integrity of the message.  When the signature is generated with a private key it can also provide a measure of non-repudiation, though a full implementation of a non-repudiatable statement is beyond the scope of this specification and highly dependent on implementation.</t>
-            <t>The "Signature" scheme can also be used for authentication similar to the purpose of the <xref target="auth-scheme">'Signature' HTTP Authentication Scheme</xref>.  The scheme is parameterized enough such that it is not bound to any particular key type or signing algorithm.</t>
 
             <section anchor="sig-header">
                 <name>Signature Header</name>
@@ -446,7 +369,6 @@ Notes (optional): The Signature scheme is designed for clients to authenticate t
             </references>
             <references>
                 <name>Informative References</name>
-                <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3230.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6234.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7239.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7515.xml"/>
@@ -646,6 +568,7 @@ Jeffrey Yasskin
                                 <li>Added Document History section.</li>
                                 <li>Removed informative intro sections on Signatures in HTTP Requests/Responses, as they imply specific use cases.</li>
                                 <li>Moved BCP 14 message under intro section.</li>
+                                <li>Removed <tt>Signature</tt> auth-scheme definition and non-normative description of using the <tt>Signature</tt> header field for authentication.</li>
                             </ul>
                         </li>
                     </ul>
