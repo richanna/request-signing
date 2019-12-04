@@ -1152,22 +1152,22 @@ aside > p {
                 <p id="section-toc.1-1.2.2.1.1"><a href="#section-2.1" class="xref">2.1</a>.  <a href="#name-signature-parameters-2" class="xref">Signature Parameters</a><a href="#section-toc.1-1.2.2.1.1" class="pilcrow">¶</a></p>
 <ul class="toc ulEmpty">
 <li class="toc ulEmpty" id="section-toc.1-1.2.2.1.2.1">
-                    <p id="section-toc.1-1.2.2.1.2.1.1"><a href="#section-2.1.1" class="xref">2.1.1</a>.  <a href="#name-keyid-2" class="xref">keyId</a><a href="#section-toc.1-1.2.2.1.2.1.1" class="pilcrow">¶</a></p>
+                    <p id="section-toc.1-1.2.2.1.2.1.1"><a href="#section-2.1.1" class="xref">2.1.1</a>.  <a href="#name-algorithm-2" class="xref">algorithm</a><a href="#section-toc.1-1.2.2.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
                   <li class="toc ulEmpty" id="section-toc.1-1.2.2.1.2.2">
-                    <p id="section-toc.1-1.2.2.1.2.2.1"><a href="#section-2.1.2" class="xref">2.1.2</a>.  <a href="#name-signature-2" class="xref">signature</a><a href="#section-toc.1-1.2.2.1.2.2.1" class="pilcrow">¶</a></p>
+                    <p id="section-toc.1-1.2.2.1.2.2.1"><a href="#section-2.1.2" class="xref">2.1.2</a>.  <a href="#name-created-2" class="xref">created</a><a href="#section-toc.1-1.2.2.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
                   <li class="toc ulEmpty" id="section-toc.1-1.2.2.1.2.3">
-                    <p id="section-toc.1-1.2.2.1.2.3.1"><a href="#section-2.1.3" class="xref">2.1.3</a>.  <a href="#name-algorithm-2" class="xref">algorithm</a><a href="#section-toc.1-1.2.2.1.2.3.1" class="pilcrow">¶</a></p>
+                    <p id="section-toc.1-1.2.2.1.2.3.1"><a href="#section-2.1.3" class="xref">2.1.3</a>.  <a href="#name-expires-2" class="xref">expires</a><a href="#section-toc.1-1.2.2.1.2.3.1" class="pilcrow">¶</a></p>
 </li>
                   <li class="toc ulEmpty" id="section-toc.1-1.2.2.1.2.4">
-                    <p id="section-toc.1-1.2.2.1.2.4.1"><a href="#section-2.1.4" class="xref">2.1.4</a>.  <a href="#name-created-2" class="xref">created</a><a href="#section-toc.1-1.2.2.1.2.4.1" class="pilcrow">¶</a></p>
+                    <p id="section-toc.1-1.2.2.1.2.4.1"><a href="#section-2.1.4" class="xref">2.1.4</a>.  <a href="#name-headers-2" class="xref">headers</a><a href="#section-toc.1-1.2.2.1.2.4.1" class="pilcrow">¶</a></p>
 </li>
                   <li class="toc ulEmpty" id="section-toc.1-1.2.2.1.2.5">
-                    <p id="section-toc.1-1.2.2.1.2.5.1"><a href="#section-2.1.5" class="xref">2.1.5</a>.  <a href="#name-expires-2" class="xref">expires</a><a href="#section-toc.1-1.2.2.1.2.5.1" class="pilcrow">¶</a></p>
+                    <p id="section-toc.1-1.2.2.1.2.5.1"><a href="#section-2.1.5" class="xref">2.1.5</a>.  <a href="#name-keyid-2" class="xref">keyId</a><a href="#section-toc.1-1.2.2.1.2.5.1" class="pilcrow">¶</a></p>
 </li>
                   <li class="toc ulEmpty" id="section-toc.1-1.2.2.1.2.6">
-                    <p id="section-toc.1-1.2.2.1.2.6.1"><a href="#section-2.1.6" class="xref">2.1.6</a>.  <a href="#name-headers-2" class="xref">headers</a><a href="#section-toc.1-1.2.2.1.2.6.1" class="pilcrow">¶</a></p>
+                    <p id="section-toc.1-1.2.2.1.2.6.1"><a href="#section-2.1.6" class="xref">2.1.6</a>.  <a href="#name-signature-2" class="xref">signature</a><a href="#section-toc.1-1.2.2.1.2.6.1" class="pilcrow">¶</a></p>
 </li>
                 </ul>
 </li>
@@ -1363,58 +1363,58 @@ aside > p {
 <a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-signature-parameters-2" class="section-name selfRef">Signature Parameters</a>
         </h3>
 <p id="section-2.1-1">The following section details the Signature Parameters.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
-<div id="keyId">
-<section id="section-2.1.1">
-          <h4 id="name-keyid-2">
-<a href="#section-2.1.1" class="section-number selfRef">2.1.1. </a><a href="#name-keyid-2" class="section-name selfRef">keyId</a>
-          </h4>
-<p id="section-2.1.1-1"><span class="bcp14">REQUIRED</span>.  The <code>keyId</code> field is an opaque string that the server can use to look up the component they need to validate the signature.  It could be an SSH key fingerprint, a URL to machine-readable key data, an LDAP DN, etc.  Management of keys and assignment of <code>keyId</code> is out of scope for this document.  Implementations <span class="bcp14">MUST</span> be able to discover metadata about the key from the <code>keyId</code> such that they can determine the type of digital signature algorithm to employ when creating or verifying signatures.<a href="#section-2.1.1-1" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="signature">
-<section id="section-2.1.2">
-          <h4 id="name-signature-2">
-<a href="#section-2.1.2" class="section-number selfRef">2.1.2. </a><a href="#name-signature-2" class="section-name selfRef">signature</a>
-          </h4>
-<p id="section-2.1.2-1"><span class="bcp14">REQUIRED</span>.  The <code>signature</code> parameter is a base 64 encoded digital signature, as described in <span>RFC 4648 [<a href="#RFC4648" class="xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-4" class="relref">Section 4</a></span>.  The client uses the <code>algorithm</code> and <code>headers</code> Signature Parameters to form a canonicalized <code>signing string</code>.  This <code>signing string</code> is then signed using the key associated with the <code>keyId</code> according to its digital signature algorithm.  The <code>signature</code> parameter is then set to the base 64 encoding of the signature.<a href="#section-2.1.2-1" class="pilcrow">¶</a></p>
-</section>
-</div>
 <div id="algorithm">
-<section id="section-2.1.3">
+<section id="section-2.1.1">
           <h4 id="name-algorithm-2">
-<a href="#section-2.1.3" class="section-number selfRef">2.1.3. </a><a href="#name-algorithm-2" class="section-name selfRef">algorithm</a>
+<a href="#section-2.1.1" class="section-number selfRef">2.1.1. </a><a href="#name-algorithm-2" class="section-name selfRef">algorithm</a>
           </h4>
-<p id="section-2.1.3-1"><span class="bcp14">RECOMMENDED</span>.  The <code>algorithm</code> parameter is used to specify the signature string construction mechanism.  Valid values for this parameter can be found in the <a href="#hsa-registry" class="xref">HTTP Signatures Algorithms Registry</a> (<a href="#hsa-registry" class="xref">Section 5.2</a>) and <span class="bcp14">MUST NOT</span> be marked "deprecated".  Implementers <span class="bcp14">SHOULD</span> derive the digital signature algorithm used by an implementation from the key metadata identified by the <code>keyId</code> rather than from this field.  If <code>algorithm</code> is provided and differs from the key metadata identified by the <code>keyId</code>, for example <code>rsa-sha256</code> but an EdDSA key is identified via <code>keyId</code>, then an implementation <span class="bcp14">MUST</span> produce an error.  Implementers should note that previous versions of the <code>algorithm</code> parameter did not use the key information to derive the digital signature type and thus could be utilized by attackers to expose security vulnerabilities.<a href="#section-2.1.3-1" class="pilcrow">¶</a></p>
+<p id="section-2.1.1-1"><span class="bcp14">RECOMMENDED</span>.  The <code>algorithm</code> parameter is used to specify the signature string construction mechanism.  Valid values for this parameter can be found in the <a href="#hsa-registry" class="xref">HTTP Signatures Algorithms Registry</a> (<a href="#hsa-registry" class="xref">Section 5.2</a>) and <span class="bcp14">MUST NOT</span> be marked "deprecated".  Implementers <span class="bcp14">SHOULD</span> derive the digital signature algorithm used by an implementation from the key metadata identified by the <code>keyId</code> rather than from this field.  If <code>algorithm</code> is provided and differs from the key metadata identified by the <code>keyId</code>, for example <code>rsa-sha256</code> but an EdDSA key is identified via <code>keyId</code>, then an implementation <span class="bcp14">MUST</span> produce an error.  Implementers should note that previous versions of the <code>algorithm</code> parameter did not use the key information to derive the digital signature type and thus could be utilized by attackers to expose security vulnerabilities.<a href="#section-2.1.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="created">
-<section id="section-2.1.4">
+<section id="section-2.1.2">
           <h4 id="name-created-2">
-<a href="#section-2.1.4" class="section-number selfRef">2.1.4. </a><a href="#name-created-2" class="section-name selfRef">created</a>
+<a href="#section-2.1.2" class="section-number selfRef">2.1.2. </a><a href="#name-created-2" class="section-name selfRef">created</a>
           </h4>
-<p id="section-2.1.4-1"><span class="bcp14">RECOMMENDED</span>.  The <code>created</code> field expresses when the signature was created.  The value <span class="bcp14">MUST</span> be a Unix timestamp integer value.  A signature with a <code>created</code> timestamp value that is in the future <span class="bcp14">MUST NOT</span> be processed.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as RFC3339.  Subsecond precision is not supported.  This value is useful when clients are not capable of controlling the <code>Date</code> HTTP Header such as when operating in certain web browser environments.<a href="#section-2.1.4-1" class="pilcrow">¶</a></p>
+<p id="section-2.1.2-1"><span class="bcp14">RECOMMENDED</span>.  The <code>created</code> field expresses when the signature was created.  The value <span class="bcp14">MUST</span> be a Unix timestamp integer value.  A signature with a <code>created</code> timestamp value that is in the future <span class="bcp14">MUST NOT</span> be processed.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as RFC3339.  Subsecond precision is not supported.  This value is useful when clients are not capable of controlling the <code>Date</code> HTTP Header such as when operating in certain web browser environments.<a href="#section-2.1.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="expires">
-<section id="section-2.1.5">
+<section id="section-2.1.3">
           <h4 id="name-expires-2">
-<a href="#section-2.1.5" class="section-number selfRef">2.1.5. </a><a href="#name-expires-2" class="section-name selfRef">expires</a>
+<a href="#section-2.1.3" class="section-number selfRef">2.1.3. </a><a href="#name-expires-2" class="section-name selfRef">expires</a>
           </h4>
-<p id="section-2.1.5-1"><span class="bcp14">OPTIONAL</span>.  The <code>expires</code> field expresses when the signature ceases to be valid.  The value <span class="bcp14">MUST</span> be a Unix timestamp integer value.  A signature with an <code>expires</code> timestamp value that is in the past <span class="bcp14">MUST NOT</span> be processed.  Using a Unix timestamp simplifies processing and avoid timezone management existing in RFC3339.  Subsecod precision is allowed using decimal notation.<a href="#section-2.1.5-1" class="pilcrow">¶</a></p>
+<p id="section-2.1.3-1"><span class="bcp14">OPTIONAL</span>.  The <code>expires</code> field expresses when the signature ceases to be valid.  The value <span class="bcp14">MUST</span> be a Unix timestamp integer value.  A signature with an <code>expires</code> timestamp value that is in the past <span class="bcp14">MUST NOT</span> be processed.  Using a Unix timestamp simplifies processing and avoid timezone management existing in RFC3339.  Subsecod precision is allowed using decimal notation.<a href="#section-2.1.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="headers">
-<section id="section-2.1.6">
+<section id="section-2.1.4">
           <h4 id="name-headers-2">
-<a href="#section-2.1.6" class="section-number selfRef">2.1.6. </a><a href="#name-headers-2" class="section-name selfRef">headers</a>
+<a href="#section-2.1.4" class="section-number selfRef">2.1.4. </a><a href="#name-headers-2" class="section-name selfRef">headers</a>
           </h4>
-<p id="section-2.1.6-1"><span class="bcp14">OPTIONAL</span>.  The <code>headers</code> parameter is used to specify the list of HTTP headers included when generating the signature for the message.  If specified, it <span class="bcp14">SHOULD</span> be a lowercased, quoted list of HTTP header fields, separated by a single space character.  If not specified, implementations <span class="bcp14">MUST</span> operate as if the field were specified with a single value, <code>(created)</code>, in the list of HTTP headers.  Note:<a href="#section-2.1.6-1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal" id="section-2.1.6-2">
-            <li id="section-2.1.6-2.1">The list order is important, and <span class="bcp14">MUST</span> be specified in the order the HTTP header field-value pairs are concatenated together during <a href="#canonicalization" class="xref">Signature String Construction</a> (<a href="#canonicalization" class="xref">Section 2.3</a>) used during signing and verifying.<a href="#section-2.1.6-2.1" class="pilcrow">¶</a>
+<p id="section-2.1.4-1"><span class="bcp14">OPTIONAL</span>.  The <code>headers</code> parameter is used to specify the list of HTTP headers included when generating the signature for the message.  If specified, it <span class="bcp14">SHOULD</span> be a lowercased, quoted list of HTTP header fields, separated by a single space character.  If not specified, implementations <span class="bcp14">MUST</span> operate as if the field were specified with a single value, <code>(created)</code>, in the list of HTTP headers.  Note:<a href="#section-2.1.4-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal" id="section-2.1.4-2">
+            <li id="section-2.1.4-2.1">The list order is important, and <span class="bcp14">MUST</span> be specified in the order the HTTP header field-value pairs are concatenated together during <a href="#canonicalization" class="xref">Signature String Construction</a> (<a href="#canonicalization" class="xref">Section 2.3</a>) used during signing and verifying.<a href="#section-2.1.4-2.1" class="pilcrow">¶</a>
 </li>
-            <li id="section-2.1.6-2.2">A zero-length <code>headers</code> parameter value <span class="bcp14">MUST NOT</span> be used, since it results in a signature of an empty string.<a href="#section-2.1.6-2.2" class="pilcrow">¶</a>
+            <li id="section-2.1.4-2.2">A zero-length <code>headers</code> parameter value <span class="bcp14">MUST NOT</span> be used, since it results in a signature of an empty string.<a href="#section-2.1.4-2.2" class="pilcrow">¶</a>
 </li>
           </ol>
+</section>
+</div>
+<div id="keyId">
+<section id="section-2.1.5">
+          <h4 id="name-keyid-2">
+<a href="#section-2.1.5" class="section-number selfRef">2.1.5. </a><a href="#name-keyid-2" class="section-name selfRef">keyId</a>
+          </h4>
+<p id="section-2.1.5-1"><span class="bcp14">REQUIRED</span>.  The <code>keyId</code> field is an opaque string that the server can use to look up the component they need to validate the signature.  It could be an SSH key fingerprint, a URL to machine-readable key data, an LDAP DN, etc.  Management of keys and assignment of <code>keyId</code> is out of scope for this document.  Implementations <span class="bcp14">MUST</span> be able to discover metadata about the key from the <code>keyId</code> such that they can determine the type of digital signature algorithm to employ when creating or verifying signatures.<a href="#section-2.1.5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="signature">
+<section id="section-2.1.6">
+          <h4 id="name-signature-2">
+<a href="#section-2.1.6" class="section-number selfRef">2.1.6. </a><a href="#name-signature-2" class="section-name selfRef">signature</a>
+          </h4>
+<p id="section-2.1.6-1"><span class="bcp14">REQUIRED</span>.  The <code>signature</code> parameter is a base 64 encoded digital signature, as described in <span>RFC 4648 [<a href="#RFC4648" class="xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-4" class="relref">Section 4</a></span>.  The client uses the <code>algorithm</code> and <code>headers</code> Signature Parameters to form a canonicalized <code>signing string</code>.  This <code>signing string</code> is then signed using the key associated with the <code>keyId</code> according to its digital signature algorithm.  The <code>signature</code> parameter is then set to the base 64 encoding of the signature.<a href="#section-2.1.6-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
