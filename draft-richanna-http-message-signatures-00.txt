@@ -64,18 +64,12 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
 Table of Contents
 
-   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
      1.1.  Signing Challenges for HTTP . . . . . . . . . . . . . . .   3
      1.2.  Innocuous Transformations . . . . . . . . . . . . . . . .   4
      1.3.  Conventions and Terminology . . . . . . . . . . . . . . .   5
    2.  The Components of a Signature . . . . . . . . . . . . . . . .   5
      2.1.  Signature Parameters  . . . . . . . . . . . . . . . . . .   5
-       2.1.1.  algorithm . . . . . . . . . . . . . . . . . . . . . .   5
-       2.1.2.  created . . . . . . . . . . . . . . . . . . . . . . .   5
-       2.1.3.  expires . . . . . . . . . . . . . . . . . . . . . . .   6
-       2.1.4.  headers . . . . . . . . . . . . . . . . . . . . . . .   6
-       2.1.5.  keyId . . . . . . . . . . . . . . . . . . . . . . . .   6
-       2.1.6.  signature . . . . . . . . . . . . . . . . . . . . . .   6
      2.2.  Ambiguous Parameters  . . . . . . . . . . . . . . . . . .   7
      2.3.  Signature String Construction . . . . . . . . . . . . . .   7
      2.4.  Creating a Signature  . . . . . . . . . . . . . . . . . .   9
@@ -105,7 +99,13 @@ Table of Contents
    Document History  . . . . . . . . . . . . . . . . . . . . . . . .  21
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  22
 
+1.  Introduction
 
+   This document describes a mechanism for creating, encoding, and
+   validating digital signatures or message authentication codes (MACs)
+   over subsets of elements within HTTP messages [RFC7230].  HTTP
+   presents particular challenges for digital signatures and MACs, both
+   due to its design and popular usage patterns.  The generic mechanism
 
 
 
@@ -114,13 +114,6 @@ Backman, et al.            Expires 6 June 2020                  [Page 2]
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
-1.  Introduction
-
-   This document describes a mechanism for creating, encoding, and
-   validating digital signatures or message authentication codes (MACs)
-   over subsets of elements within HTTP messages [RFC7230].  HTTP
-   presents particular challenges for digital signatures and MACs, both
-   due to its design and popular usage patterns.  The generic mechanism
    presented in this document overcomes these challenges, allowing
    applications built on HTTP to create signatures over those elements
    of HTTP messages that are relevant to the application, such that
@@ -163,17 +156,19 @@ Internet-Draft            Signing HTTP Messages            December 2019
    *  Removal of header fields listed in the "Connection" header field
       [RFC7230] (Section 6.1)
 
+   *  Addition of header fields that indicate control options [RFC7230]
+      (Section 6.1)
+
+   *  Addition or removal of a transfer coding [RFC7230] (Section 5.7.2)
+
+
+
 
 
 Backman, et al.            Expires 6 June 2020                  [Page 3]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
-
-   *  Addition of header fields that indicate control options [RFC7230]
-      (Section 6.1)
-
-   *  Addition or removal of a transfer coding [RFC7230] (Section 5.7.2)
 
    *  Addition of header fields such as "Via" ([RFC7230], Section 5.7.1)
       and "Forwarded" ([RFC7239], Section 4)
@@ -221,6 +216,11 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
 
 
+
+
+
+
+
 Backman, et al.            Expires 6 June 2020                  [Page 4]
 
 Internet-Draft            Signing HTTP Messages            December 2019
@@ -245,35 +245,35 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    The following section details the Signature Parameters.
 
-2.1.1.  algorithm
+   "algorithm"
+      RECOMMENDED.  The "algorithm" parameter is used to specify the
+      signature string construction mechanism.  Valid values for this
+      parameter can be found in the HTTP Signatures Algorithms Registry
+      (Section 5.2) and MUST NOT be marked "deprecated".  Implementers
+      SHOULD derive the digital signature algorithm used by an
+      implementation from the key metadata identified by the "keyId"
+      rather than from this field.  If "algorithm" is provided and
+      differs from the key metadata identified by the "keyId", for
+      example "rsa-sha256" but an EdDSA key is identified via "keyId",
+      then an implementation MUST produce an error.  Implementers should
+      note that previous versions of the "algorithm" parameter did not
+      use the key information to derive the digital signature type and
+      thus could be utilized by attackers to expose security
+      vulnerabilities.
 
-   RECOMMENDED.  The "algorithm" parameter is used to specify the
-   signature string construction mechanism.  Valid values for this
-   parameter can be found in the HTTP Signatures Algorithms Registry
-   (Section 5.2) and MUST NOT be marked "deprecated".  Implementers
-   SHOULD derive the digital signature algorithm used by an
-   implementation from the key metadata identified by the "keyId" rather
-   than from this field.  If "algorithm" is provided and differs from
-   the key metadata identified by the "keyId", for example "rsa-sha256"
-   but an EdDSA key is identified via "keyId", then an implementation
-   MUST produce an error.  Implementers should note that previous
-   versions of the "algorithm" parameter did not use the key information
-   to derive the digital signature type and thus could be utilized by
-   attackers to expose security vulnerabilities.
+   "created"
+      RECOMMENDED.  The "created" field expresses when the signature was
+      created.  The value MUST be a Unix timestamp integer value.  A
+      signature with a "created" timestamp value that is in the future
+      MUST NOT be processed.  Using a Unix timestamp simplifies
+      processing and avoids timezone management required by
+      specifications such as RFC3339.  Subsecond precision is not
+      supported.  This value is useful when clients are not capable of
+      controlling the "Date" HTTP Header such as when operating in
+      certain web browser environments.
 
-2.1.2.  created
-
-   RECOMMENDED.  The "created" field expresses when the signature was
-   created.  The value MUST be a Unix timestamp integer value.  A
-   signature with a "created" timestamp value that is in the future MUST
-   NOT be processed.  Using a Unix timestamp simplifies processing and
-   avoids timezone management required by specifications such as
-   RFC3339.  Subsecond precision is not supported.  This value is useful
-   when clients are not capable of controlling the "Date" HTTP Header
-   such as when operating in certain web browser environments.
-
-
-
+   "expires"
+      OPTIONAL.  The "expires" field expresses when the signature ceases
 
 
 
@@ -282,52 +282,52 @@ Backman, et al.            Expires 6 June 2020                  [Page 5]
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
-2.1.3.  expires
+      to be valid.  The value MUST be a Unix timestamp integer value.  A
+      signature with an "expires" timestamp value that is in the past
+      MUST NOT be processed.  Using a Unix timestamp simplifies
+      processing and avoid timezone management existing in RFC3339.
+      Subsecod precision is allowed using decimal notation.
 
-   OPTIONAL.  The "expires" field expresses when the signature ceases to
-   be valid.  The value MUST be a Unix timestamp integer value.  A
-   signature with an "expires" timestamp value that is in the past MUST
-   NOT be processed.  Using a Unix timestamp simplifies processing and
-   avoid timezone management existing in RFC3339.  Subsecod precision is
-   allowed using decimal notation.
+   "headers"
+      OPTIONAL.  The "headers" parameter is used to specify the list of
+      HTTP headers included when generating the signature for the
+      message.  If specified, it SHOULD be a lowercased, quoted list of
+      HTTP header fields, separated by a single space character.  If not
+      specified, implementations MUST operate as if the field were
+      specified with a single value, "(created)", in the list of HTTP
+      headers.  Note:
 
-2.1.4.  headers
+      1.  The list order is important, and MUST be specified in the
+          order the HTTP header field-value pairs are concatenated
+          together during Signature String Construction (Section 2.3)
+          used during signing and verifying.
 
-   OPTIONAL.  The "headers" parameter is used to specify the list of
-   HTTP headers included when generating the signature for the message.
-   If specified, it SHOULD be a lowercased, quoted list of HTTP header
-   fields, separated by a single space character.  If not specified,
-   implementations MUST operate as if the field were specified with a
-   single value, "(created)", in the list of HTTP headers.  Note:
+      2.  A zero-length "headers" parameter value MUST NOT be used,
+          since it results in a signature of an empty string.
 
-   1.  The list order is important, and MUST be specified in the order
-       the HTTP header field-value pairs are concatenated together
-       during Signature String Construction (Section 2.3) used during
-       signing and verifying.
+   "keyId"
+      REQUIRED.  The "keyId" field is an opaque string that the server
+      can use to look up the component they need to validate the
+      signature.  It could be an SSH key fingerprint, a URL to machine-
+      readable key data, an LDAP DN, etc.  Management of keys and
+      assignment of "keyId" is out of scope for this document.
+      Implementations MUST be able to discover metadata about the key
+      from the "keyId" such that they can determine the type of digital
+      signature algorithm to employ when creating or verifying
+      signatures.
 
-   2.  A zero-length "headers" parameter value MUST NOT be used, since
-       it results in a signature of an empty string.
+   "signature"
+      REQUIRED.  The "signature" parameter is a base 64 encoded digital
+      signature, as described in RFC 4648 [RFC4648], Section 4.  The
+      client uses the "algorithm" and "headers" Signature Parameters to
+      form a canonicalized "signing string".  This "signing string" is
+      then signed using the key associated with the "keyId" according to
+      its digital signature algorithm.  The "signature" parameter is
+      then set to the base 64 encoding of the signature.
 
-2.1.5.  keyId
 
-   REQUIRED.  The "keyId" field is an opaque string that the server can
-   use to look up the component they need to validate the signature.  It
-   could be an SSH key fingerprint, a URL to machine-readable key data,
-   an LDAP DN, etc.  Management of keys and assignment of "keyId" is out
-   of scope for this document.  Implementations MUST be able to discover
-   metadata about the key from the "keyId" such that they can determine
-   the type of digital signature algorithm to employ when creating or
-   verifying signatures.
 
-2.1.6.  signature
 
-   REQUIRED.  The "signature" parameter is a base 64 encoded digital
-   signature, as described in RFC 4648 [RFC4648], Section 4.  The client
-   uses the "algorithm" and "headers" Signature Parameters to form a
-   canonicalized "signing string".  This "signing string" is then signed
-   using the key associated with the "keyId" according to its digital
-   signature algorithm.  The "signature" parameter is then set to the
-   base 64 encoding of the signature.
 
 
 

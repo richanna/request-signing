@@ -120,40 +120,42 @@
                 <name>Signature Parameters</name>
                 <t>The following section details the Signature Parameters.</t>
 
-                <section anchor="algorithm">
-                    <name>algorithm</name>
-                    <t><bcp14>RECOMMENDED</bcp14>.  The <tt>algorithm</tt> parameter is used to specify the signature string construction mechanism.  Valid values for this parameter can be found in the <xref target="hsa-registry" format="title"/> (<xref target="hsa-registry"/>) and <bcp14>MUST NOT</bcp14> be marked "deprecated".  Implementers <bcp14>SHOULD</bcp14> derive the digital signature algorithm used by an implementation from the key metadata identified by the <tt>keyId</tt> rather than from this field.  If <tt>algorithm</tt> is provided and differs from the key metadata identified by the <tt>keyId</tt>, for example <tt>rsa-sha256</tt> but an EdDSA key is identified via <tt>keyId</tt>, then an implementation <bcp14>MUST</bcp14> produce an error.  Implementers should note that previous versions of the <tt>algorithm</tt> parameter did not use the key information to derive the digital signature type and thus could be utilized by attackers to expose security vulnerabilities.</t>
-                </section>
+                <dl newline="true">
+                    <dt anchor="algorithm"><tt>algorithm</tt></dt>
+                    <dd>
+                        <t><bcp14>RECOMMENDED</bcp14>.  The <tt>algorithm</tt> parameter is used to specify the signature string construction mechanism.  Valid values for this parameter can be found in the <xref target="hsa-registry" format="title"/> (<xref target="hsa-registry"/>) and <bcp14>MUST NOT</bcp14> be marked "deprecated".  Implementers <bcp14>SHOULD</bcp14> derive the digital signature algorithm used by an implementation from the key metadata identified by the <tt>keyId</tt> rather than from this field.  If <tt>algorithm</tt> is provided and differs from the key metadata identified by the <tt>keyId</tt>, for example <tt>rsa-sha256</tt> but an EdDSA key is identified via <tt>keyId</tt>, then an implementation <bcp14>MUST</bcp14> produce an error.  Implementers should note that previous versions of the <tt>algorithm</tt> parameter did not use the key information to derive the digital signature type and thus could be utilized by attackers to expose security vulnerabilities.</t>
+                    </dd>
 
-                <section anchor="created">
-                    <name>created</name>
-                    <t><bcp14>RECOMMENDED</bcp14>.  The <tt>created</tt> field expresses when the signature was created.  The value <bcp14>MUST</bcp14> be a Unix timestamp integer value.  A signature with a <tt>created</tt> timestamp value that is in the future <bcp14>MUST NOT</bcp14> be processed.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as RFC3339.  Subsecond precision is not supported.  This value is useful when clients are not capable of controlling the <tt>Date</tt> HTTP Header such as when operating in certain web browser environments.</t>
-                </section>
+                    <dt anchor="created"><tt>created</tt></dt>
+                    <dd>
+                        <t><bcp14>RECOMMENDED</bcp14>.  The <tt>created</tt> field expresses when the signature was created.  The value <bcp14>MUST</bcp14> be a Unix timestamp integer value.  A signature with a <tt>created</tt> timestamp value that is in the future <bcp14>MUST NOT</bcp14> be processed.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as RFC3339.  Subsecond precision is not supported.  This value is useful when clients are not capable of controlling the <tt>Date</tt> HTTP Header such as when operating in certain web browser environments.</t>
+                    </dd>
 
-                <section anchor="expires">
-                    <name>expires</name>
-                    <t><bcp14>OPTIONAL</bcp14>.  The <tt>expires</tt> field expresses when the signature ceases to be valid.  The value <bcp14>MUST</bcp14> be a Unix timestamp integer value.  A signature with an <tt>expires</tt> timestamp value that is in the past <bcp14>MUST NOT</bcp14> be processed.  Using a Unix timestamp simplifies processing and avoid timezone management existing in RFC3339.  Subsecod precision is allowed using decimal notation.</t>
-                </section>
+                    <dt anchor="expires"><tt>expires</tt></dt>
+                    <dd>
+                        <t><bcp14>OPTIONAL</bcp14>.  The <tt>expires</tt> field expresses when the signature ceases to be valid.  The value <bcp14>MUST</bcp14> be a Unix timestamp integer value.  A signature with an <tt>expires</tt> timestamp value that is in the past <bcp14>MUST NOT</bcp14> be processed.  Using a Unix timestamp simplifies processing and avoid timezone management existing in RFC3339.  Subsecod precision is allowed using decimal notation.</t>
+                    </dd>
 
-                <section anchor="headers">
-                    <name>headers</name>
-                    <t><bcp14>OPTIONAL</bcp14>.  The <tt>headers</tt> parameter is used to specify the list of HTTP headers included when generating the signature for the message.  If specified, it <bcp14>SHOULD</bcp14> be a lowercased, quoted list of HTTP header fields, separated by a single space character.  If not specified, implementations <bcp14>MUST</bcp14> operate as if the field were specified with a single value, <tt>(created)</tt>, in the list of HTTP headers.  Note:
-                    </t>
-                    <ol>
-                        <li>The list order is important, and <bcp14>MUST</bcp14> be specified in the order the HTTP header field-value pairs are concatenated together during <xref target="canonicalization" format="title"/> (<xref target="canonicalization"/>) used during signing and verifying.</li>
-                        <li>A zero-length <tt>headers</tt> parameter value <bcp14>MUST NOT</bcp14> be used, since it results in a signature of an empty string.</li>
-                    </ol>
-                </section>
+                    <dt anchor="headers"><tt>headers</tt></dt>
+                    <dd>
+                        <t><bcp14>OPTIONAL</bcp14>.  The <tt>headers</tt> parameter is used to specify the list of HTTP headers included when generating the signature for the message.  If specified, it <bcp14>SHOULD</bcp14> be a lowercased, quoted list of HTTP header fields, separated by a single space character.  If not specified, implementations <bcp14>MUST</bcp14> operate as if the field were specified with a single value, <tt>(created)</tt>, in the list of HTTP headers.  Note:
+                        </t>
+                        <ol>
+                            <li>The list order is important, and <bcp14>MUST</bcp14> be specified in the order the HTTP header field-value pairs are concatenated together during <xref target="canonicalization" format="title"/> (<xref target="canonicalization"/>) used during signing and verifying.</li>
+                            <li>A zero-length <tt>headers</tt> parameter value <bcp14>MUST NOT</bcp14> be used, since it results in a signature of an empty string.</li>
+                        </ol>
+                    </dd>
 
-                <section anchor="keyId">
-                    <name>keyId</name>
-                    <t><bcp14>REQUIRED</bcp14>.  The <tt>keyId</tt> field is an opaque string that the server can use to look up the component they need to validate the signature.  It could be an SSH key fingerprint, a URL to machine-readable key data, an LDAP DN, etc.  Management of keys and assignment of <tt>keyId</tt> is out of scope for this document.  Implementations <bcp14>MUST</bcp14> be able to discover metadata about the key from the <tt>keyId</tt> such that they can determine the type of digital signature algorithm to employ when creating or verifying signatures.</t>
-                </section>
+                    <dt anchor="keyId"><tt>keyId</tt></dt>
+                    <dd>
+                        <t><bcp14>REQUIRED</bcp14>.  The <tt>keyId</tt> field is an opaque string that the server can use to look up the component they need to validate the signature.  It could be an SSH key fingerprint, a URL to machine-readable key data, an LDAP DN, etc.  Management of keys and assignment of <tt>keyId</tt> is out of scope for this document.  Implementations <bcp14>MUST</bcp14> be able to discover metadata about the key from the <tt>keyId</tt> such that they can determine the type of digital signature algorithm to employ when creating or verifying signatures.</t>
+                    </dd>
 
-                <section anchor="signature">
-                    <name>signature</name>
-                    <t><bcp14>REQUIRED</bcp14>.  The <tt>signature</tt> parameter is a base 64 encoded digital signature, as described in <xref target="RFC4648" section="4" sectionFormat="comma">RFC 4648</xref>.  The client uses the <tt>algorithm</tt> and <tt>headers</tt> Signature Parameters to form a canonicalized <tt>signing string</tt>.  This <tt>signing string</tt> is then signed using the key associated with the <tt>keyId</tt> according to its digital signature algorithm.  The <tt>signature</tt> parameter is then set to the base 64 encoding of the signature.</t>
-                </section>
+                    <dt anchor="signature"><tt>signature</tt></dt>
+                    <dd>
+                        <t><bcp14>REQUIRED</bcp14>.  The <tt>signature</tt> parameter is a base 64 encoded digital signature, as described in <xref target="RFC4648" section="4" sectionFormat="comma">RFC 4648</xref>.  The client uses the <tt>algorithm</tt> and <tt>headers</tt> Signature Parameters to form a canonicalized <tt>signing string</tt>.  This <tt>signing string</tt> is then signed using the key associated with the <tt>keyId</tt> according to its digital signature algorithm.  The <tt>signature</tt> parameter is then set to the base 64 encoding of the signature.</t>
+                    </dd>
+                </dl>
             </section>
 
             <section anchor="ambiguity">
