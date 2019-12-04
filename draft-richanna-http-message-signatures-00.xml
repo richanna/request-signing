@@ -296,14 +296,6 @@ content-length: 18]]></sourcecode>
 
         <section anchor="iana">
             <name>IANA Considerations</name>
-            <section anchor="iana-scheme">
-                <name>Signature Authentication Scheme</name>
-                <t>The following entry should be added to the Authentication Scheme Registry located at <eref target="https://www.iana.org/assignments/http-authschemes"/></t>
-                <t>Authentication Scheme Name: Signature 
-Reference: [RFC_THIS_DOCUMENT], Section 2. 
-Notes (optional): The Signature scheme is designed for clients to authenticate themselves with a server.</t>
-            </section>
-
             <section anchor="hsa-registry">
                 <name>HTTP Signatures Algorithms Registry</name>
                 <t>The following initial entries should be added to the Canonicalization Algorithms Registry to be created and maintained at (the suggested URI) <eref target="https://www.iana.org/assignments/shm-algorithms"/>:</t>
