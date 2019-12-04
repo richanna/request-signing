@@ -81,22 +81,22 @@ Table of Contents
    4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  12
      4.1.  HTTP Signatures Algorithms Registry . . . . . . . . . . .  12
        "hs2019"  . . . . . . . . . . . . . . . . . . . . . . . . . .  12
-       "rsa-sha1"  . . . . . . . . . . . . . . . . . . . . . . . . .  12
+       "rsa-sha1"  . . . . . . . . . . . . . . . . . . . . . . . . .  13
        "rsa-sha256"  . . . . . . . . . . . . . . . . . . . . . . . .  13
        "hmac-sha256" . . . . . . . . . . . . . . . . . . . . . . . .  13
-       "ecdsa-sha256"  . . . . . . . . . . . . . . . . . . . . . . .  13
+       "ecdsa-sha256"  . . . . . . . . . . . . . . . . . . . . . . .  14
    5.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
    6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
      6.1.  Normative References  . . . . . . . . . . . . . . . . . .  14
-     6.2.  Informative References  . . . . . . . . . . . . . . . . .  14
-   Appendix A.  Extensions . . . . . . . . . . . . . . . . . . . . .  15
+     6.2.  Informative References  . . . . . . . . . . . . . . . . .  15
+   Appendix A.  Extensions . . . . . . . . . . . . . . . . . . . . .  16
    Appendix B.  Test Values  . . . . . . . . . . . . . . . . . . . .  16
      B.1.  Default Test  . . . . . . . . . . . . . . . . . . . . . .  17
-     B.2.  Basic Test  . . . . . . . . . . . . . . . . . . . . . . .  17
+     B.2.  Basic Test  . . . . . . . . . . . . . . . . . . . . . . .  18
      B.3.  All Headers Test  . . . . . . . . . . . . . . . . . . . .  18
-   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  18
+   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  19
    Document History  . . . . . . . . . . . . . . . . . . . . . . . .  19
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  20
 
 1.  Introduction
 
@@ -650,22 +650,22 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
 "hs2019"
 
-      Algorithm Name: hs2019
-      Status: active
-      Canonicalization Algorithm: [RFC_THIS_DOCUMENT], Section 2.3:
-      Signature String Construction
-      Hash Algorithm: RFC 6234 [RFC6234], SHA-512 (SHA-2 with 512-bits
-      of digest output)
-      Digital Signature Algorithm: Derived from metadata associated with
-      "keyId".  Recommend support for RFC 8017 [RFC8017], Section 8.1:
-      RSASSA-PSS, RFC 6234 [RFC6234], Section 7.1: SHA-Based HMACs, ANSI
-      X9.62-2005 ECDSA, P-256, and RFC 8032 [RFC8032], Section 5.1:
-      Ed25519ph, Ed25519ctx, and Ed25519.
+   Algorithm Name
+      "hs2019"
 
-"rsa-sha1"
+   Status
+      active
 
-      Algorithm Name: rsa-sha1
-      Status: deprecated, SHA-1 not secure.
+   Canonicalization Algorithm
+      [RFC_THIS_DOCUMENT], Section 2.3: Signature String Construction
+
+   Hash Algorithm
+      RFC 6234 [RFC6234], SHA-512 (SHA-2 with 512-bits of digest output)
+
+   Digital Signature Algorithm
+      Derived from metadata associated with "keyId".  Recommend support
+      for RFC 8017 [RFC8017], Section 8.1: RSASSA-PSS, RFC 6234
+      [RFC6234], Section 7.1: SHA-Based HMACs, ANSI X9.62-2005 ECDSA,
 
 
 
@@ -674,53 +674,53 @@ Backman, et al.            Expires 6 June 2020                 [Page 12]
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
-      Canonicalization Algorithm: [RFC_THIS_DOCUMENT], Section 2.3:
-      Signature String Construction
-      Hash Algorithm: RFC 6234 [RFC6234], SHA-1 (SHA-1 with 160-bits of
-      digest output)
-      Digital Signature Algorithm: RFC 8017 [RFC8017], Section 8.2:
-      RSASSA-PKCS1-v1_5
+      P-256, and RFC 8032 [RFC8032], Section 5.1: Ed25519ph, Ed25519ctx,
+      and Ed25519.
+
+"rsa-sha1"
+
+   Algorithm Name
+      "rsa-sha1"
+
+   Status
+      deprecated, SHA-1 not secure.
+
+   Canonicalization Algorithm
+      [RFC_THIS_DOCUMENT], Section 2.3: Signature String Construction
+
+   Hash Algorithm
+      RFC 6234 [RFC6234], SHA-1 (SHA-1 with 160-bits of digest output)
+
+   Digital Signature Algorithm
+      RFC 8017 [RFC8017], Section 8.2: RSASSA-PKCS1-v1_5
 
 "rsa-sha256"
 
-      Algorithm Name: rsa-sha256
-      Status: deprecated, specifying signature algorithm enables attack
-      vector.
-      Canonicalization Algorithm: [RFC_THIS_DOCUMENT], Section 2.3:
-      Signature String Construction
-      Hash Algorithm: RFC 6234 [RFC6234], SHA-256 (SHA-2 with 256-bits
-      of digest output)
-      Digital Signature Algorithm: RFC 8017 [RFC8017], Section 8.2:
-      RSASSA-PKCS1-v1_5
+   Algorithm Name
+      "rsa-sha256"
+
+   Status
+      deprecated, specifying signature algorithm enables attack vector.
+
+   Canonicalization Algorithm
+      [RFC_THIS_DOCUMENT], Section 2.3: Signature String Construction
+
+   Hash Algorithm
+      RFC 6234 [RFC6234], SHA-256 (SHA-2 with 256-bits of digest output)
+
+   Digital Signature Algorithm
+      RFC 8017 [RFC8017], Section 8.2: RSASSA-PKCS1-v1_5
 
 "hmac-sha256"
 
-      Algorithm Name: hmac-sha256
-      Status: deprecated, specifying signature algorithm enables attack
-      vector.
-      Canonicalization Algorithm: [RFC_THIS_DOCUMENT], Section 2.3:
-      Signature String Construction
-      Hash Algorithm: RFC 6234 [RFC6234], SHA-256 (SHA-2 with 256-bits
-      of digest output)
-      Message Authentication Code Algorithm: RFC 6234 [RFC6234],
-      Section 7.1: SHA-Based HMACs
+   Algorithm Name
+      "hmac-sha256"
 
-"ecdsa-sha256"
+   Status
+      deprecated, specifying signature algorithm enables attack vector.
 
-      Algorithm Name: ecdsa-sha256
-      Status: deprecated, specifying signature algorithm enables attack
-      vector.
-      Canonicalization Algorithm: [RFC_THIS_DOCUMENT], Section 2.3:
-      Signature String Construction
-      Hash Algorithm: RFC 6234 [RFC6234], SHA-256 (SHA-2 with 256-bits
-      of digest output)
-      Digital Signature Algorithm: ANSI X9.62-2005 ECDSA, P-256
-
-
-
-
-
-
+   Canonicalization Algorithm
+      [RFC_THIS_DOCUMENT], Section 2.3: Signature String Construction
 
 
 
@@ -729,6 +729,29 @@ Backman, et al.            Expires 6 June 2020                 [Page 13]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
+
+   Hash Algorithm
+      RFC 6234 [RFC6234], SHA-256 (SHA-2 with 256-bits of digest output)
+
+   Message Authentication Code Algorithm
+      RFC 6234 [RFC6234], Section 7.1: SHA-Based HMACs
+
+"ecdsa-sha256"
+
+   Algorithm Name
+      "ecdsa-sha256"
+
+   Status
+      deprecated, specifying signature algorithm enables attack vector.
+
+   Canonicalization Algorithm
+      [RFC_THIS_DOCUMENT], Section 2.3: Signature String Construction
+
+   Hash Algorithm
+      RFC 6234 [RFC6234], SHA-256 (SHA-2 with 256-bits of digest output)
+
+   Digital Signature Algorithm
+      ANSI X9.62-2005 ECDSA, P-256
 
 5.  Security Considerations
 
@@ -756,6 +779,13 @@ Internet-Draft            Signing HTTP Messages            December 2019
               RFC 7230, DOI 10.17487/RFC7230, June 2014,
               <https://www.rfc-editor.org/info/rfc7230>.
 
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 14]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
    [RFC7235]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
               Protocol (HTTP/1.1): Authentication", RFC 7235,
               DOI 10.17487/RFC7235, June 2014,
@@ -776,15 +806,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
               (SHA and SHA-based HMAC and HKDF)", RFC 6234,
               DOI 10.17487/RFC6234, May 2011,
               <https://www.rfc-editor.org/info/rfc6234>.
-
-
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 14]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
 
    [RFC7239]  Petersson, A. and M. Nilsson, "Forwarded HTTP Extension",
               RFC 7239, DOI 10.17487/RFC7239, June 2014,
@@ -814,6 +835,13 @@ Internet-Draft            Signing HTTP Messages            December 2019
               <https://web-payments.org/specs/source/http-signature-
               nonces/>.
 
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 15]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
    [WP-HTTP-Sig-Trailers]
               Sporny, M., "HTTP Signature Trailers", July 2013,
               <https://web-payments.org/specs/source/http-signature-
@@ -834,14 +862,6 @@ Appendix A.  Extensions
 
    If extensions to this specification are made by adding new Signature
    Parameters, those extension parameters MUST be registered in the
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 15]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
    Signature Authentication Scheme Registry.  The registry will be
    created and maintained at (the suggested URI)
    https://www.iana.org/assignments/http-auth-scheme-signature.
@@ -860,6 +880,23 @@ Appendix B.  Test Values
 
    The following test data uses the following RSA 2048-bit keys, which
    we will refer to as "keyId=Test" in the following samples:
+
+
+
+
+
+
+
+
+
+
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 16]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
 
    -----BEGIN PUBLIC KEY-----
    MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDCFENGw33yGihy92pDjZQhl0C3
@@ -886,18 +923,6 @@ Appendix B.  Test Values
 
    All examples use this request:
 
-
-
-
-
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 16]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
    POST /foo?param=value&pet=dog HTTP/1.1
    Host: example.com
    Date: Sun, 05 Jan 2014 21:31:40 GMT
@@ -922,6 +947,13 @@ B.1.  Default Test
    6m79cNfwwb8DMJ5cou1s7uEGKKCs+FLEEaDV5lp7q25WqS+lavg7T8hc0GppauB
    6hbgEKTwblDHYGEtbGmtdHgVCk9SuS13F0hZ8FD0k/5OxEPXe5WozsbM="
 
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 17]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
    The Signature header would be:
 
    Signature: keyId="Test",algorithm="rsa-sha256",
@@ -945,14 +977,6 @@ B.2.  Basic Test
        signature="qdx+H7PHHDZgy4y/Ahn9Tny9V3GP6YgBPyUXMmoxWtLbHpUnXS
        2mg2+SbrQDMCJypxBLSPQR2aAjn7ndmw2iicw3HMbe8VfEdKFYRqzic+efkb3
        nndiv/x1xSHDJWeSWkx3ButlYSuBskLu6kd9Fswtemr3lgdDEmn04swr2Os0="
-
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 17]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
 
 B.3.  All Headers Test
 
@@ -979,6 +1003,13 @@ B.3.  All Headers Test
 
    The Signature header would be:
 
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 18]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
    Signature: keyId="Test",algorithm="rsa-sha256",
        created=1402170695, expires=1402170699,
        headers="(request-target) (created) (expires)
@@ -1002,14 +1033,6 @@ Acknowledgements
    Andrey Kislyuk, Adam Knight, Dave Lehn, Dave Longley, James H.
    Manger, Ilari Liusvaara, Mark Nottingham, Yoav Nir, Adrian Palmer,
    Lucas Pardue, Roberto Polli, Julian Reschke, Michael Richardson,
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 18]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
    Wojciech Rygielski, Adam Scarr, Cory J.  Slep, Dirk Stein, Henry
    Story, Lukasz Szewc, Chris Webber, and Jeffrey Yasskin
 
@@ -1036,6 +1059,13 @@ Document History
          o  Removed informative intro sections on Signatures in HTTP
             Requests/Responses, as they imply specific use cases.
 
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 19]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
          o  Moved BCP 14 message under intro section.
 
          o  Removed "Signature" auth-scheme definition and non-normative
@@ -1059,13 +1089,6 @@ Authors' Addresses
    Email: ietf@justin.richer.org
 
 
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 19]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
    Manu Sporny
    Digital Bazaar
    203 Roanoke Street W.
@@ -1075,29 +1098,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
    Phone: +1 540 961 4469
    Email: msporny@digitalbazaar.com
    URI:   https://manu.sporny.org/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
