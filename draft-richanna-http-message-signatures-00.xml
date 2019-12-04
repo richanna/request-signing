@@ -92,6 +92,7 @@
                     <li>A JavaScript application making a cross-origin request using the <eref target="https://fetch.spec.whatwg.org/">Fetch API</eref> may not have full control or view of the header fields in the actual HTTP request transmitted by the user agent.</li>
                 </ul>
             </section>
+
             <section>
                 <name>Innocuous Transformations</name>
                 <t>The mechanism described in this document is designed to tolerate "innocuous" transformations by allowing the signer to specify precisely which elements in the message are to be protected, and ensuring that transformations that do not alter the value of protected elements do not prevent signature verification. Specifically, the following list describes transformations that are considered innocuous:</t>
@@ -105,47 +106,45 @@
                 </ul>
             </section>
 
-            <section anchor="intro-requests">
-                <name>Using Signatures in HTTP Requests</name>
-                <t>It is common practice to protect sensitive website and API functionality via authentication mechanisms.  Often, the entity accessing these APIs is a piece of automated software outside of an interactive human session.  While there are mechanisms like OAuth and API secrets that are used to grant API access, each have their weaknesses such as unnecessary complexity for particular use cases or the use of shared secrets which may not be acceptable to an implementer.  Shared secrets also prohibit any possibility for non-repudiation, while secure transports such as TLS do not provide for this at all.</t>
-                <t>Digital signatures are widely used to provide authentication and integrity assurances without the need for shared secrets.  They also do not require a round-trip in order to authenticate the client, and allow the integrity of a message to be verified independently of the transport (e.g., TLS).  A server need only have an understanding of the key (e.g., through a mapping between the key being used to sign the content and the authorized entity) to verify that a message was signed by that entity.</t>
-                <t>When optionally combined with asymmetric keys associated with an identity, this specification can also enable authentication of a client and server with or without prior knowledge of each other.</t>
-            </section>
-            <section anchor="intro-responses">
-                <name>Using Signatures in HTTP Responses</name>
-                <t>HTTP messages are routinely altered as they traverse the infrastructure of the Internet, for mostly benign reasons.  Gateways and proxies add, remove and alter headers for operational reasons, so a sender cannot rely on the recipient receiving exactly the message transmitted.  By allowing a sender to sign specified headers, and recipient or intermediate system can confirm that the original intent of the sender is preserved, and including a Digest header can also verify the message body is not modified.  This allows any recipient to easily confirm both the sender's identity, and any incidental or malicious changes that alter the content or meaning of the message.</t>
+            <section anchor="terms">
+                <name>Conventions and Terminology</name>
+                <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119">BCP14</xref> <xref target="RFC8174"/> when, and only when, they appear in all capitals, as shown here.</t>
             </section>
         </section>
-        <section anchor="terms">
-            <name>Conventions and Terminology</name>
-            <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119">BCP14</xref> <xref target="RFC8174"/> when, and only when, they appear in all capitals, as shown here.</t>
-        </section>
+
         <section anchor="components">
             <name>The Components of a Signature</name>
             <t>There are a number of components in a signature that are common between the 'Signature' HTTP Authentication Scheme and the 'Signature' HTTP Header.  This section details the components of the digital signature parameters common to both schemes.</t>
+
             <section anchor="params">
                 <name>Signature Parameters</name>
                 <t>The following section details the Signature Parameters.</t>
+
                 <section anchor="keyId">
                     <name>keyId</name>
                     <t><bcp14>REQUIRED</bcp14>.  The <tt>keyId</tt> field is an opaque string that the server can use to look up the component they need to validate the signature.  It could be an SSH key fingerprint, a URL to machine-readable key data, an LDAP DN, etc.  Management of keys and assignment of <tt>keyId</tt> is out of scope for this document.  Implementations <bcp14>MUST</bcp14> be able to discover metadata about the key from the <tt>keyId</tt> such that they can determine the type of digital signature algorithm to employ when creating or verifying signatures.</t>
                 </section>
+
                 <section anchor="signature">
                     <name>signature</name>
                     <t><bcp14>REQUIRED</bcp14>.  The <tt>signature</tt> parameter is a base 64 encoded digital signature, as described in <xref target="RFC4648" section="4" sectionFormat="comma">RFC 4648</xref>.  The client uses the <tt>algorithm</tt> and <tt>headers</tt> Signature Parameters to form a canonicalized <tt>signing string</tt>.  This <tt>signing string</tt> is then signed using the key associated with the <tt>keyId</tt> according to its digital signature algorithm.  The <tt>signature</tt> parameter is then set to the base 64 encoding of the signature.</t>
                 </section>
+
                 <section anchor="algorithm">
                     <name>algorithm</name>
                     <t><bcp14>RECOMMENDED</bcp14>.  The <tt>algorithm</tt> parameter is used to specify the signature string construction mechanism.  Valid values for this parameter can be found in the <xref target="hsa-registry" format="title"/> (<xref target="hsa-registry"/>) and <bcp14>MUST NOT</bcp14> be marked "deprecated".  Implementers <bcp14>SHOULD</bcp14> derive the digital signature algorithm used by an implementation from the key metadata identified by the <tt>keyId</tt> rather than from this field.  If <tt>algorithm</tt> is provided and differs from the key metadata identified by the <tt>keyId</tt>, for example <tt>rsa-sha256</tt> but an EdDSA key is identified via <tt>keyId</tt>, then an implementation <bcp14>MUST</bcp14> produce an error.  Implementers should note that previous versions of the <tt>algorithm</tt> parameter did not use the key information to derive the digital signature type and thus could be utilized by attackers to expose security vulnerabilities.</t>
                 </section>
+
                 <section anchor="created">
                     <name>created</name>
                     <t><bcp14>RECOMMENDED</bcp14>.  The <tt>created</tt> field expresses when the signature was created.  The value <bcp14>MUST</bcp14> be a Unix timestamp integer value.  A signature with a <tt>created</tt> timestamp value that is in the future <bcp14>MUST NOT</bcp14> be processed.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as RFC3339.  Subsecond precision is not supported.  This value is useful when clients are not capable of controlling the <tt>Date</tt> HTTP Header such as when operating in certain web browser environments.</t>
                 </section>
+
                 <section anchor="expires">
                     <name>expires</name>
                     <t><bcp14>OPTIONAL</bcp14>.  The <tt>expires</tt> field expresses when the signature ceases to be valid.  The value <bcp14>MUST</bcp14> be a Unix timestamp integer value.  A signature with an <tt>expires</tt> timestamp value that is in the past <bcp14>MUST NOT</bcp14> be processed.  Using a Unix timestamp simplifies processing and avoid timezone management existing in RFC3339.  Subsecod precision is allowed using decimal notation.</t>
                 </section>
+
                 <section anchor="headers">
                     <name>headers</name>
                     <t><bcp14>OPTIONAL</bcp14>.  The <tt>headers</tt> parameter is used to specify the list of HTTP headers included when generating the signature for the message.  If specified, it <bcp14>SHOULD</bcp14> be a lowercased, quoted list of HTTP header fields, separated by a single space character.  If not specified, implementations <bcp14>MUST</bcp14> operate as if the field were specified with a single value, <tt>(created)</tt>, in the list of HTTP headers.  Note:
@@ -156,10 +155,12 @@
                     </ol>
                 </section>
             </section>
+
             <section anchor="ambiguity">
                 <name>Ambiguous Parameters</name>
                 <t>If any of the parameters listed above are erroneously duplicated in the associated header field, then the the signature <bcp14>MUST NOT</bcp14> be processed.  Any parameter that is not recognized as a parameter, or is not well-formed, <bcp14>MUST</bcp14> be ignored.</t>
             </section>
+
             <section anchor="canonicalization">
                 <name>Signature String Construction</name>
                 <t>A signed HTTP message needs to be tolerant of some trivial alterations during transmission as it goes through gateways, proxies, and other entities.  These changes are often of little consequence and very benign, but also often not visible to or detectable by either the sender or the recipient.  Simply signing the entire message that was transmitted by the sender is therefore not feasible: Even very minor changes would result in a signature which cannot be verified.</t>
@@ -203,6 +204,7 @@ cache-control: max-age=60, must-revalidate
 x-emptyheader:
 x-example: Example header with some whitespace.]]></sourcecode>
             </section>
+
             <section anchor="create">
                 <name>Creating a Signature</name>
                 <t>In order to create a signature, a client <bcp14>MUST</bcp14>:
@@ -214,6 +216,7 @@ x-example: Example header with some whitespace.]]></sourcecode>
                 </ol>
                 <t>For example, assume that the <tt>algorithm</tt> value is "hs2019" and the <tt>keyId</tt> refers to an EdDSA public key.  This would signal to the application that the signature string construction mechanism is the one defined in <xref target="canonicalization"/>: <xref target="canonicalization" format="title"/>, the signature string hashing function is SHA-512, and the signing algorithm is Ed25519 as defined in <xref target="RFC8032" section="5.1" sectionFormat="comma">RFC 8032</xref>: Ed25519ph, Ed25519ctx, and Ed25519.  The result of the signature creation algorithm should result in a binary string, which is then base 64 encoded and placed into the <tt>signature</tt> value.</t>
             </section>
+
             <section anchor="verify">
                 <name>Verifying a Signature</name>
                 <t>In order to verify a signature, a server <bcp14>MUST</bcp14>:
@@ -226,10 +229,12 @@ x-example: Example header with some whitespace.]]></sourcecode>
                 <t>For example, assume that the <tt>algorithm</tt> value was "hs2019" and and the <tt>keyId</tt> refers to an EdDSA public key.  This would signal to the application that the signature string construction mechanism is the one defined in <xref target="canonicalization"/>: <xref target="canonicalization" format="title"/>, the signature string hashing function is SHA-512, and the signing algorithm is Ed25519 as defined in <xref target="RFC8032" section="5.1" sectionFormat="comma">RFC 8032</xref>: Ed25519ph, Ed25519ctx, and Ed25519.  The result of the signature verification algorithm should result in a successful verification unless the headers protected by the signature were tampered with in transit.</t>
             </section>
         </section>
+
         <section anchor="auth-scheme">
             <name>The 'Signature' HTTP Authentication Scheme</name>
             <t>The "Signature" authentication scheme is based on the model that the client must authenticate itself with a digital signature produced by either a private asymmetric key (e.g., RSA) or a shared symmetric key (e.g., HMAC).</t>
             <t>The scheme is parameterized enough such that it is not bound to any particular key type or signing algorithm.</t>
+
             <section anchor="auth-header">
                 <name>Authorization Header</name>
                 <t>The client is expected to send an Authorization header (as defined in <xref target="RFC7235" section="2.1" sectionFormat="comma">RFC 7235</xref>) where the "auth-scheme" is "Signature" and the "auth-param" parameters meet the requirements listed in Section 2: The Components of a Signature.</t>
@@ -244,6 +249,7 @@ Content-Length: 18
 
 {"hello": "world"}]]></sourcecode>
                 <t>Note that the use of the <tt>Digest</tt> header field is per <xref target="RFC3230" section="4.3.2" sectionFormat="comma">RFC 3230</xref> and is included merely as a demonstration of how an implementer could include information about the body of the message in the signature.  The following sections also assume that the "rsa-key-1" keyId asserted by the client is an identifier meaningful to the server.</t>
+
                 <section anchor="auth-isa">
                     <name>Initiating Signature Authorization</name>
                     <t>A server may notify a client when a resource is protected by requiring a signature.
@@ -259,6 +265,7 @@ WWW-Authenticate: Signature
 
 ...]]></sourcecode>
                 </section>
+
                 <section anchor="auth-rsa-example">
                     <name>RSA Example</name>
                     <t keepWithNext="true">The authorization header and signature would be generated as:</t>
@@ -280,6 +287,7 @@ Authorization: Signature keyId="rsa-key-1",algorithm="hs2019",
 headers="(request-target) (created) host digest content-length",
 signature="Base64(RSA-SHA512(signing string))"]]></sourcecode>
                 </section>
+
                 <section anchor="auth-hmac-example">
                     <name>HMAC Example</name>
                     <t keepWithNext="true">For an HMAC-based signature without a list of headers specified, the authorization header and signature would be generated as:</t>
@@ -297,10 +305,12 @@ content-length: 18]]></sourcecode>
                 </section>
             </section>
         </section>
+
         <section anchor="sig">
             <name>The 'Signature' HTTP Header</name>
             <t>The "Signature" HTTP Header provides a mechanism to link the headers of a message (client request or server response) to a digital signature.  By including the "Digest" header with a properly formatted digest, the message body can also be linked to the signature.  The signature is generated and verified either using a shared secret (e.g., HMAC) or public/private keys (e.g., RSA, EC).  This allows the receiver and/or any intermediate system to immediately or later verify the integrity of the message.  When the signature is generated with a private key it can also provide a measure of non-repudiation, though a full implementation of a non-repudiatable statement is beyond the scope of this specification and highly dependent on implementation.</t>
             <t>The "Signature" scheme can also be used for authentication similar to the purpose of the <xref target="auth-scheme">'Signature' HTTP Authentication Scheme</xref>.  The scheme is parameterized enough such that it is not bound to any particular key type or signing algorithm.</t>
+
             <section anchor="sig-header">
                 <name>Signature Header</name>
                 <t>The sender is expected to transmit a header (as defined in <xref target="RFC7230" section="3.2" sectionFormat="comma">RFC 7230</xref>) where the "field-name" is "Signature", and the "field-value" contains one or more "auth-param"s (as defined in <xref target="RFC7235" section="4.1" sectionFormat="comma">RFC 7235</xref>) where the "auth-param" parameters meet the requirements listed in Section 2: The Components of a Signature.</t>
@@ -315,6 +325,7 @@ Content-Length: 18
 
 {"hello": "world"}]]></sourcecode>
                 <t>The following sections assume that the "rsa-key-1" keyId provided by the signer is an identifier meaningful to the server.</t>
+
                 <section anchor="sig-rsa-example">
                     <name>RSA Example</name>
                     <t keepWithNext="true">The signature header and signature would be generated as:</t>
@@ -339,6 +350,7 @@ Signature: keyId="rsa-key-1",algorithm="hs2019",created=1402170695,
     headers="(request-target) (created) host digest content-length",
     signature="Base64(RSA-SHA512(signing string))"]]></sourcecode>
                 </section>
+
                 <section anchor="sig-hmac-example">
                     <name>HMAC Example</name>
                     <t keepWithNext="true">For an HMAC-based signature without a list of headers specified, the authorization header and signature would be generated as:</t>
@@ -356,6 +368,7 @@ content-length: 18]]></sourcecode>
                 </section>
             </section>
         </section>
+
         <section anchor="iana">
             <name>IANA Considerations</name>
             <section anchor="iana-scheme">
@@ -365,6 +378,7 @@ content-length: 18]]></sourcecode>
 Reference: [RFC_THIS_DOCUMENT], Section 2. 
 Notes (optional): The Signature scheme is designed for clients to authenticate themselves with a server.</t>
             </section>
+
             <section anchor="hsa-registry">
                 <name>HTTP Signatures Algorithms Registry</name>
                 <t>The following initial entries should be added to the Canonicalization Algorithms Registry to be created and maintained at (the suggested URI) <eref target="https://www.iana.org/assignments/shm-algorithms"/>:</t>
@@ -410,6 +424,7 @@ Notes (optional): The Signature scheme is designed for clients to authenticate t
                 </ul>
             </section>
         </section>
+
         <section anchor="security">
             <name>Security Considerations</name>
             <t>There are a number of security considerations to take into account when implementing or utilizing this specification.  A thorough security analysis of this protocol, including its strengths and weaknesses, can be found in <xref target="WP-HTTP-Sig-Audit">Security Considerations for HTTP Signatures</xref>.</t>
@@ -458,6 +473,7 @@ Notes (optional): The Signature scheme is designed for clients to authenticate t
                 </reference>
             </references>
         </references>
+
         <section anchor="appendix-a">
             <name>Extensions</name>
             <t>This specification was designed to be simple, modular, and extensible.  There are a number of other specifications that build on this one.  For example, the <xref target="WP-HTTP-Sig-Nonces">HTTP Signature Nonces</xref> specification details how to use HTTP Signatures over a non-secured channel like HTTP and the <xref target="WP-HTTP-Sig-Trailers">HTTP Signature Trailers</xref> specification explains how to apply HTTP Signatures to streaming content.  Developers that desire more functionality than this specification provides are urged to ensure that an extension specification doesn't already exist before implementing a proprietary extension.</t>
@@ -469,6 +485,7 @@ Reference to specification: [HTTP_AUTH_SIGNATURE_NONCE], Section XYZ.
 Notes (optional): The HTTP Signature Nonces specification details
 how to use HTTP Signatures over a unsecured channel like HTTP.]]></sourcecode>
         </section>
+
         <section anchor="appendix-b">
             <name>Test Values</name>
             <t>WARNING: THESE TEST VECTORS ARE OLD AND POSSIBLY WRONG.  THE NEXT VERSION OF THIS SPECIFICATION WILL CONTAIN THE PROPER TEST VECTORS.</t>
@@ -506,6 +523,7 @@ Digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 Content-Length: 18
 
 {"hello": "world"}]]></sourcecode>
+
             <section anchor="default-test">
                 <name>Default Test</name>
                 <t keepWithNext="true">If a list of headers is not included, the date is the only header that is signed by default for rsa-sha256.  The string to sign would be:</t>
@@ -524,6 +542,7 @@ signature="SjWJWbWN7i0wzBvtPl8rbASWz5xQW6mcJmn+ibttBqtifLN7Sazz
 6m79cNfwwb8DMJ5cou1s7uEGKKCs+FLEEaDV5lp7q25WqS+lavg7T8hc0GppauB
 6hbgEKTwblDHYGEtbGmtdHgVCk9SuS13F0hZ8FD0k/5OxEPXe5WozsbM="]]></sourcecode>
             </section>
+
             <section anchor="basic-test">
                 <name>Basic Test</name>
                 <t keepWithNext="true">The minimum recommended data to sign is the (request-target), host, and date.  In this case, the string to sign would be:</t>
@@ -539,6 +558,7 @@ Authorization: Signature keyId="Test",algorithm="rsa-sha256",
     2mg2+SbrQDMCJypxBLSPQR2aAjn7ndmw2iicw3HMbe8VfEdKFYRqzic+efkb3
     nndiv/x1xSHDJWeSWkx3ButlYSuBskLu6kd9Fswtemr3lgdDEmn04swr2Os0="]]></sourcecode>
             </section>
+
             <section anchor="all-headers-test">
                 <name>All Headers Test</name>
                 <t keepWithNext="true">A strong signature including all of the headers and a digest of the body of the HTTP request would result in the following signing string:</t>
@@ -569,6 +589,7 @@ Signature: keyId="Test",algorithm="rsa-sha256",
         ZFukWgHoBTLMhYS2Gb51gWxpeIq8knRmPnYePbF5MOkR0Zkly4zKH7s1dE="]]></sourcecode>
             </section>
         </section>
+
         <section anchor="acknowledgements" numbered="false">
             <name>Acknowledgements</name>
             <t>This specification is based on the draft-cavage-http-signatures draft.  The editor would like to thank the authors of that draft, Mark Cavage and Manu Sporny, for their work on that draft and their continuing contributions.</t>
@@ -607,6 +628,7 @@ Chris Webber, and
 Jeffrey Yasskin
             </t>
         </section>
+
         <section numbered="false" removeInRFC="true">
             <name>Document History</name>
             <ul>
@@ -620,6 +642,8 @@ Jeffrey Yasskin
                                 <li>Rewrote abstract and introduction to focus on general purpose signing and avoid specific use cases.</li>
                                 <li>Added intro sections on challenges with HTTP message signing, and listing innocuous transformations that the signing mechanism must tolerate.</li>
                                 <li>Added Document History section.</li>
+                                <li>Removed informative intro sections on Signatures in HTTP Requests/Responses, as they imply specific use cases.</li>
+                                <li>Moved BCP 14 message under intro section.</li>
                             </ul>
                         </li>
                     </ul>
