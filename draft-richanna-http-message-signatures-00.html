@@ -1149,7 +1149,7 @@ aside > p {
             <p id="section-toc.1-1.2.1"><a href="#section-2" class="xref">2</a>.  <a href="#name-definitions-2" class="xref">Definitions</a><a href="#section-toc.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="toc ulEmpty" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-the-components-of-a-signatur" class="xref">The Components of a Signature</a><a href="#section-toc.1-1.3.1" class="pilcrow">¶</a></p>
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-http-message-signatures-2" class="xref">HTTP Message Signatures</a><a href="#section-toc.1-1.3.1" class="pilcrow">¶</a></p>
 <ul class="toc ulEmpty">
 <li class="toc ulEmpty" id="section-toc.1-1.3.2.1">
                 <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="xref">3.1</a>.  <a href="#name-signature-parameters-2" class="xref">Signature Parameters</a><a href="#section-toc.1-1.3.2.1.1" class="pilcrow">¶</a></p>
@@ -1343,12 +1343,12 @@ aside > p {
 </dl>
 </section>
 </div>
-<div id="components">
+<div id="message-signatures">
 <section id="section-3">
-      <h2 id="name-the-components-of-a-signatur">
-<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-the-components-of-a-signatur" class="section-name selfRef">The Components of a Signature</a>
+      <h2 id="name-http-message-signatures-2">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-http-message-signatures-2" class="section-name selfRef">HTTP Message Signatures</a>
       </h2>
-<p id="section-3-1">There are a number of components in a signature that are common between the 'Signature' HTTP Authentication Scheme and the 'Signature' HTTP Header.  This section details the components of the digital signature parameters common to both schemes.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">An HTTP Message Signature represents a signature over a subset of protocol elements within an HTTP message.  It consists of a set of Signature Parameters containing the signature itself along with metadata describing how the signature was generated and which protocol elements are covered by it.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <div id="params">
 <section id="section-3.1">
         <h3 id="name-signature-parameters-2">
@@ -2051,6 +2051,8 @@ Jeffrey Yasskin<a href="#section-appendix.c-2" class="pilcrow">¶</a></p>
                 <li id="section-appendix.d-2.1.2.1.2.17">Added definitions for Signer and Verifier, and placeholder entries for Signing Algorithm and Signing String.<a href="#section-appendix.d-2.1.2.1.2.17" class="pilcrow">¶</a>
 </li>
                 <li id="section-appendix.d-2.1.2.1.2.18">Added definition of signature as applying to both digital signatures and MACs.<a href="#section-appendix.d-2.1.2.1.2.18" class="pilcrow">¶</a>
+</li>
+                <li id="section-appendix.d-2.1.2.1.2.19">Renamed The Components of a Signature to HTTP Message Signatures. Revised to define message signatures without reference to Authorization or Signature headers.<a href="#section-appendix.d-2.1.2.1.2.19" class="pilcrow">¶</a>
 </li>
               </ul>
 </li>

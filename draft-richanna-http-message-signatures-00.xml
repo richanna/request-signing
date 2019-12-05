@@ -136,9 +136,9 @@
             </dl>
         </section>
 
-        <section anchor="components">
-            <name>The Components of a Signature</name>
-            <t>There are a number of components in a signature that are common between the 'Signature' HTTP Authentication Scheme and the 'Signature' HTTP Header.  This section details the components of the digital signature parameters common to both schemes.</t>
+        <section anchor="message-signatures">
+            <name>HTTP Message Signatures</name>
+            <t>An HTTP Message Signature represents a signature over a subset of protocol elements within an HTTP message.  It consists of a set of Signature Parameters containing the signature itself along with metadata describing how the signature was generated and which protocol elements are covered by it.</t>
 
             <section anchor="params">
                 <name>Signature Parameters</name>
@@ -685,6 +685,7 @@ Jeffrey Yasskin
                                 <li>Added definitions for HTTP-related terms by referencing RFC 7230.</li>
                                 <li>Added definitions for Signer and Verifier, and placeholder entries for Signing Algorithm and Signing String.</li>
                                 <li>Added definition of signature as applying to both digital signatures and MACs.</li>
+                                <li>Renamed The Components of a Signature to HTTP Message Signatures. Revised to define message signatures without reference to Authorization or Signature headers.</li>
                             </ul>
                         </li>
                     </ul>
