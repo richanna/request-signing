@@ -308,8 +308,6 @@ content-length: 18]]></sourcecode>
                         <dd><tt>hs2019</tt></dd>
                         <dt>Status</dt>
                         <dd>active</dd>
-                        <dt>Canonicalization Algorithm</dt>
-                        <dd>[RFC_THIS_DOCUMENT], <xref target="canonicalization"/>: <xref target="canonicalization" format="title"/></dd> 
                         <dt>Hash Algorithm</dt>
                         <dd><xref target="RFC6234">RFC 6234</xref>, SHA-512 (SHA-2 with 512-bits of digest output)</dd>
                         <dt>Digital Signature Algorithm</dt>
@@ -324,8 +322,6 @@ content-length: 18]]></sourcecode>
                         <dd><tt>rsa-sha1</tt></dd>
                         <dt>Status</dt>
                         <dd>deprecated, SHA-1 not secure.</dd>
-                        <dt>Canonicalization Algorithm</dt>
-                        <dd>[RFC_THIS_DOCUMENT], <xref target="canonicalization"/>: <xref target="canonicalization" format="title"/></dd> 
                         <dt>Hash Algorithm</dt>
                         <dd><xref target="RFC6234">RFC 6234</xref>, SHA-1 (SHA-1 with 160-bits of digest output)</dd>
                         <dt>Digital Signature Algorithm</dt>
@@ -340,8 +336,6 @@ content-length: 18]]></sourcecode>
                         <dd><tt>rsa-sha256</tt></dd>
                         <dt>Status</dt>
                         <dd>deprecated, specifying signature algorithm enables attack vector.</dd>
-                        <dt>Canonicalization Algorithm</dt>
-                        <dd>[RFC_THIS_DOCUMENT], <xref target="canonicalization"/>: <xref target="canonicalization" format="title"/></dd>
                         <dt>Hash Algorithm</dt>
                         <dd><xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)</dd>
                         <dt>Digital Signature Algorithm</dt>
@@ -356,8 +350,6 @@ content-length: 18]]></sourcecode>
                         <dd><tt>hmac-sha256</tt></dd>
                         <dt>Status</dt>
                         <dd>deprecated, specifying signature algorithm enables attack vector.</dd>
-                        <dt>Canonicalization Algorithm</dt>
-                        <dd>[RFC_THIS_DOCUMENT], <xref target="canonicalization"/>: <xref target="canonicalization" format="title"/></dd>
                         <dt>Hash Algorithm</dt>
                         <dd><xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)</dd>
                         <dt>Message Authentication Code Algorithm</dt>
@@ -372,8 +364,6 @@ content-length: 18]]></sourcecode>
                         <dd><tt>ecdsa-sha256</tt></dd>
                         <dt>Status</dt>
                         <dd>deprecated, specifying signature algorithm enables attack vector.</dd>
-                        <dt>Canonicalization Algorithm</dt>
-                        <dd>[RFC_THIS_DOCUMENT], <xref target="canonicalization"/>: <xref target="canonicalization" format="title"/></dd>
                         <dt>Hash Algorithm</dt>
                         <dd><xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)</dd>
                         <dt>Digital Signature Algorithm</dt>
@@ -602,6 +592,7 @@ Jeffrey Yasskin
                                 <li>Removed informative intro sections on Signatures in HTTP Requests/Responses, as they imply specific use cases.</li>
                                 <li>Moved BCP 14 message under intro section.</li>
                                 <li>Removed <tt>Signature</tt> auth-scheme definition and non-normative description of using the <tt>Signature</tt> header field for authentication.</li>
+                                <li>Removed "Canonicalization Algorithm" from HTTP Signature Algorithms registry entries.</li>
                             </ul>
                         </li>
                     </ul>
