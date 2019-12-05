@@ -308,15 +308,13 @@ content-length: 18]]></sourcecode>
                         <dd><tt>hs2019</tt></dd>
                         <dt>Status</dt>
                         <dd>active</dd>
-                        <dt>Hash Algorithm</dt>
-                        <dd><xref target="RFC6234">RFC 6234</xref>, SHA-512 (SHA-2 with 512-bits of digest output)</dd>
-                        <dt>Digital Signature Algorithm</dt>
+                        <dt>Description</dt>
                         <dd>
                             <t keepWithNext="true">Derived from metadata associated with <tt>keyId</tt>.  Recommend support for:</t>
                             <ul>
-                                <li>RSASSA-PSS <xref target="RFC8017"/></li>
-                                <li>SHA-Based HMACs <xref target="RFC6234"/></li>
-                                <li>ECDSA using curve P-256 <xref target="FIPS186-4"/></li>
+                                <li>RSASSA-PSS <xref target="RFC8017"/> using SHA-512 <xref target="RFC6234"/></li>
+                                <li>HMAC using SHA-512 <xref target="RFC6234"/></li>
+                                <li>ECDSA using curve P-256 <xref target="FIPS186-4"/> and SHA-512 <xref target="RFC6234"/></li>
                                 <li>Ed25519ph, Ed25519ctx, and Ed25519 <xref target="RFC8032"/></li>
                             </ul>
                         </dd>
@@ -330,10 +328,8 @@ content-length: 18]]></sourcecode>
                         <dd><tt>rsa-sha1</tt></dd>
                         <dt>Status</dt>
                         <dd>deprecated, SHA-1 not secure.</dd>
-                        <dt>Hash Algorithm</dt>
-                        <dd><xref target="RFC6234">RFC 6234</xref>, SHA-1 (SHA-1 with 160-bits of digest output)</dd>
-                        <dt>Digital Signature Algorithm</dt>
-                        <dd>RSASSA-PKCS1-v1_5 <xref target="RFC8017"/></dd>
+                        <dt>Description</dt>
+                        <dd>RSASSA-PKCS1-v1_5 <xref target="RFC8017"/> using SHA-1 <xref target="RFC6234"/></dd>
                     </dl>
                 </section>
 
@@ -344,10 +340,8 @@ content-length: 18]]></sourcecode>
                         <dd><tt>rsa-sha256</tt></dd>
                         <dt>Status</dt>
                         <dd>deprecated, specifying signature algorithm enables attack vector.</dd>
-                        <dt>Hash Algorithm</dt>
-                        <dd><xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)</dd>
-                        <dt>Digital Signature Algorithm</dt>
-                        <dd>RSASSA-PKCS1-v1_5 <xref target="RFC8017"/></dd>
+                        <dt>Description</dt>
+                        <dd>RSASSA-PKCS1-v1_5 <xref target="RFC8017"/> using SHA-256 <xref target="RFC6234"/></dd>
                     </dl>
                 </section>
 
@@ -358,10 +352,8 @@ content-length: 18]]></sourcecode>
                         <dd><tt>hmac-sha256</tt></dd>
                         <dt>Status</dt>
                         <dd>deprecated, specifying signature algorithm enables attack vector.</dd>
-                        <dt>Hash Algorithm</dt>
-                        <dd><xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)</dd>
-                        <dt>Message Authentication Code Algorithm</dt>
-                        <dd>SHA-Based HMACs <xref target="RFC6234"/></dd>
+                        <dt>Description</dt>
+                        <dd>HMAC using SHA-256 <xref target="RFC6234"/></dd>
                     </dl>
                 </section>
 
@@ -372,10 +364,8 @@ content-length: 18]]></sourcecode>
                         <dd><tt>ecdsa-sha256</tt></dd>
                         <dt>Status</dt>
                         <dd>deprecated, specifying signature algorithm enables attack vector.</dd>
-                        <dt>Hash Algorithm</dt>
-                        <dd><xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)</dd>
-                        <dt>Digital Signature Algorithm</dt>
-                        <dd>ECDSA using curve P-256 <xref target="FIPS186-4"/></dd>
+                        <dt>Description</dt>
+                        <dd>ECDSA using curve P-256 <xref target="FIPS186-4"/> and SHA-256 <xref target="RFC6234"/></dd>
                     </dl>
                 </section>
             </section>
@@ -612,6 +602,7 @@ Jeffrey Yasskin
                                 <li>Removed <tt>Signature</tt> auth-scheme definition and non-normative description of using the <tt>Signature</tt> header field for authentication.</li>
                                 <li>Removed "Canonicalization Algorithm" from HTTP Signature Algorithms registry entries.</li>
                                 <li>Replaced mentions of ANSI X9.64 with normative references to FIPS 186-4.</li>
+                                <li>Combined HTTP Signature Algorithms registry entry algorithm fields into a "Description" field.</li>
                             </ul>
                         </li>
                     </ul>
