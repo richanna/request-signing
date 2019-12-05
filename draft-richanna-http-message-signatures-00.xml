@@ -67,20 +67,20 @@
         <keyword>digital signature</keyword>
         <keyword>PKI</keyword>
         <abstract>
-            <t>This document describes a mechanism for creating, encoding, and validating digital signatures or message authentication codes over subsets of elements within HTTP messages.  This mechanism supports use cases where the full HTTP message may not be known to the signer, and where the message may be transformed (e.g., by intermediaries) before reaching the validator.</t>
+            <t>This document describes a mechanism for creating, encoding, and verifying digital signatures or message authentication codes over subsets of elements within HTTP messages.  This mechanism supports use cases where the full HTTP message may not be known to the signer, and where the message may be transformed (e.g., by intermediaries) before reaching the verifier.</t>
         </abstract>
     </front>
     <middle>
         <section anchor="intro">
             <name>Introduction</name>
-            <t>This document describes a mechanism for creating, encoding, and validating digital signatures or message authentication codes (MACs) over subsets of elements within <xref target="RFC7230">HTTP messages</xref>.  HTTP presents particular challenges for digital signatures and MACs, both due to its design and popular usage patterns.  The generic mechanism presented in this document overcomes these challenges, allowing applications built on HTTP to create signatures over those elements of HTTP messages that are relevant to the application, such that changes to other elements of the message do not prevent verification of the signature.</t>
+            <t>This document describes a mechanism for creating, encoding, and verifying digital signatures or message authentication codes (MACs) over subsets of elements within <xref target="RFC7230">HTTP messages</xref>.  HTTP presents particular challenges for digital signatures and MACs, both due to its design and popular usage patterns.  The generic mechanism presented in this document overcomes these challenges, allowing applications built on HTTP to create signatures over those elements of HTTP messages that are relevant to the application, such that changes to other elements of the message do not prevent verification of the signature.</t>
             
             <t>The mechanism described in this document consists of four parts:</t>
             <ul>
                 <li>Rules for creating canonical representations of message elements for the purpose of signing</li>
                 <li>Rules for signing a set of these canonical representations</li>
                 <li>A mechanism for attaching a signature and related metadata to an HTTP message</li>
-                <li>Instructions on how to validate an HTTP message signature</li>
+                <li>Instructions on how to verify an HTTP message signature</li>
             </ul>
 
             <section anchor="about_sigs">
@@ -115,10 +115,25 @@
                 </ul>
             </section>
 
-            <section anchor="terms">
+            <section anchor="bcp14-terms">
                 <name>Conventions and Terminology</name>
                 <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119">BCP14</xref> <xref target="RFC8174"/> when, and only when, they appear in all capitals, as shown here.</t>
             </section>
+        </section>
+
+        <section anchor="definitions">
+            <name>Definitions</name>
+            <t>The terms "HTTP message", "HTTP request", "HTTP response", "header field", "sender", and "recipient" take their meaning from <xref target="RFC7230">HTTP</xref>.</t>
+
+            <t>For brevity, the term "signature" on its own is used in this document to refer to both digital signatures and keyed MACs. Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given input string. The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.</t>
+
+            <t keepWithNext="true">In addition to those listed above, this document uses the following terms:</t>
+            <dl newline="true">
+                <dt>Signer</dt><dd>The entity that is generating or has generated an HTTP Message Signature.</dd>
+                <dt>Signing Algorithm</dt><dd><cref source="AB">TODO</cref></dd>
+                <dt>Signing String</dt><dd><cref source="AB">TODO</cref></dd>
+                <dt>Verifier</dt><dd>An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message.  Note that an HTTP Message Signature may be verified by multiple entities, and thus have multiple verifiers.</dd>
+            </dl>
         </section>
 
         <section anchor="components">
@@ -138,7 +153,7 @@
 
                     <dt anchor="created"><tt>created</tt></dt>
                     <dd>
-                        <t><bcp14>RECOMMENDED</bcp14>.  The <tt>created</tt> field expresses when the signature was created.  The value <bcp14>MUST</bcp14> be an integer representing the number of seconds since the Epoch, as defined in <eref target="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</eref> of <xref target="POSIX.1"/>.  A signature with a <tt>created</tt> timestamp value that is in the future <bcp14>MUST NOT</bcp14> be processed.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as <xref target="RFC3339"/>.  Sub-second precision is not supported.  This value is useful when clients are not capable of controlling the <tt>Date</tt> HTTP Header such as when operating in certain web browser environments.</t>
+                        <t><bcp14>RECOMMENDED</bcp14>.  The <tt>created</tt> field expresses when the signature was created.  The value <bcp14>MUST</bcp14> be an integer representing the number of seconds since the Epoch, as defined in <eref target="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</eref> of <xref target="POSIX.1"/>.  A signature with a <tt>created</tt> timestamp value that is in the future <bcp14>MUST NOT</bcp14> be processed.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as <xref target="RFC3339"/>.  Sub-second precision is not supported.  This value is useful when signers are not capable of controlling the <tt>Date</tt> HTTP Header such as when operating in certain web browser environments.</t>
                         <t><cref source="AB">This wording implies that verifiers are not permitted to account for clock skew during signature verification.</cref></t>
                     </dd>
 
@@ -162,13 +177,13 @@
 
                     <dt anchor="keyId"><tt>keyId</tt></dt>
                     <dd>
-                        <t><bcp14>REQUIRED</bcp14>.  The <tt>keyId</tt> field is an opaque string that the server can use to look up the component they need to validate the signature.  It could be an SSH key fingerprint, a URL to machine-readable key data, an LDAP DN, etc.  Management of keys and assignment of <tt>keyId</tt> is out of scope for this document.  Implementations <bcp14>MUST</bcp14> be able to discover metadata about the key from the <tt>keyId</tt> such that they can determine the type of digital signature algorithm to employ when creating or verifying signatures.</t>
+                        <t><bcp14>REQUIRED</bcp14>.  The <tt>keyId</tt> field is an opaque string that the verifier can use to look up the component they need to verify the signature.  It could be an SSH key fingerprint, a URL to machine-readable key data, an LDAP DN, etc.  Management of keys and assignment of <tt>keyId</tt> is out of scope for this document.  Implementations <bcp14>MUST</bcp14> be able to discover metadata about the key from the <tt>keyId</tt> such that they can determine the type of digital signature algorithm to employ when creating or verifying signatures.</t>
                         <t><cref source="AB">While we need to allow for flexibility in key specification, leaving it completely undefined hurts interoperability.  We could borrow from JOSE and define <tt>jwk</tt> and <tt>jku</tt> parameters as extensible ways to specify common types of keys.</cref></t>
                     </dd>
 
                     <dt anchor="signature"><tt>signature</tt></dt>
                     <dd>
-                        <t><bcp14>REQUIRED</bcp14>.  The <tt>signature</tt> parameter is a base 64 encoded digital signature, as described in <xref target="RFC4648" section="4" sectionFormat="comma">RFC 4648</xref>.  The client uses the <tt>algorithm</tt> and <tt>headers</tt> Signature Parameters to form a canonicalized <tt>signing string</tt>.  This <tt>signing string</tt> is then signed using the key associated with the <tt>keyId</tt> according to its digital signature algorithm.  The <tt>signature</tt> parameter is then set to the base 64 encoding of the signature.</t>
+                        <t><bcp14>REQUIRED</bcp14>.  The <tt>signature</tt> parameter is a base 64 encoded digital signature, as described in <xref target="RFC4648" section="4" sectionFormat="comma">RFC 4648</xref>.  The signer uses the <tt>algorithm</tt> and <tt>headers</tt> Signature Parameters to form a canonicalized <tt>signing string</tt>.  This <tt>signing string</tt> is then signed using the key associated with the <tt>keyId</tt> according to its digital signature algorithm.  The <tt>signature</tt> parameter is then set to the base 64 encoding of the signature.</t>
                     </dd>
                 </dl>
             </section>
@@ -176,8 +191,8 @@
             <section anchor="canonicalization">
                 <name>Signature String Construction</name>
                 <t>A signed HTTP message needs to be tolerant of some trivial alterations during transmission as it goes through gateways, proxies, and other entities.  These changes are often of little consequence and very benign, but also often not visible to or detectable by either the sender or the recipient.  Simply signing the entire message that was transmitted by the sender is therefore not feasible: Even very minor changes would result in a signature which cannot be verified.</t>
-                <t>This specification allows the sender to select which headers are meaningful by including their names in the <tt>headers</tt> Signature Parameter.  The headers appearing in this parameter are then used to construct the intermediate Signature String, which is the data that is actually signed.</t>
-                <t>In order to generate the string that is signed with a key, the client <bcp14>MUST</bcp14> use the values of each HTTP header field in the <tt>headers</tt> Signature Parameter, in the order they appear in the <tt>headers</tt> Signature Parameter.  It is out of scope for this document to dictate what header fields an application will want to enforce, but implementers <bcp14>SHOULD</bcp14> at minimum include the <tt>(request-target)</tt> and <tt>(created)</tt> header fields if <tt>algorithm</tt> does not start with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt>.  Otherwise, <tt>(request-target)</tt> and <tt>date</tt> <bcp14>SHOULD</bcp14> be included in the signature.</t>
+                <t>This specification allows the signer to select which headers are meaningful by including their names in the <tt>headers</tt> Signature Parameter.  The headers appearing in this parameter are then used to construct the intermediate Signature String, which is the data that is actually signed.</t>
+                <t>In order to generate the string that is signed with a key, the signer <bcp14>MUST</bcp14> use the values of each HTTP header field in the <tt>headers</tt> Signature Parameter, in the order they appear in the <tt>headers</tt> Signature Parameter.  It is out of scope for this document to dictate what header fields an application will want to enforce, but implementers <bcp14>SHOULD</bcp14> at minimum include the <tt>(request-target)</tt> and <tt>(created)</tt> header fields if <tt>algorithm</tt> does not start with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt>.  Otherwise, <tt>(request-target)</tt> and <tt>date</tt> <bcp14>SHOULD</bcp14> be included in the signature.</t>
                 <t>To include the HTTP request target in the signature calculation, use the special <tt>(request-target)</tt> header field name.  To include the signature creation time, use the special <tt>(created)</tt> header field name.  To include the signature expiration time, use the special <tt>(expires)</tt> header field name.
                 </t>
                 <ol>
@@ -219,7 +234,7 @@ x-example: Example header with some whitespace.]]></sourcecode>
 
             <section anchor="create">
                 <name>Creating a Signature</name>
-                <t>In order to create a signature, a client <bcp14>MUST</bcp14>:
+                <t>In order to create a signature, a signer <bcp14>MUST</bcp14>:
                 </t>
                 <ol>
                     <li>Use the <tt>headers</tt> and <tt>algorithm</tt> values as well as the contents of the HTTP message, to create the signature string.</li>
@@ -231,7 +246,7 @@ x-example: Example header with some whitespace.]]></sourcecode>
 
             <section anchor="verify">
                 <name>Verifying a Signature</name>
-                <t>In order to verify a signature, a server <bcp14>MUST</bcp14>:
+                <t>In order to verify a signature, a verifier <bcp14>MUST</bcp14>:
                 </t>
                 <ol>
                     <li>Use the received HTTP message, the <tt>headers</tt> value, and the <xref target="canonicalization" format="title"/> (<xref target="canonicalization"/>) algorithm to recreate the signature.</li>
@@ -262,7 +277,7 @@ Digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 Content-Length: 18
 
 {"hello": "world"}]]></sourcecode>
-                <t>The following sections assume that the "rsa-key-1" keyId provided by the signer is an identifier meaningful to the server.</t>
+                <t>The following sections assume that the "rsa-key-1" keyId provided by the signer is an identifier meaningful to the verifier.</t>
 
                 <section anchor="sig-rsa-example">
                     <name>RSA Example</name>
@@ -273,7 +288,7 @@ Signature: keyId="rsa-key-1",algorithm="hs2019",
     headers="(request-target) (created) (expires)
         host date digest content-length",
     signature="Base64(RSA-SHA256(signing string))"]]></sourcecode>
-                    <t keepWithNext="true">The client would compose the signing string as:</t>
+                    <t keepWithNext="true">The signer would compose the signing string as:</t>
                     <sourcecode><![CDATA[
 (request-target): post /foo\n
 (created): 1402170695
@@ -296,7 +311,7 @@ Signature: keyId="rsa-key-1",algorithm="hs2019",created=1402170695,
 Signature: keyId="hmac-key-1",algorithm="hs2019",created=1402170695,
     headers="(request-target) (created) host digest content-length",
     signature="Base64(HMAC-SHA512(signing string))"]]></sourcecode>
-                    <t keepWithNext="true">The only difference between the RSA Example and the HMAC Example is the signature algorithm that is used.  The client would compose the signing string in the same way as the RSA Example above:</t>
+                    <t keepWithNext="true">The only difference between the RSA Example and the HMAC Example is the signature algorithm that is used.  The signer would compose the signing string in the same way as the RSA Example above:</t>
                     <sourcecode><![CDATA[
 (request-target): post /foo\n
 (created): 1402170695
@@ -667,6 +682,9 @@ Jeffrey Yasskin
                                 <li>Added normative reference to RFC 2104 for HMAC.</li>
                                 <li>Added informative reference to RFC 3339.</li>
                                 <li>Added normative reference to POSIX.1 in `created` and `expires` parameter definitions.</li>
+                                <li>Added definitions for HTTP-related terms by referencing RFC 7230.</li>
+                                <li>Added definitions for Signer and Verifier, and placeholder entries for Signing Algorithm and Signing String.</li>
+                                <li>Added definition of signature as applying to both digital signatures and MACs.</li>
                             </ul>
                         </li>
                     </ul>
