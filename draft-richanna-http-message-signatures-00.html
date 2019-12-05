@@ -1334,12 +1334,12 @@ aside > p {
 </dd>
 <dt id="section-2.1-2.3"><code>created</code></dt>
           <dd id="section-2.1-2.4">
-            <p id="section-2.1-2.4.1"><span class="bcp14">RECOMMENDED</span>.  The <code>created</code> field expresses when the signature was created.  The value <span class="bcp14">MUST</span> be a Unix timestamp integer value.  A signature with a <code>created</code> timestamp value that is in the future <span class="bcp14">MUST NOT</span> be processed.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as RFC3339.  Subsecond precision is not supported.  This value is useful when clients are not capable of controlling the <code>Date</code> HTTP Header such as when operating in certain web browser environments.<a href="#section-2.1-2.4.1" class="pilcrow">¶</a></p>
+            <p id="section-2.1-2.4.1"><span class="bcp14">RECOMMENDED</span>.  The <code>created</code> field expresses when the signature was created.  The value <span class="bcp14">MUST</span> be an integer representing the number of seconds since the Epoch, as defined in <a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</a> of <span>[<a href="#POSIX.1" class="xref">POSIX.1</a>]</span>.  A signature with a <code>created</code> timestamp value that is in the future <span class="bcp14">MUST NOT</span> be processed.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as <span>[<a href="#RFC3339" class="xref">RFC3339</a>]</span>.  Sub-second precision is not supported.  This value is useful when clients are not capable of controlling the <code>Date</code> HTTP Header such as when operating in certain web browser environments.<a href="#section-2.1-2.4.1" class="pilcrow">¶</a></p>
 <p id="section-2.1-2.4.2"><span class="cref">This wording implies that verifiers are not permitted to account for clock skew during signature verification.<span class="crefSource">AB</span></span><a href="#section-2.1-2.4.2" class="pilcrow">¶</a></p>
 </dd>
 <dt id="section-2.1-2.5"><code>expires</code></dt>
           <dd id="section-2.1-2.6">
-            <p id="section-2.1-2.6.1"><span class="bcp14">OPTIONAL</span>.  The <code>expires</code> field expresses when the signature ceases to be valid.  The value <span class="bcp14">MUST</span> be a Unix timestamp integer value.  A signature with an <code>expires</code> timestamp value that is in the past <span class="bcp14">MUST NOT</span> be processed.  Using a Unix timestamp simplifies processing and avoid timezone management existing in RFC3339.  Subsecod precision is allowed using decimal notation.<a href="#section-2.1-2.6.1" class="pilcrow">¶</a></p>
+            <p id="section-2.1-2.6.1"><span class="bcp14">OPTIONAL</span>.  The <code>expires</code> field expresses when the signature ceases to be valid.  The value <span class="bcp14">MUST</span> be a decimal representing the number of seconds since the Epoch, as defined in <a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</a> of <span>[<a href="#POSIX.1" class="xref">POSIX.1</a>]</span>.  A signature with an <code>expires</code> timestamp value that is in the past <span class="bcp14">MUST NOT</span> be processed.  Using a Unix timestamp simplifies processing and avoid timezone management existing in <span>[<a href="#RFC3339" class="xref">RFC3339</a>]</span>.  Sub-second precision is allowed using decimal notation.<a href="#section-2.1-2.6.1" class="pilcrow">¶</a></p>
 <p id="section-2.1-2.6.2"><span class="cref">This wording implies that verifiers are not permitted to account for clock skew during signature verification.<span class="crefSource">AB</span></span><a href="#section-2.1-2.6.2" class="pilcrow">¶</a></p>
 </dd>
 <dt id="section-2.1-2.7"><code>headers</code></dt>
@@ -1600,7 +1600,7 @@ content-length: 18</pre><a href="#section-3.1.2-4" class="pilcrow">¶</a>
 <ul>
 <li id="section-4.1.2.1-1.6.2.1">RSASSA-PSS <span>[<a href="#RFC8017" class="xref">RFC8017</a>]</span> using SHA-512 <span>[<a href="#RFC6234" class="xref">RFC6234</a>]</span><a href="#section-4.1.2.1-1.6.2.1" class="pilcrow">¶</a>
 </li>
-                  <li id="section-4.1.2.1-1.6.2.2">HMAC using SHA-512 <span>[<a href="#RFC6234" class="xref">RFC6234</a>]</span><a href="#section-4.1.2.1-1.6.2.2" class="pilcrow">¶</a>
+                  <li id="section-4.1.2.1-1.6.2.2">HMAC <span>[<a href="#RFC2104" class="xref">RFC2104</a>]</span> using SHA-512 <span>[<a href="#RFC6234" class="xref">RFC6234</a>]</span><a href="#section-4.1.2.1-1.6.2.2" class="pilcrow">¶</a>
 </li>
                   <li id="section-4.1.2.1-1.6.2.3">ECDSA using curve P-256 <span>[<a href="#FIPS186-4" class="xref">DSS</a>]</span> and SHA-512 <span>[<a href="#RFC6234" class="xref">RFC6234</a>]</span><a href="#section-4.1.2.1-1.6.2.3" class="pilcrow">¶</a>
 </li>
@@ -1664,7 +1664,7 @@ content-length: 18</pre><a href="#section-3.1.2-4" class="pilcrow">¶</a>
 <p id="section-4.1.2.4-1.4.2"><span class="cref">What attack vector?  Can we mitigate it by including <code>algorithm</code> in the signing string?<span class="crefSource">AB</span></span><a href="#section-4.1.2.4-1.4.2" class="pilcrow">¶</a></p>
 </dd>
 <dt id="section-4.1.2.4-1.5">Description</dt>
-              <dd id="section-4.1.2.4-1.6">HMAC using SHA-256 <span>[<a href="#RFC6234" class="xref">RFC6234</a>]</span><a href="#section-4.1.2.4-1.6" class="pilcrow">¶</a>
+              <dd id="section-4.1.2.4-1.6">HMAC <span>[<a href="#RFC2104" class="xref">RFC2104</a>]</span> using SHA-256 <span>[<a href="#RFC6234" class="xref">RFC6234</a>]</span><a href="#section-4.1.2.4-1.6" class="pilcrow">¶</a>
 </dd>
 </dl>
 </section>
@@ -1717,6 +1717,12 @@ content-length: 18</pre><a href="#section-3.1.2-4" class="pilcrow">¶</a>
 <dt id="FIPS186-4">[DSS]</dt>
         <dd>
 <span class="refAuthor">NIST</span>, <span class="refTitle">"Digital Signature Standard (DSS)"</span>, <span class="seriesInfo">FIPS 186-4</span>, <span class="seriesInfo">DOI 10.6028/NIST.FIPS.186-4</span>, <time datetime="2013-07">July 2013</time>, <span>&lt;<a href="https://csrc.nist.gov/publications/detail/fips/186/4/final">https://csrc.nist.gov/publications/detail/fips/186/4/final</a>&gt;</span>. </dd>
+<dt id="POSIX.1">[POSIX.1]</dt>
+        <dd>
+<span class="refAuthor">IEEE</span><span class="refAuthor"> and The Open Group</span>, <span class="refTitle">"The Open Group Base Specifications Issue 7, 2018 edition"</span>, <span class="seriesInfo">IEEE Std 1003.1-2017</span>, <time datetime="2018">2018</time>, <span>&lt;<a href="https://pubs.opengroup.org/onlinepubs/9699919799/">https://pubs.opengroup.org/onlinepubs/9699919799/</a>&gt;</span>. </dd>
+<dt id="RFC2104">[RFC2104]</dt>
+        <dd>
+<span class="refAuthor">Krawczyk, H.</span><span class="refAuthor">, Bellare, M.</span><span class="refAuthor">, and R. Canetti</span>, <span class="refTitle">"HMAC: Keyed-Hashing for Message Authentication"</span>, <span class="seriesInfo">RFC 2104</span>, <span class="seriesInfo">DOI 10.17487/RFC2104</span>, <time datetime="1997-02">February 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2104">https://www.rfc-editor.org/info/rfc2104</a>&gt;</span>. </dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
@@ -1742,6 +1748,9 @@ content-length: 18</pre><a href="#section-3.1.2-4" class="pilcrow">¶</a>
 <a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-informative-references-2" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
+<dt id="RFC3339">[RFC3339]</dt>
+        <dd>
+<span class="refAuthor">Klyne, G.</span><span class="refAuthor"> and C. Newman</span>, <span class="refTitle">"Date and Time on the Internet: Timestamps"</span>, <span class="seriesInfo">RFC 3339</span>, <span class="seriesInfo">DOI 10.17487/RFC3339</span>, <time datetime="2002-07">July 2002</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc3339">https://www.rfc-editor.org/info/rfc3339</a>&gt;</span>. </dd>
 <dt id="RFC6234">[RFC6234]</dt>
         <dd>
 <span class="refAuthor">Eastlake 3rd, D.</span><span class="refAuthor"> and T. Hansen</span>, <span class="refTitle">"US Secure Hash Algorithms (SHA and SHA-based HMAC and HKDF)"</span>, <span class="seriesInfo">RFC 6234</span>, <span class="seriesInfo">DOI 10.17487/RFC6234</span>, <time datetime="2011-05">May 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6234">https://www.rfc-editor.org/info/rfc6234</a>&gt;</span>. </dd>
@@ -2001,6 +2010,12 @@ Jeffrey Yasskin<a href="#section-appendix.c-2" class="pilcrow">¶</a></p>
                 <li id="section-appendix.d-2.1.2.1.2.11">Revised HTTP Signature Algorithms registry definition.  Added change control policy and registry template.  Removed suggested URI.<a href="#section-appendix.d-2.1.2.1.2.11" class="pilcrow">¶</a>
 </li>
                 <li id="section-appendix.d-2.1.2.1.2.12">Moved normative text related to ambiguous signature parameters to Signature header definition.<a href="#section-appendix.d-2.1.2.1.2.12" class="pilcrow">¶</a>
+</li>
+                <li id="section-appendix.d-2.1.2.1.2.13">Added normative reference to RFC 2104 for HMAC.<a href="#section-appendix.d-2.1.2.1.2.13" class="pilcrow">¶</a>
+</li>
+                <li id="section-appendix.d-2.1.2.1.2.14">Added informative reference to RFC 3339.<a href="#section-appendix.d-2.1.2.1.2.14" class="pilcrow">¶</a>
+</li>
+                <li id="section-appendix.d-2.1.2.1.2.15">Added normative reference to POSIX.1 in `created` and `expires` parameter definitions.<a href="#section-appendix.d-2.1.2.1.2.15" class="pilcrow">¶</a>
 </li>
               </ul>
 </li>

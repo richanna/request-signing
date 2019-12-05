@@ -129,13 +129,13 @@
 
                     <dt anchor="created"><tt>created</tt></dt>
                     <dd>
-                        <t><bcp14>RECOMMENDED</bcp14>.  The <tt>created</tt> field expresses when the signature was created.  The value <bcp14>MUST</bcp14> be a Unix timestamp integer value.  A signature with a <tt>created</tt> timestamp value that is in the future <bcp14>MUST NOT</bcp14> be processed.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as RFC3339.  Subsecond precision is not supported.  This value is useful when clients are not capable of controlling the <tt>Date</tt> HTTP Header such as when operating in certain web browser environments.</t>
+                        <t><bcp14>RECOMMENDED</bcp14>.  The <tt>created</tt> field expresses when the signature was created.  The value <bcp14>MUST</bcp14> be an integer representing the number of seconds since the Epoch, as defined in <eref target="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</eref> of <xref target="POSIX.1"/>.  A signature with a <tt>created</tt> timestamp value that is in the future <bcp14>MUST NOT</bcp14> be processed.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as <xref target="RFC3339"/>.  Sub-second precision is not supported.  This value is useful when clients are not capable of controlling the <tt>Date</tt> HTTP Header such as when operating in certain web browser environments.</t>
                         <t><cref source="AB">This wording implies that verifiers are not permitted to account for clock skew during signature verification.</cref></t>
                     </dd>
 
                     <dt anchor="expires"><tt>expires</tt></dt>
                     <dd>
-                        <t><bcp14>OPTIONAL</bcp14>.  The <tt>expires</tt> field expresses when the signature ceases to be valid.  The value <bcp14>MUST</bcp14> be a Unix timestamp integer value.  A signature with an <tt>expires</tt> timestamp value that is in the past <bcp14>MUST NOT</bcp14> be processed.  Using a Unix timestamp simplifies processing and avoid timezone management existing in RFC3339.  Subsecod precision is allowed using decimal notation.</t>
+                        <t><bcp14>OPTIONAL</bcp14>.  The <tt>expires</tt> field expresses when the signature ceases to be valid.  The value <bcp14>MUST</bcp14> be a decimal representing the number of seconds since the Epoch, as defined in <eref target="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</eref> of <xref target="POSIX.1"/>.  A signature with an <tt>expires</tt> timestamp value that is in the past <bcp14>MUST NOT</bcp14> be processed.  Using a Unix timestamp simplifies processing and avoid timezone management existing in <xref target="RFC3339"/>.  Sub-second precision is allowed using decimal notation.</t>
                         <t><cref source="AB">This wording implies that verifiers are not permitted to account for clock skew during signature verification.</cref></t>
                     </dd>
 
@@ -334,7 +334,7 @@ content-length: 18]]></sourcecode>
                                 <t keepWithNext="true">Derived from metadata associated with <tt>keyId</tt>.  Recommend support for:</t>
                                 <ul>
                                     <li>RSASSA-PSS <xref target="RFC8017"/> using SHA-512 <xref target="RFC6234"/></li>
-                                    <li>HMAC using SHA-512 <xref target="RFC6234"/></li>
+                                    <li>HMAC <xref target="RFC2104"/> using SHA-512 <xref target="RFC6234"/></li>
                                     <li>ECDSA using curve P-256 <xref target="FIPS186-4"/> and SHA-512 <xref target="RFC6234"/></li>
                                     <li>Ed25519ph, Ed25519ctx, and Ed25519 <xref target="RFC8032"/></li>
                                 </ul>
@@ -384,7 +384,7 @@ content-length: 18]]></sourcecode>
                                 <t><cref source="AB">What attack vector?  Can we mitigate it by including <tt>algorithm</tt> in the signing string?</cref></t>
                             </dd>
                             <dt>Description</dt>
-                            <dd>HMAC using SHA-256 <xref target="RFC6234"/></dd>
+                            <dd>HMAC <xref target="RFC2104"/> using SHA-256 <xref target="RFC6234"/></dd>
                         </dl>
                     </section>
 
@@ -419,6 +419,7 @@ content-length: 18]]></sourcecode>
             <name>References</name>
             <references>
                 <name>Normative References</name>
+                <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2104.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4648.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7230.xml"/>
@@ -435,9 +436,19 @@ content-length: 18]]></sourcecode>
                     <seriesInfo name="FIPS" value="186-4"/>
                     <seriesInfo name="DOI" value="10.6028/NIST.FIPS.186-4"/>
                 </reference>
+                <reference anchor="POSIX.1" target="https://pubs.opengroup.org/onlinepubs/9699919799/">
+                    <front>
+                        <title>The Open Group Base Specifications Issue 7, 2018 edition</title>
+                        <author><organization>IEEE</organization></author>
+                        <author><organization>The Open Group</organization></author>
+                        <date year="2018"/>
+                    </front>
+                    <seriesInfo name="IEEE Std" value="1003.1-2017"/>
+                </reference>
             </references>
             <references>
                 <name>Informative References</name>
+                <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3339.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6234.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7239.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7515.xml"/>
@@ -644,6 +655,9 @@ Jeffrey Yasskin
                                 <li>Combined HTTP Signature Algorithms registry entry algorithm fields into a "Description" field.</li>
                                 <li>Revised HTTP Signature Algorithms registry definition.  Added change control policy and registry template.  Removed suggested URI.</li>
                                 <li>Moved normative text related to ambiguous signature parameters to Signature header definition.</li>
+                                <li>Added normative reference to RFC 2104 for HMAC.</li>
+                                <li>Added informative reference to RFC 3339.</li>
+                                <li>Added normative reference to POSIX.1 in `created` and `expires` parameter definitions.</li>
                             </ul>
                         </li>
                     </ul>

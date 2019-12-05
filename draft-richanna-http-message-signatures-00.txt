@@ -72,7 +72,7 @@ Table of Contents
      2.1.  Signature Parameters  . . . . . . . . . . . . . . . . . .   5
      2.2.  Signature String Construction . . . . . . . . . . . . . .   7
      2.3.  Creating a Signature  . . . . . . . . . . . . . . . . . .   9
-     2.4.  Verifying a Signature . . . . . . . . . . . . . . . . . .   9
+     2.4.  Verifying a Signature . . . . . . . . . . . . . . . . . .  10
    3.  The 'Signature' HTTP Header . . . . . . . . . . . . . . . . .  10
      3.1.  Signature Header  . . . . . . . . . . . . . . . . . . . .  11
        3.1.1.  RSA Example . . . . . . . . . . . . . . . . . . . . .  11
@@ -85,14 +85,14 @@ Table of Contents
    6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
      6.1.  Normative References  . . . . . . . . . . . . . . . . . .  15
      6.2.  Informative References  . . . . . . . . . . . . . . . . .  16
-   Appendix A.  Extensions . . . . . . . . . . . . . . . . . . . . .  17
+   Appendix A.  Extensions . . . . . . . . . . . . . . . . . . . . .  18
    Appendix B.  Test Values  . . . . . . . . . . . . . . . . . . . .  18
-     B.1.  Default Test  . . . . . . . . . . . . . . . . . . . . . .  18
-     B.2.  Basic Test  . . . . . . . . . . . . . . . . . . . . . . .  19
-     B.3.  All Headers Test  . . . . . . . . . . . . . . . . . . . .  19
-   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  20
-   Document History  . . . . . . . . . . . . . . . . . . . . . . . .  20
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  21
+     B.1.  Default Test  . . . . . . . . . . . . . . . . . . . . . .  19
+     B.2.  Basic Test  . . . . . . . . . . . . . . . . . . . . . . .  20
+     B.3.  All Headers Test  . . . . . . . . . . . . . . . . . . . .  20
+   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  21
+   Document History  . . . . . . . . . . . . . . . . . . . . . . . .  21
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  22
 
 1.  Introduction
 
@@ -255,14 +255,16 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    "created"
       RECOMMENDED.  The "created" field expresses when the signature was
-      created.  The value MUST be a Unix timestamp integer value.  A
-      signature with a "created" timestamp value that is in the future
-      MUST NOT be processed.  Using a Unix timestamp simplifies
-      processing and avoids timezone management required by
-      specifications such as RFC3339.  Subsecond precision is not
-      supported.  This value is useful when clients are not capable of
-      controlling the "Date" HTTP Header such as when operating in
-      certain web browser environments.
+      created.  The value MUST be an integer representing the number of
+      seconds since the Epoch, as defined in Section 4.16
+      (https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/
+      V1_chap04.html#tag_04_16) of [POSIX.1].  A signature with a
+      "created" timestamp value that is in the future MUST NOT be
+      processed.  Using a Unix timestamp simplifies processing and
+      avoids timezone management required by specifications such as
+      [RFC3339].  Sub-second precision is not supported.  This value is
+      useful when clients are not capable of controlling the "Date" HTTP
+      Header such as when operating in certain web browser environments.
 
       // This wording implies that verifiers are not permitted to
       account // for clock skew during signature verification. // // --
@@ -270,10 +272,8 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    "expires"
       OPTIONAL.  The "expires" field expresses when the signature ceases
-      to be valid.  The value MUST be a Unix timestamp integer value.  A
-      signature with an "expires" timestamp value that is in the past
-      MUST NOT be processed.  Using a Unix timestamp simplifies
-      processing and avoid timezone management existing in RFC3339.
+      to be valid.  The value MUST be a decimal representing the number
+      of seconds since the Epoch, as defined in Section 4.16
 
 
 
@@ -282,7 +282,12 @@ Backman, et al.            Expires 6 June 2020                  [Page 5]
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
-      Subsecod precision is allowed using decimal notation.
+      (https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/
+      V1_chap04.html#tag_04_16) of [POSIX.1].  A signature with an
+      "expires" timestamp value that is in the past MUST NOT be
+      processed.  Using a Unix timestamp simplifies processing and avoid
+      timezone management existing in [RFC3339].  Sub-second precision
+      is allowed using decimal notation.
 
       // This wording implies that verifiers are not permitted to
       account // for clock skew during signature verification. // // --
@@ -325,11 +330,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
       signatures.
 
       // While we need to allow for flexibility in key specification, //
-      leaving it completely undefined hurts interoperability.  We could
-      // borrow from JOSE and define "jwk" and "jku" parameters as //
-      extensible ways to specify common types of keys. // // -- AB
-
-
 
 
 
@@ -337,6 +337,10 @@ Backman, et al.            Expires 6 June 2020                  [Page 6]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
+
+      leaving it completely undefined hurts interoperability.  We could
+      // borrow from JOSE and define "jwk" and "jku" parameters as //
+      extensible ways to specify common types of keys. // // -- AB
 
    "signature"
       REQUIRED.  The "signature" parameter is a base 64 encoded digital
@@ -382,10 +386,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    1.  If the header field name is "(request-target)" then generate the
        header field value by concatenating the lowercased :method, an
-       ASCII space, and the :path pseudo-headers (as specified in HTTP/2
-       [RFC7540], Section 8.1.2.3).  Note: For the avoidance of doubt,
-       lowercasing only applies to the :method pseudo-header and not to
-       the :path pseudo-header.
 
 
 
@@ -393,6 +393,11 @@ Backman, et al.            Expires 6 June 2020                  [Page 7]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
+
+       ASCII space, and the :path pseudo-headers (as specified in HTTP/2
+       [RFC7540], Section 8.1.2.3).  Note: For the avoidance of doubt,
+       lowercasing only applies to the :method pseudo-header and not to
+       the :path pseudo-header.
 
    2.  If the header field name is "(created)" and the "algorithm"
        parameter starts with "rsa", "hmac", or "ecdsa" an implementation
@@ -437,11 +442,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    To illustrate the rules specified above, assume a "headers" parameter
    list with the value of "(request-target) (created) host date cache-
-   control x-emptyheader x-example" with the following HTTP request
-   headers:
-
-
-
 
 
 
@@ -449,6 +449,9 @@ Backman, et al.            Expires 6 June 2020                  [Page 8]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
+
+   control x-emptyheader x-example" with the following HTTP request
+   headers:
 
    GET /foo HTTP/1.1
    Host: example.org
@@ -493,9 +496,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
    creation algorithm should result in a binary string, which is then
    base 64 encoded and placed into the "signature" value.
 
-2.4.  Verifying a Signature
-
-   In order to verify a signature, a server MUST:
 
 
 
@@ -505,6 +505,10 @@ Backman, et al.            Expires 6 June 2020                  [Page 9]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
+
+2.4.  Verifying a Signature
+
+   In order to verify a signature, a server MUST:
 
    1.  Use the received HTTP message, the "headers" value, and the
        Signature String Construction (Section 2.2) algorithm to recreate
@@ -547,10 +551,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
    measure of non-repudiation, though a full implementation of a non-
    repudiatable statement is beyond the scope of this specification and
    highly dependent on implementation.
-
-
-
-
 
 
 
@@ -730,7 +730,7 @@ Backman, et al.            Expires 6 June 2020                 [Page 13]
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
-      *  HMAC using SHA-512 [RFC6234]
+      *  HMAC [RFC2104] using SHA-512 [RFC6234]
 
       *  ECDSA using curve P-256 [DSS] and SHA-512 [RFC6234]
 
@@ -790,7 +790,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
       "algorithm" // in the signing string? // // -- AB
 
    Description
-      HMAC using SHA-256 [RFC6234]
+      HMAC [RFC2104] using SHA-256 [RFC6234]
 
 "ecdsa-sha256"
 
@@ -832,8 +832,8 @@ Internet-Draft            Signing HTTP Messages            December 2019
               <https://csrc.nist.gov/publications/detail/fips/186/4/
               final>.
 
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
+   [POSIX.1]  IEEE and The Open Group, "The Open Group Base
+              Specifications Issue 7, 2018 edition", IEEE
 
 
 
@@ -842,6 +842,16 @@ Backman, et al.            Expires 6 June 2020                 [Page 15]
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
+              Std 1003.1-2017, 2018,
+              <https://pubs.opengroup.org/onlinepubs/9699919799/>.
+
+   [RFC2104]  Krawczyk, H., Bellare, M., and R. Canetti, "HMAC: Keyed-
+              Hashing for Message Authentication", RFC 2104,
+              DOI 10.17487/RFC2104, February 1997,
+              <https://www.rfc-editor.org/info/rfc2104>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
@@ -870,10 +880,23 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
 6.2.  Informative References
 
+   [RFC3339]  Klyne, G. and C. Newman, "Date and Time on the Internet:
+              Timestamps", RFC 3339, DOI 10.17487/RFC3339, July 2002,
+              <https://www.rfc-editor.org/info/rfc3339>.
+
    [RFC6234]  Eastlake 3rd, D. and T. Hansen, "US Secure Hash Algorithms
               (SHA and SHA-based HMAC and HKDF)", RFC 6234,
               DOI 10.17487/RFC6234, May 2011,
               <https://www.rfc-editor.org/info/rfc6234>.
+
+
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 16]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
 
    [RFC7239]  Petersson, A. and M. Nilsson, "Forwarded HTTP Extension",
               RFC 7239, DOI 10.17487/RFC7239, June 2014,
@@ -889,15 +912,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    [RFC8017]  Moriarty, K., Ed., Kaliski, B., Jonsson, J., and A. Rusch,
               "PKCS #1: RSA Cryptography Specifications Version 2.2",
-
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 16]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
               RFC 8017, DOI 10.17487/RFC8017, November 2016,
               <https://www.rfc-editor.org/info/rfc8017>.
 
@@ -920,6 +934,25 @@ Internet-Draft            Signing HTTP Messages            December 2019
               Sporny, M., "HTTP Signature Trailers", July 2013,
               <https://web-payments.org/specs/source/http-signature-
               trailers/>.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 17]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
 
 Appendix A.  Extensions
 
@@ -947,13 +980,6 @@ Appendix A.  Extensions
    Notes (optional): The HTTP Signature Nonces specification details
    how to use HTTP Signatures over a unsecured channel like HTTP.
 
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 17]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
 Appendix B.  Test Values
 
    WARNING: THESE TEST VECTORS ARE OLD AND POSSIBLY WRONG.  THE NEXT
@@ -961,6 +987,28 @@ Appendix B.  Test Values
 
    The following test data uses the following RSA 2048-bit keys, which
    we will refer to as "keyId=Test" in the following samples:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 18]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
 
    -----BEGIN PUBLIC KEY-----
    MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDCFENGw33yGihy92pDjZQhl0C3
@@ -1002,14 +1050,6 @@ B.1.  Default Test
    that is signed by default for rsa-sha256.  The string to sign would
    be:
 
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 18]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
    date: Sun, 05 Jan 2014 21:31:40 GMT
 
    The Authorization header would be:
@@ -1018,6 +1058,13 @@ Internet-Draft            Signing HTTP Messages            December 2019
    signature="SjWJWbWN7i0wzBvtPl8rbASWz5xQW6mcJmn+ibttBqtifLN7Sazz
    6m79cNfwwb8DMJ5cou1s7uEGKKCs+FLEEaDV5lp7q25WqS+lavg7T8hc0GppauB
    6hbgEKTwblDHYGEtbGmtdHgVCk9SuS13F0hZ8FD0k/5OxEPXe5WozsbM="
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 19]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
 
    The Signature header would be:
 
@@ -1058,14 +1105,6 @@ B.3.  All Headers Test
 
    The Authorization header would be:
 
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 19]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
    Authorization: Signature keyId="Test",algorithm="rsa-sha256",
        created=1402170695, expires=1402170699,
        headers="(request-target) (created) (expires)
@@ -1075,6 +1114,13 @@ Internet-Draft            Signing HTTP Messages            December 2019
            ZFukWgHoBTLMhYS2Gb51gWxpeIq8knRmPnYePbF5MOkR0Zkly4zKH7s1dE="
 
    The Signature header would be:
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 20]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
 
    Signature: keyId="Test",algorithm="rsa-sha256",
        created=1402170695, expires=1402170699,
@@ -1113,15 +1159,6 @@ Document History
          o  Converted to xml2rfc v3 and reformatted to comply with RFC
             style guides.
 
-
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 20]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
          o  Rewrote abstract and introduction to focus on general
             purpose signing and avoid specific use cases.
 
@@ -1133,6 +1170,13 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
          o  Removed informative intro sections on Signatures in HTTP
             Requests/Responses, as they imply specific use cases.
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 21]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
 
          o  Moved BCP 14 message under intro section.
 
@@ -1156,6 +1200,13 @@ Internet-Draft            Signing HTTP Messages            December 2019
          o  Moved normative text related to ambiguous signature
             parameters to Signature header definition.
 
+         o  Added normative reference to RFC 2104 for HMAC.
+
+         o  Added informative reference to RFC 3339.
+
+         o  Added normative reference to POSIX.1 in `created` and
+            `expires` parameter definitions.
+
 Authors' Addresses
 
    Annabelle Backman (editor)
@@ -1170,19 +1221,19 @@ Authors' Addresses
 
    Justin Richer
 
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 21]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
    Email: ietf@justin.richer.org
 
 
    Manu Sporny
    Digital Bazaar
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 22]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
    203 Roanoke Street W.
    Blacksburg, VA 24060
    United States of America
@@ -1229,4 +1280,9 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
 
 
-Backman, et al.            Expires 6 June 2020                 [Page 22]
+
+
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 23]
