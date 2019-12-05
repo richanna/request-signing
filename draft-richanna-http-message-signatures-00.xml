@@ -164,11 +164,6 @@
                 </dl>
             </section>
 
-            <section anchor="ambiguity">
-                <name>Ambiguous Parameters</name>
-                <t><cref source="AB">TODO: Move this to <tt>Signature</tt> definition.</cref> If any of the parameters listed above are erroneously duplicated in the associated header field, then the the signature <bcp14>MUST NOT</bcp14> be processed.  Any parameter that is not recognized as a parameter, or is not well-formed, <bcp14>MUST</bcp14> be ignored.</t>
-            </section>
-
             <section anchor="canonicalization">
                 <name>Signature String Construction</name>
                 <t>A signed HTTP message needs to be tolerant of some trivial alterations during transmission as it goes through gateways, proxies, and other entities.  These changes are often of little consequence and very benign, but also often not visible to or detectable by either the sender or the recipient.  Simply signing the entire message that was transmitted by the sender is therefore not feasible: Even very minor changes would result in a signature which cannot be verified.</t>
@@ -245,6 +240,9 @@ x-example: Example header with some whitespace.]]></sourcecode>
             <section anchor="sig-header">
                 <name>Signature Header</name>
                 <t>The sender is expected to transmit a header (as defined in <xref target="RFC7230" section="3.2" sectionFormat="comma">RFC 7230</xref>) where the "field-name" is "Signature", and the "field-value" contains one or more "auth-param"s (as defined in <xref target="RFC7235" section="4.1" sectionFormat="comma">RFC 7235</xref>) where the "auth-param" parameters meet the requirements listed in Section 2: The Components of a Signature.</t>
+
+                <t>If any of parameters are erroneously duplicated in the Signature header field value, then the the signature <bcp14>MUST NOT</bcp14> be processed.  Any parameter that is not recognized by the verifier or that is not well-formed <bcp14>MUST</bcp14> be ignored.</t>
+
                 <t keepWithNext="true">The rest of this section uses the following HTTP request as an example.</t>
                 <sourcecode><![CDATA[
 POST /foo HTTP/1.1
@@ -645,6 +643,7 @@ Jeffrey Yasskin
                                 <li>Replaced mentions of ANSI X9.64 with normative references to FIPS 186-4.</li>
                                 <li>Combined HTTP Signature Algorithms registry entry algorithm fields into a "Description" field.</li>
                                 <li>Revised HTTP Signature Algorithms registry definition.  Added change control policy and registry template.  Removed suggested URI.</li>
+                                <li>Moved normative text related to ambiguous signature parameters to Signature header definition.</li>
                             </ul>
                         </li>
                     </ul>
