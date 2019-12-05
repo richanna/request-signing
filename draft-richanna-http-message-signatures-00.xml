@@ -297,76 +297,92 @@ content-length: 18]]></sourcecode>
         <section anchor="iana">
             <name>IANA Considerations</name>
             <section anchor="hsa-registry">
-                <name>HTTP Signatures Algorithms Registry</name>
-                <t>The following initial entries should be added to the Canonicalization Algorithms Registry to be created and maintained at (the suggested URI) <eref target="https://www.iana.org/assignments/shm-algorithms"/>:</t>
-                <t>Editor's note: The references in this section are problematic as many of the specifications that they refer to are too implementation specific, rather than just pointing to the proper signature and hashing specifications.  A better approach might be just specifying the signature and hashing function specifications, leaving implementers to connect the dots (which are not that hard to connect).</t>
+                <name>HTTP Signature Algorithms Registry</name>
+                <t>This document defines HTTP Signature Algorithms, for which IANA is asked to create and maintain a new registry titled "HTTP Signature Algorithms".  Initial values for this registry are given in <xref target="iana-hsa-contents"/>.  Future assignments and modifications to existing assignment are to be made through the Expert Review registration policy <xref target="RFC8126"/> and shall follow the template presented in <xref target="iana-hsa-template" />.</t>
 
-                <section numbered="false">
-                    <name><tt>hs2019</tt></name>
+                <section anchor="iana-hsa-template">
+                    <name>Registration Template</name>
                     <dl newline="true">
                         <dt>Algorithm Name</dt>
-                        <dd><tt>hs2019</tt></dd>
+                        <dd>An identifier for the HTTP Signature Algorithm.  The name <bcp14>MUST</bcp14> be an ASCII string consisting only of lower-case characters (<tt>"a"</tt> - <tt>"z"</tt>), digits (<tt>"0"</tt> - <tt>"9"</tt>), and hyphens (<tt>"-"</tt>), and <bcp14>SHOULD NOT</bcp14> exceed 20 characters in length.  The identifier <bcp14>MUST</bcp14> be unique within the context of the registry.</dd>
                         <dt>Status</dt>
-                        <dd>active</dd>
+                        <dd>A brief text description of the status of the algorithm.  The description <bcp14>MUST</bcp14> begin with one of "Active" or "Deprecated", and <bcp14>MAY</bcp14> provide further context or explanation as to the reason for the status.</dd>
                         <dt>Description</dt>
-                        <dd>
-                            <t keepWithNext="true">Derived from metadata associated with <tt>keyId</tt>.  Recommend support for:</t>
-                            <ul>
-                                <li>RSASSA-PSS <xref target="RFC8017"/> using SHA-512 <xref target="RFC6234"/></li>
-                                <li>HMAC using SHA-512 <xref target="RFC6234"/></li>
-                                <li>ECDSA using curve P-256 <xref target="FIPS186-4"/> and SHA-512 <xref target="RFC6234"/></li>
-                                <li>Ed25519ph, Ed25519ctx, and Ed25519 <xref target="RFC8032"/></li>
-                            </ul>
-                        </dd>
+                        <dd>A description of the algorithm used to sign the signing string when generating an HTTP Message Signature, or instructions on how to determine that algorithm. When the description specifies an algorithm, it <bcp14>MUST</bcp14> include a reference to the document or documents that define the algorithm.</dd>
                     </dl>
                 </section>
 
-                <section numbered="false">
-                    <name><tt>rsa-sha1</tt></name>
-                    <dl newline="true">
-                        <dt>Algorithm Name</dt>
-                        <dd><tt>rsa-sha1</tt></dd>
-                        <dt>Status</dt>
-                        <dd>deprecated, SHA-1 not secure.</dd>
-                        <dt>Description</dt>
-                        <dd>RSASSA-PKCS1-v1_5 <xref target="RFC8017"/> using SHA-1 <xref target="RFC6234"/></dd>
-                    </dl>
-                </section>
+                <section anchor="iana-hsa-contents">
+                    <name>Initial Contents</name>
+                    <t><cref source="MS">The references in this section are problematic as many of the specifications that they refer to are too implementation specific, rather than just pointing to the proper signature and hashing specifications.  A better approach might be just specifying the signature and hashing function specifications, leaving implementers to connect the dots (which are not that hard to connect).</cref></t>
 
-                <section numbered="false">
-                    <name><tt>rsa-sha256</tt></name>
-                    <dl newline="true">
-                        <dt>Algorithm Name</dt>
-                        <dd><tt>rsa-sha256</tt></dd>
-                        <dt>Status</dt>
-                        <dd>deprecated, specifying signature algorithm enables attack vector.</dd>
-                        <dt>Description</dt>
-                        <dd>RSASSA-PKCS1-v1_5 <xref target="RFC8017"/> using SHA-256 <xref target="RFC6234"/></dd>
-                    </dl>
-                </section>
+                    <section numbered="false">
+                        <name><tt>hs2019</tt></name>
+                        <dl newline="true">
+                            <dt>Algorithm Name</dt>
+                            <dd><tt>hs2019</tt></dd>
+                            <dt>Status</dt>
+                            <dd>active</dd>
+                            <dt>Description</dt>
+                            <dd>
+                                <t keepWithNext="true">Derived from metadata associated with <tt>keyId</tt>.  Recommend support for:</t>
+                                <ul>
+                                    <li>RSASSA-PSS <xref target="RFC8017"/> using SHA-512 <xref target="RFC6234"/></li>
+                                    <li>HMAC using SHA-512 <xref target="RFC6234"/></li>
+                                    <li>ECDSA using curve P-256 <xref target="FIPS186-4"/> and SHA-512 <xref target="RFC6234"/></li>
+                                    <li>Ed25519ph, Ed25519ctx, and Ed25519 <xref target="RFC8032"/></li>
+                                </ul>
+                            </dd>
+                        </dl>
+                    </section>
 
-                <section numbered="false">
-                    <name><tt>hmac-sha256</tt></name>
-                    <dl newline="true">
-                        <dt>Algorithm Name</dt>
-                        <dd><tt>hmac-sha256</tt></dd>
-                        <dt>Status</dt>
-                        <dd>deprecated, specifying signature algorithm enables attack vector.</dd>
-                        <dt>Description</dt>
-                        <dd>HMAC using SHA-256 <xref target="RFC6234"/></dd>
-                    </dl>
-                </section>
+                    <section numbered="false">
+                        <name><tt>rsa-sha1</tt></name>
+                        <dl newline="true">
+                            <dt>Algorithm Name</dt>
+                            <dd><tt>rsa-sha1</tt></dd>
+                            <dt>Status</dt>
+                            <dd>Deprecated; SHA-1 not secure.</dd>
+                            <dt>Description</dt>
+                            <dd>RSASSA-PKCS1-v1_5 <xref target="RFC8017"/> using SHA-1 <xref target="RFC6234"/></dd>
+                        </dl>
+                    </section>
 
-                <section numbered="false">
-                    <name><tt>ecdsa-sha256</tt></name>
-                    <dl newline="true">
-                        <dt>Algorithm Name</dt>
-                        <dd><tt>ecdsa-sha256</tt></dd>
-                        <dt>Status</dt>
-                        <dd>deprecated, specifying signature algorithm enables attack vector.</dd>
-                        <dt>Description</dt>
-                        <dd>ECDSA using curve P-256 <xref target="FIPS186-4"/> and SHA-256 <xref target="RFC6234"/></dd>
-                    </dl>
+                    <section numbered="false">
+                        <name><tt>rsa-sha256</tt></name>
+                        <dl newline="true">
+                            <dt>Algorithm Name</dt>
+                            <dd><tt>rsa-sha256</tt></dd>
+                            <dt>Status</dt>
+                            <dd>Deprecated; specifying signature algorithm enables attack vector.</dd>
+                            <dt>Description</dt>
+                            <dd>RSASSA-PKCS1-v1_5 <xref target="RFC8017"/> using SHA-256 <xref target="RFC6234"/></dd>
+                        </dl>
+                    </section>
+
+                    <section numbered="false">
+                        <name><tt>hmac-sha256</tt></name>
+                        <dl newline="true">
+                            <dt>Algorithm Name</dt>
+                            <dd><tt>hmac-sha256</tt></dd>
+                            <dt>Status</dt>
+                            <dd>Deprecated; specifying signature algorithm enables attack vector.</dd>
+                            <dt>Description</dt>
+                            <dd>HMAC using SHA-256 <xref target="RFC6234"/></dd>
+                        </dl>
+                    </section>
+
+                    <section numbered="false">
+                        <name><tt>ecdsa-sha256</tt></name>
+                        <dl newline="true">
+                            <dt>Algorithm Name</dt>
+                            <dd><tt>ecdsa-sha256</tt></dd>
+                            <dt>Status</dt>
+                            <dd>Deprecated; specifying signature algorithm enables attack vector.</dd>
+                            <dt>Description</dt>
+                            <dd>ECDSA using curve P-256 <xref target="FIPS186-4"/> and SHA-256 <xref target="RFC6234"/></dd>
+                        </dl>
+                    </section>
                 </section>
             </section>
         </section>
@@ -378,6 +394,7 @@ content-length: 18]]></sourcecode>
     </middle>
     <back>
         <displayreference target="FIPS186-4" to="DSS"/>
+        <displayreference target="RFC8126" to="BCP 26"/>
         <references>
             <name>References</name>
             <references>
@@ -387,6 +404,7 @@ content-length: 18]]></sourcecode>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7230.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7235.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7540.xml"/>
+                <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8126.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
                 <reference anchor="FIPS186-4" target="https://csrc.nist.gov/publications/detail/fips/186/4/final">
                     <front>
@@ -603,6 +621,7 @@ Jeffrey Yasskin
                                 <li>Removed "Canonicalization Algorithm" from HTTP Signature Algorithms registry entries.</li>
                                 <li>Replaced mentions of ANSI X9.64 with normative references to FIPS 186-4.</li>
                                 <li>Combined HTTP Signature Algorithms registry entry algorithm fields into a "Description" field.</li>
+                                <li>Revised HTTP Signature Algorithms registry definition.  Added change control policy and registry template.  Removed suggested URI.</li>
                             </ul>
                         </li>
                     </ul>
