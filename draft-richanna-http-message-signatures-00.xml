@@ -9,8 +9,17 @@
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
 <!--
-     xml2rfc 2.35.0 reports a warning if consensus="true" is not set on the <rfc> element, but this seems to be an issue with a lack of distinction between drafts and RFCs. The guidance is to ignore the warning for now.
-     See: https://www.rfc-editor.org/materials/FAQ-xml2rfcv3.html#name-how-do-i-fix-common-errors-
+    Note for draft editors and processors – you may see the following warning
+    when processing this document through xml2rfc:
+
+        Warning: Setting consensus="true" for IETF STD document (this is not
+        the schema default, but is the only value permitted for this type of
+        document)
+
+    This appears to be an issue be an issue with a lack of distinction between
+    drafts and RFCs. The guidance is to ignore the warning for now.
+
+    See: https://www.rfc-editor.org/materials/FAQ-xml2rfcv3.html#name-how-do-i-fix-common-errors-
  -->
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" ipr="trust200902" docName="draft-richanna-http-message-signatures-00" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="3" symRefs="true" sortRefs="true" version="3">
     <!-- xml2rfc v2v3 conversion 2.35.0 -->
