@@ -84,19 +84,19 @@ Table of Contents
        "rsa-sha1"  . . . . . . . . . . . . . . . . . . . . . . . . .  13
        "rsa-sha256"  . . . . . . . . . . . . . . . . . . . . . . . .  13
        "hmac-sha256" . . . . . . . . . . . . . . . . . . . . . . . .  13
-       "ecdsa-sha256"  . . . . . . . . . . . . . . . . . . . . . . .  13
+       "ecdsa-sha256"  . . . . . . . . . . . . . . . . . . . . . . .  14
    5.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
    6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
      6.1.  Normative References  . . . . . . . . . . . . . . . . . .  14
      6.2.  Informative References  . . . . . . . . . . . . . . . . .  15
-   Appendix A.  Extensions . . . . . . . . . . . . . . . . . . . . .  15
+   Appendix A.  Extensions . . . . . . . . . . . . . . . . . . . . .  16
    Appendix B.  Test Values  . . . . . . . . . . . . . . . . . . . .  16
      B.1.  Default Test  . . . . . . . . . . . . . . . . . . . . . .  17
-     B.2.  Basic Test  . . . . . . . . . . . . . . . . . . . . . . .  17
+     B.2.  Basic Test  . . . . . . . . . . . . . . . . . . . . . . .  18
      B.3.  All Headers Test  . . . . . . . . . . . . . . . . . . . .  18
-   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  18
+   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  19
    Document History  . . . . . . . . . . . . . . . . . . . . . . . .  19
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  20
 
 1.  Introduction
 
@@ -661,11 +661,11 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    Digital Signature Algorithm
       Derived from metadata associated with "keyId".  Recommend support
-      for RFC 8017 [RFC8017], Section 8.1: RSASSA-PSS, RFC 6234
-      [RFC6234], Section 7.1: SHA-Based HMACs, ANSI X9.62-2005 ECDSA,
-      P-256, and RFC 8032 [RFC8032], Section 5.1: Ed25519ph, Ed25519ctx,
-      and Ed25519.
+      for:
 
+      *  RFC 8017 [RFC8017], Section 8.1: RSASSA-PSS
+
+      *  RFC 6234 [RFC6234], Section 7.1: SHA-Based HMACs
 
 
 
@@ -673,6 +673,11 @@ Backman, et al.            Expires 6 June 2020                 [Page 12]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
+
+      *  ANSI X9.62-2005 ECDSA, P-256
+
+      *  RFC 8032 [RFC8032], Section 5.1: Ed25519ph, Ed25519ctx, and
+         Ed25519.
 
 "rsa-sha1"
 
@@ -716,11 +721,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
    Message Authentication Code Algorithm
       RFC 6234 [RFC6234], Section 7.1: SHA-Based HMACs
 
-"ecdsa-sha256"
-
-   Algorithm Name
-      "ecdsa-sha256"
-
 
 
 
@@ -729,6 +729,11 @@ Backman, et al.            Expires 6 June 2020                 [Page 13]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
+
+"ecdsa-sha256"
+
+   Algorithm Name
+      "ecdsa-sha256"
 
    Status
       deprecated, specifying signature algorithm enables attack vector.
@@ -772,12 +777,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    [RFC7540]  Belshe, M., Peon, R., and M. Thomson, Ed., "Hypertext
               Transfer Protocol Version 2 (HTTP/2)", RFC 7540,
-              DOI 10.17487/RFC7540, May 2015,
-              <https://www.rfc-editor.org/info/rfc7540>.
 
-   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
-              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
-              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
 
 
@@ -785,6 +785,13 @@ Backman, et al.            Expires 6 June 2020                 [Page 14]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
+
+              DOI 10.17487/RFC7540, May 2015,
+              <https://www.rfc-editor.org/info/rfc7540>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
 6.2.  Informative References
 
@@ -826,14 +833,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
               <https://web-payments.org/specs/source/http-signature-
               trailers/>.
 
-Appendix A.  Extensions
 
-   This specification was designed to be simple, modular, and
-   extensible.  There are a number of other specifications that build on
-   this one.  For example, the HTTP Signature Nonces
-   [WP-HTTP-Sig-Nonces] specification details how to use HTTP Signatures
-   over a non-secured channel like HTTP and the HTTP Signature Trailers
-   [WP-HTTP-Sig-Trailers] specification explains how to apply HTTP
 
 
 
@@ -842,6 +842,14 @@ Backman, et al.            Expires 6 June 2020                 [Page 15]
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
+Appendix A.  Extensions
+
+   This specification was designed to be simple, modular, and
+   extensible.  There are a number of other specifications that build on
+   this one.  For example, the HTTP Signature Nonces
+   [WP-HTTP-Sig-Nonces] specification details how to use HTTP Signatures
+   over a non-secured channel like HTTP and the HTTP Signature Trailers
+   [WP-HTTP-Sig-Trailers] specification explains how to apply HTTP
    Signatures to streaming content.  Developers that desire more
    functionality than this specification provides are urged to ensure
    that an extension specification doesn't already exist before
@@ -868,6 +876,28 @@ Appendix B.  Test Values
    The following test data uses the following RSA 2048-bit keys, which
    we will refer to as "keyId=Test" in the following samples:
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 16]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
    -----BEGIN PUBLIC KEY-----
    MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDCFENGw33yGihy92pDjZQhl0C3
    6rPJj+CvfSC8+q28hxA161QFNUd13wuCTUcq0Qd2qsBe/2hFyc2DCJJg0h1L78+6
@@ -890,13 +920,6 @@ Appendix B.  Test Values
    G6aFKaqQfOXKCyWoUiVknQJAXrlgySFci/2ueKlIE1QqIiLSZ8V8OlpFLRnb1pzI
    7U1yQXnTAEFYM560yJlzUpOb1V4cScGd365tiSMvxLOvTA==
    -----END RSA PRIVATE KEY-----
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 16]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
 
    All examples use this request:
 
@@ -924,6 +947,13 @@ B.1.  Default Test
    6m79cNfwwb8DMJ5cou1s7uEGKKCs+FLEEaDV5lp7q25WqS+lavg7T8hc0GppauB
    6hbgEKTwblDHYGEtbGmtdHgVCk9SuS13F0hZ8FD0k/5OxEPXe5WozsbM="
 
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 17]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
    The Signature header would be:
 
    Signature: keyId="Test",algorithm="rsa-sha256",
@@ -941,18 +971,6 @@ B.2.  Basic Test
    date: Sun, 05 Jan 2014 21:31:40 GMT
 
    The Authorization header would be:
-
-
-
-
-
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 17]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
 
    Authorization: Signature keyId="Test",algorithm="rsa-sha256",
        headers="(request-target) host date",
@@ -985,6 +1003,13 @@ B.3.  All Headers Test
 
    The Signature header would be:
 
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 18]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
    Signature: keyId="Test",algorithm="rsa-sha256",
        created=1402170695, expires=1402170699,
        headers="(request-target) (created) (expires)
@@ -1002,14 +1027,6 @@ Acknowledgements
 
    The editor would also like to thank the following individuals for
    feedback on and implementations of the draft-cavage-http-signatures
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 18]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
    draft (in alphabetical order): Mark Adamcin, Mark Allen, Paul
    Annesley, Karl Boehlmark, Stephane Bortzmeyer, Sarven Capadisli, Liam
    Dennehy, ductm54, Stephen Farrell, Phillip Hallam-Baker, Eric Holmes,
@@ -1042,6 +1059,13 @@ Document History
          o  Removed informative intro sections on Signatures in HTTP
             Requests/Responses, as they imply specific use cases.
 
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 19]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
          o  Moved BCP 14 message under intro section.
 
          o  Removed "Signature" auth-scheme definition and non-normative
@@ -1057,15 +1081,6 @@ Authors' Addresses
    Amazon
    P.O. Box 81226
    Seattle, WA 98108-1226
-
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 19]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
    United States of America
 
    Email: richanna@amazon.com
@@ -1086,21 +1101,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
    Phone: +1 540 961 4469
    Email: msporny@digitalbazaar.com
    URI:   https://manu.sporny.org/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

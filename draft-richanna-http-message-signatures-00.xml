@@ -311,7 +311,15 @@ content-length: 18]]></sourcecode>
                         <dt>Hash Algorithm</dt>
                         <dd><xref target="RFC6234">RFC 6234</xref>, SHA-512 (SHA-2 with 512-bits of digest output)</dd>
                         <dt>Digital Signature Algorithm</dt>
-                        <dd>Derived from metadata associated with <tt>keyId</tt>.  Recommend support for <xref target="RFC8017" section="8.1" sectionFormat="comma">RFC 8017</xref>: RSASSA-PSS, <xref target="RFC6234" section="7.1" sectionFormat="comma">RFC 6234</xref>: SHA-Based HMACs, ANSI X9.62-2005 ECDSA, P-256, and <xref target="RFC8032" section="5.1" sectionFormat="comma">RFC 8032</xref>: Ed25519ph, Ed25519ctx, and Ed25519.</dd>
+                        <dd>
+                            <t keepWithNext="true">Derived from metadata associated with <tt>keyId</tt>.  Recommend support for:</t>
+                            <ul>
+                                <li><xref target="RFC8017" section="8.1" sectionFormat="comma">RFC 8017</xref>: RSASSA-PSS</li>
+                                <li><xref target="RFC6234" section="7.1" sectionFormat="comma">RFC 6234</xref>: SHA-Based HMACs</li>
+                                <li>ANSI X9.62-2005 ECDSA, P-256</li>
+                                <li><xref target="RFC8032" section="5.1" sectionFormat="comma">RFC 8032</xref>: Ed25519ph, Ed25519ctx, and Ed25519.</li>
+                            </ul>
+                        </dd>
                     </dl>
                 </section>
 
