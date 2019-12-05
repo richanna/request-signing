@@ -124,16 +124,19 @@
                     <dt anchor="algorithm"><tt>algorithm</tt></dt>
                     <dd>
                         <t><bcp14>RECOMMENDED</bcp14>.  The <tt>algorithm</tt> parameter is used to specify the signature string construction mechanism.  Valid values for this parameter can be found in the <xref target="hsa-registry" format="title"/> (<xref target="hsa-registry"/>) and <bcp14>MUST NOT</bcp14> be marked "deprecated".  Implementers <bcp14>SHOULD</bcp14> derive the digital signature algorithm used by an implementation from the key metadata identified by the <tt>keyId</tt> rather than from this field.  If <tt>algorithm</tt> is provided and differs from the key metadata identified by the <tt>keyId</tt>, for example <tt>rsa-sha256</tt> but an EdDSA key is identified via <tt>keyId</tt>, then an implementation <bcp14>MUST</bcp14> produce an error.  Implementers should note that previous versions of the <tt>algorithm</tt> parameter did not use the key information to derive the digital signature type and thus could be utilized by attackers to expose security vulnerabilities.</t>
+                        <t><cref source="AB">These instructions are confusing.  Punting algorithm identification into <tt>keyId</tt> hurts interoperability, since we aren't defining the syntax or semantics of <tt>keyId</tt>.  It also goes against the statement that we <em>aren't</em> defining <tt>keyId</tt>'s semantics, as we are dictating that the signing algorithm must be specified by <tt>keyId</tt> or derivable from it.</cref></t>
                     </dd>
 
                     <dt anchor="created"><tt>created</tt></dt>
                     <dd>
                         <t><bcp14>RECOMMENDED</bcp14>.  The <tt>created</tt> field expresses when the signature was created.  The value <bcp14>MUST</bcp14> be a Unix timestamp integer value.  A signature with a <tt>created</tt> timestamp value that is in the future <bcp14>MUST NOT</bcp14> be processed.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as RFC3339.  Subsecond precision is not supported.  This value is useful when clients are not capable of controlling the <tt>Date</tt> HTTP Header such as when operating in certain web browser environments.</t>
+                        <t><cref source="AB">This wording implies that verifiers are not permitted to account for clock skew during signature verification.</cref></t>
                     </dd>
 
                     <dt anchor="expires"><tt>expires</tt></dt>
                     <dd>
                         <t><bcp14>OPTIONAL</bcp14>.  The <tt>expires</tt> field expresses when the signature ceases to be valid.  The value <bcp14>MUST</bcp14> be a Unix timestamp integer value.  A signature with an <tt>expires</tt> timestamp value that is in the past <bcp14>MUST NOT</bcp14> be processed.  Using a Unix timestamp simplifies processing and avoid timezone management existing in RFC3339.  Subsecod precision is allowed using decimal notation.</t>
+                        <t><cref source="AB">This wording implies that verifiers are not permitted to account for clock skew during signature verification.</cref></t>
                     </dd>
 
                     <dt anchor="headers"><tt>headers</tt></dt>
@@ -144,11 +147,14 @@
                             <li>The list order is important, and <bcp14>MUST</bcp14> be specified in the order the HTTP header field-value pairs are concatenated together during <xref target="canonicalization" format="title"/> (<xref target="canonicalization"/>) used during signing and verifying.</li>
                             <li>A zero-length <tt>headers</tt> parameter value <bcp14>MUST NOT</bcp14> be used, since it results in a signature of an empty string.</li>
                         </ol>
+                        <t><cref source="AB">The name <tt>headers</tt> is misleading, as this parameter will contain entries that are not HTTP header field names (e.g., <tt>(created)</tt>).</cref></t>
+                        <t><cref source="AB">This needs to be expanded to allow for more fine-grained inclusion of message elements (e.g., method, scheme, authority, path, query string parameters).</cref></t>
                     </dd>
 
                     <dt anchor="keyId"><tt>keyId</tt></dt>
                     <dd>
                         <t><bcp14>REQUIRED</bcp14>.  The <tt>keyId</tt> field is an opaque string that the server can use to look up the component they need to validate the signature.  It could be an SSH key fingerprint, a URL to machine-readable key data, an LDAP DN, etc.  Management of keys and assignment of <tt>keyId</tt> is out of scope for this document.  Implementations <bcp14>MUST</bcp14> be able to discover metadata about the key from the <tt>keyId</tt> such that they can determine the type of digital signature algorithm to employ when creating or verifying signatures.</t>
+                        <t><cref source="AB">While we need to allow for flexibility in key specification, leaving it completely undefined hurts interoperability.  We could borrow from JOSE and define <tt>jwk</tt> and <tt>jku</tt> parameters as extensible ways to specify common types of keys.</cref></t>
                     </dd>
 
                     <dt anchor="signature"><tt>signature</tt></dt>
@@ -160,7 +166,7 @@
 
             <section anchor="ambiguity">
                 <name>Ambiguous Parameters</name>
-                <t>If any of the parameters listed above are erroneously duplicated in the associated header field, then the the signature <bcp14>MUST NOT</bcp14> be processed.  Any parameter that is not recognized as a parameter, or is not well-formed, <bcp14>MUST</bcp14> be ignored.</t>
+                <t><cref source="AB">TODO: Move this to <tt>Signature</tt> definition.</cref> If any of the parameters listed above are erroneously duplicated in the associated header field, then the the signature <bcp14>MUST NOT</bcp14> be processed.  Any parameter that is not recognized as a parameter, or is not well-formed, <bcp14>MUST</bcp14> be ignored.</t>
             </section>
 
             <section anchor="canonicalization">
@@ -404,6 +410,7 @@ content-length: 18]]></sourcecode>
 
         <section anchor="security">
             <name>Security Considerations</name>
+            <t><cref source="AB">TODO: need to dive deeper on this section; not sure how much of what's referenced below is actually applicable, or if it covers everything we need to worry about.</cref></t>
             <t>There are a number of security considerations to take into account when implementing or utilizing this specification.  A thorough security analysis of this protocol, including its strengths and weaknesses, can be found in <xref target="WP-HTTP-Sig-Audit">Security Considerations for HTTP Signatures</xref>.</t>
         </section>
     </middle>

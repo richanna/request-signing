@@ -1333,14 +1333,17 @@ aside > p {
           <dt id="section-2.1-2.1"><code>algorithm</code></dt>
           <dd id="section-2.1-2.2">
             <p id="section-2.1-2.2.1"><span class="bcp14">RECOMMENDED</span>.  The <code>algorithm</code> parameter is used to specify the signature string construction mechanism.  Valid values for this parameter can be found in the <a href="#hsa-registry" class="xref">HTTP Signature Algorithms Registry</a> (<a href="#hsa-registry" class="xref">Section 4.1</a>) and <span class="bcp14">MUST NOT</span> be marked "deprecated".  Implementers <span class="bcp14">SHOULD</span> derive the digital signature algorithm used by an implementation from the key metadata identified by the <code>keyId</code> rather than from this field.  If <code>algorithm</code> is provided and differs from the key metadata identified by the <code>keyId</code>, for example <code>rsa-sha256</code> but an EdDSA key is identified via <code>keyId</code>, then an implementation <span class="bcp14">MUST</span> produce an error.  Implementers should note that previous versions of the <code>algorithm</code> parameter did not use the key information to derive the digital signature type and thus could be utilized by attackers to expose security vulnerabilities.<a href="#section-2.1-2.2.1" class="pilcrow">¶</a></p>
+<p id="section-2.1-2.2.2"><span class="cref">These instructions are confusing.  Punting algorithm identification into <code>keyId</code> hurts interoperability, since we aren't defining the syntax or semantics of <code>keyId</code>.  It also goes against the statement that we <em>aren't</em> defining <code>keyId</code>'s semantics, as we are dictating that the signing algorithm must be specified by <code>keyId</code> or derivable from it.<span class="crefSource">AB</span></span><a href="#section-2.1-2.2.2" class="pilcrow">¶</a></p>
 </dd>
 <dt id="section-2.1-2.3"><code>created</code></dt>
           <dd id="section-2.1-2.4">
             <p id="section-2.1-2.4.1"><span class="bcp14">RECOMMENDED</span>.  The <code>created</code> field expresses when the signature was created.  The value <span class="bcp14">MUST</span> be a Unix timestamp integer value.  A signature with a <code>created</code> timestamp value that is in the future <span class="bcp14">MUST NOT</span> be processed.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as RFC3339.  Subsecond precision is not supported.  This value is useful when clients are not capable of controlling the <code>Date</code> HTTP Header such as when operating in certain web browser environments.<a href="#section-2.1-2.4.1" class="pilcrow">¶</a></p>
+<p id="section-2.1-2.4.2"><span class="cref">This wording implies that verifiers are not permitted to account for clock skew during signature verification.<span class="crefSource">AB</span></span><a href="#section-2.1-2.4.2" class="pilcrow">¶</a></p>
 </dd>
 <dt id="section-2.1-2.5"><code>expires</code></dt>
           <dd id="section-2.1-2.6">
             <p id="section-2.1-2.6.1"><span class="bcp14">OPTIONAL</span>.  The <code>expires</code> field expresses when the signature ceases to be valid.  The value <span class="bcp14">MUST</span> be a Unix timestamp integer value.  A signature with an <code>expires</code> timestamp value that is in the past <span class="bcp14">MUST NOT</span> be processed.  Using a Unix timestamp simplifies processing and avoid timezone management existing in RFC3339.  Subsecod precision is allowed using decimal notation.<a href="#section-2.1-2.6.1" class="pilcrow">¶</a></p>
+<p id="section-2.1-2.6.2"><span class="cref">This wording implies that verifiers are not permitted to account for clock skew during signature verification.<span class="crefSource">AB</span></span><a href="#section-2.1-2.6.2" class="pilcrow">¶</a></p>
 </dd>
 <dt id="section-2.1-2.7"><code>headers</code></dt>
           <dd id="section-2.1-2.8">
@@ -1351,10 +1354,13 @@ aside > p {
               <li id="section-2.1-2.8.2.2">A zero-length <code>headers</code> parameter value <span class="bcp14">MUST NOT</span> be used, since it results in a signature of an empty string.<a href="#section-2.1-2.8.2.2" class="pilcrow">¶</a>
 </li>
             </ol>
+<p id="section-2.1-2.8.3"><span class="cref">The name <code>headers</code> is misleading, as this parameter will contain entries that are not HTTP header field names (e.g., <code>(created)</code>).<span class="crefSource">AB</span></span><a href="#section-2.1-2.8.3" class="pilcrow">¶</a></p>
+<p id="section-2.1-2.8.4"><span class="cref">This needs to be expanded to allow for more fine-grained inclusion of message elements (e.g., method, scheme, authority, path, query string parameters).<span class="crefSource">AB</span></span><a href="#section-2.1-2.8.4" class="pilcrow">¶</a></p>
 </dd>
 <dt id="section-2.1-2.9"><code>keyId</code></dt>
           <dd id="section-2.1-2.10">
             <p id="section-2.1-2.10.1"><span class="bcp14">REQUIRED</span>.  The <code>keyId</code> field is an opaque string that the server can use to look up the component they need to validate the signature.  It could be an SSH key fingerprint, a URL to machine-readable key data, an LDAP DN, etc.  Management of keys and assignment of <code>keyId</code> is out of scope for this document.  Implementations <span class="bcp14">MUST</span> be able to discover metadata about the key from the <code>keyId</code> such that they can determine the type of digital signature algorithm to employ when creating or verifying signatures.<a href="#section-2.1-2.10.1" class="pilcrow">¶</a></p>
+<p id="section-2.1-2.10.2"><span class="cref">While we need to allow for flexibility in key specification, leaving it completely undefined hurts interoperability.  We could borrow from JOSE and define <code>jwk</code> and <code>jku</code> parameters as extensible ways to specify common types of keys.<span class="crefSource">AB</span></span><a href="#section-2.1-2.10.2" class="pilcrow">¶</a></p>
 </dd>
 <dt id="section-2.1-2.11"><code>signature</code></dt>
           <dd id="section-2.1-2.12">
@@ -1368,7 +1374,7 @@ aside > p {
         <h3 id="name-ambiguous-parameters-2">
 <a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-ambiguous-parameters-2" class="section-name selfRef">Ambiguous Parameters</a>
         </h3>
-<p id="section-2.2-1">If any of the parameters listed above are erroneously duplicated in the associated header field, then the the signature <span class="bcp14">MUST NOT</span> be processed.  Any parameter that is not recognized as a parameter, or is not well-formed, <span class="bcp14">MUST</span> be ignored.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.2-1"><span class="cref">TODO: Move this to <code>Signature</code> definition.<span class="crefSource">AB</span></span> If any of the parameters listed above are erroneously duplicated in the associated header field, then the the signature <span class="bcp14">MUST NOT</span> be processed.  Any parameter that is not recognized as a parameter, or is not well-formed, <span class="bcp14">MUST</span> be ignored.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="canonicalization">
@@ -1702,7 +1708,8 @@ content-length: 18</pre><a href="#section-3.1.2-4" class="pilcrow">¶</a>
       <h2 id="name-security-considerations-2">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-security-considerations-2" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-5-1">There are a number of security considerations to take into account when implementing or utilizing this specification.  A thorough security analysis of this protocol, including its strengths and weaknesses, can be found in <span><a href="#WP-HTTP-Sig-Audit" class="xref">Security Considerations for HTTP Signatures</a> [<a href="#WP-HTTP-Sig-Audit" class="xref">WP-HTTP-Sig-Audit</a>]</span>.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-1"><span class="cref">TODO: need to dive deeper on this section; not sure how much of what's referenced below is actually applicable, or if it covers everything we need to worry about.<span class="crefSource">AB</span></span><a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">There are a number of security considerations to take into account when implementing or utilizing this specification.  A thorough security analysis of this protocol, including its strengths and weaknesses, can be found in <span><a href="#WP-HTTP-Sig-Audit" class="xref">Security Considerations for HTTP Signatures</a> [<a href="#WP-HTTP-Sig-Audit" class="xref">WP-HTTP-Sig-Audit</a>]</span>.<a href="#section-5-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <section id="section-6">
