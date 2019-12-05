@@ -314,10 +314,10 @@ content-length: 18]]></sourcecode>
                         <dd>
                             <t keepWithNext="true">Derived from metadata associated with <tt>keyId</tt>.  Recommend support for:</t>
                             <ul>
-                                <li><xref target="RFC8017" section="8.1" sectionFormat="comma">RFC 8017</xref>: RSASSA-PSS</li>
-                                <li><xref target="RFC6234" section="7.1" sectionFormat="comma">RFC 6234</xref>: SHA-Based HMACs</li>
-                                <li>ANSI X9.62-2005 ECDSA, P-256</li>
-                                <li><xref target="RFC8032" section="5.1" sectionFormat="comma">RFC 8032</xref>: Ed25519ph, Ed25519ctx, and Ed25519.</li>
+                                <li>RSASSA-PSS <xref target="RFC8017"/></li>
+                                <li>SHA-Based HMACs <xref target="RFC6234"/></li>
+                                <li>ECDSA using curve P-256 <xref target="FIPS186-4"/></li>
+                                <li>Ed25519ph, Ed25519ctx, and Ed25519 <xref target="RFC8032"/></li>
                             </ul>
                         </dd>
                     </dl>
@@ -333,7 +333,7 @@ content-length: 18]]></sourcecode>
                         <dt>Hash Algorithm</dt>
                         <dd><xref target="RFC6234">RFC 6234</xref>, SHA-1 (SHA-1 with 160-bits of digest output)</dd>
                         <dt>Digital Signature Algorithm</dt>
-                        <dd><xref target="RFC8017" section="8.2" sectionFormat="comma">RFC 8017</xref>: RSASSA-PKCS1-v1_5</dd>
+                        <dd>RSASSA-PKCS1-v1_5 <xref target="RFC8017"/></dd>
                     </dl>
                 </section>
 
@@ -347,7 +347,7 @@ content-length: 18]]></sourcecode>
                         <dt>Hash Algorithm</dt>
                         <dd><xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)</dd>
                         <dt>Digital Signature Algorithm</dt>
-                        <dd><xref target="RFC8017" section="8.2" sectionFormat="comma">RFC 8017</xref>: RSASSA-PKCS1-v1_5</dd>
+                        <dd>RSASSA-PKCS1-v1_5 <xref target="RFC8017"/></dd>
                     </dl>
                 </section>
 
@@ -361,7 +361,7 @@ content-length: 18]]></sourcecode>
                         <dt>Hash Algorithm</dt>
                         <dd><xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)</dd>
                         <dt>Message Authentication Code Algorithm</dt>
-                        <dd><xref target="RFC6234" section="7.1" sectionFormat="comma">RFC 6234</xref>: SHA-Based HMACs</dd>
+                        <dd>SHA-Based HMACs <xref target="RFC6234"/></dd>
                     </dl>
                 </section>
 
@@ -375,7 +375,7 @@ content-length: 18]]></sourcecode>
                         <dt>Hash Algorithm</dt>
                         <dd><xref target="RFC6234">RFC 6234</xref>, SHA-256 (SHA-2 with 256-bits of digest output)</dd>
                         <dt>Digital Signature Algorithm</dt>
-                        <dd>ANSI X9.62-2005 ECDSA, P-256</dd>
+                        <dd>ECDSA using curve P-256 <xref target="FIPS186-4"/></dd>
                     </dl>
                 </section>
             </section>
@@ -387,6 +387,7 @@ content-length: 18]]></sourcecode>
         </section>
     </middle>
     <back>
+        <displayreference target="FIPS186-4" to="DSS"/>
         <references>
             <name>References</name>
             <references>
@@ -397,6 +398,15 @@ content-length: 18]]></sourcecode>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7235.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7540.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+                <reference anchor="FIPS186-4" target="https://csrc.nist.gov/publications/detail/fips/186/4/final">
+                    <front>
+                        <title>Digital Signature Standard (DSS)</title>
+                        <author><organization>NIST</organization></author>
+                        <date month="07" year="2013"/>
+                    </front>
+                    <seriesInfo name="FIPS" value="186-4"/>
+                    <seriesInfo name="DOI" value="10.6028/NIST.FIPS.186-4"/>
+                </reference>
             </references>
             <references>
                 <name>Informative References</name>
@@ -601,6 +611,7 @@ Jeffrey Yasskin
                                 <li>Moved BCP 14 message under intro section.</li>
                                 <li>Removed <tt>Signature</tt> auth-scheme definition and non-normative description of using the <tt>Signature</tt> header field for authentication.</li>
                                 <li>Removed "Canonicalization Algorithm" from HTTP Signature Algorithms registry entries.</li>
+                                <li>Replaced mentions of ANSI X9.64 with normative references to FIPS 186-4.</li>
                             </ul>
                         </li>
                     </ul>

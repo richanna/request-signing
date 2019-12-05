@@ -84,7 +84,7 @@ Table of Contents
        "rsa-sha1"  . . . . . . . . . . . . . . . . . . . . . . . . .  13
        "rsa-sha256"  . . . . . . . . . . . . . . . . . . . . . . . .  13
        "hmac-sha256" . . . . . . . . . . . . . . . . . . . . . . . .  13
-       "ecdsa-sha256"  . . . . . . . . . . . . . . . . . . . . . . .  14
+       "ecdsa-sha256"  . . . . . . . . . . . . . . . . . . . . . . .  13
    5.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
    6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
      6.1.  Normative References  . . . . . . . . . . . . . . . . . .  14
@@ -663,9 +663,9 @@ Internet-Draft            Signing HTTP Messages            December 2019
       Derived from metadata associated with "keyId".  Recommend support
       for:
 
-      *  RFC 8017 [RFC8017], Section 8.1: RSASSA-PSS
+      *  RSASSA-PSS [RFC8017]
 
-      *  RFC 6234 [RFC6234], Section 7.1: SHA-Based HMACs
+      *  SHA-Based HMACs [RFC6234]
 
 
 
@@ -674,10 +674,9 @@ Backman, et al.            Expires 6 June 2020                 [Page 12]
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
-      *  ANSI X9.62-2005 ECDSA, P-256
+      *  ECDSA using curve P-256 [DSS]
 
-      *  RFC 8032 [RFC8032], Section 5.1: Ed25519ph, Ed25519ctx, and
-         Ed25519.
+      *  Ed25519ph, Ed25519ctx, and Ed25519 [RFC8032]
 
 "rsa-sha1"
 
@@ -691,7 +690,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
       RFC 6234 [RFC6234], SHA-1 (SHA-1 with 160-bits of digest output)
 
    Digital Signature Algorithm
-      RFC 8017 [RFC8017], Section 8.2: RSASSA-PKCS1-v1_5
+      RSASSA-PKCS1-v1_5 [RFC8017]
 
 "rsa-sha256"
 
@@ -705,7 +704,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
       RFC 6234 [RFC6234], SHA-256 (SHA-2 with 256-bits of digest output)
 
    Digital Signature Algorithm
-      RFC 8017 [RFC8017], Section 8.2: RSASSA-PKCS1-v1_5
+      RSASSA-PKCS1-v1_5 [RFC8017]
 
 "hmac-sha256"
 
@@ -719,8 +718,9 @@ Internet-Draft            Signing HTTP Messages            December 2019
       RFC 6234 [RFC6234], SHA-256 (SHA-2 with 256-bits of digest output)
 
    Message Authentication Code Algorithm
-      RFC 6234 [RFC6234], Section 7.1: SHA-Based HMACs
+      SHA-Based HMACs [RFC6234]
 
+"ecdsa-sha256"
 
 
 
@@ -729,8 +729,6 @@ Backman, et al.            Expires 6 June 2020                 [Page 13]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
-
-"ecdsa-sha256"
 
    Algorithm Name
       "ecdsa-sha256"
@@ -742,7 +740,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
       RFC 6234 [RFC6234], SHA-256 (SHA-2 with 256-bits of digest output)
 
    Digital Signature Algorithm
-      ANSI X9.62-2005 ECDSA, P-256
+      ECDSA using curve P-256 [DSS]
 
 5.  Security Considerations
 
@@ -755,6 +753,11 @@ Internet-Draft            Signing HTTP Messages            December 2019
 6.  References
 
 6.1.  Normative References
+
+   [DSS]      NIST, "Digital Signature Standard (DSS)", FIPS 186-4,
+              DOI 10.6028/NIST.FIPS.186-4, July 2013,
+              <https://csrc.nist.gov/publications/detail/fips/186/4/
+              final>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -775,9 +778,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
               DOI 10.17487/RFC7235, June 2014,
               <https://www.rfc-editor.org/info/rfc7235>.
 
-   [RFC7540]  Belshe, M., Peon, R., and M. Thomson, Ed., "Hypertext
-              Transfer Protocol Version 2 (HTTP/2)", RFC 7540,
-
 
 
 
@@ -786,6 +786,8 @@ Backman, et al.            Expires 6 June 2020                 [Page 14]
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
+   [RFC7540]  Belshe, M., Peon, R., and M. Thomson, Ed., "Hypertext
+              Transfer Protocol Version 2 (HTTP/2)", RFC 7540,
               DOI 10.17487/RFC7540, May 2015,
               <https://www.rfc-editor.org/info/rfc7540>.
 
@@ -832,8 +834,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
               Sporny, M., "HTTP Signature Trailers", July 2013,
               <https://web-payments.org/specs/source/http-signature-
               trailers/>.
-
-
 
 
 
@@ -1075,6 +1075,9 @@ Internet-Draft            Signing HTTP Messages            December 2019
          o  Removed "Canonicalization Algorithm" from HTTP Signature
             Algorithms registry entries.
 
+         o  Replaced mentions of ANSI X9.64 with normative references to
+            FIPS 186-4.
+
 Authors' Addresses
 
    Annabelle Backman (editor)
@@ -1101,9 +1104,6 @@ Authors' Addresses
    Phone: +1 540 961 4469
    Email: msporny@digitalbazaar.com
    URI:   https://manu.sporny.org/
-
-
-
 
 
 
