@@ -298,6 +298,7 @@ content-length: 18]]></sourcecode>
             <name>IANA Considerations</name>
             <section anchor="hsa-registry">
                 <name>HTTP Signature Algorithms Registry</name>
+                <t><cref source="AB"><xref target="RFC7518">JSON Web Algorithms (JWA)</xref> already defines an IANA registry for cryptographic algorithms.  What is the justification for defining a new one?</cref></t>
                 <t>This document defines HTTP Signature Algorithms, for which IANA is asked to create and maintain a new registry titled "HTTP Signature Algorithms".  Initial values for this registry are given in <xref target="iana-hsa-contents"/>.  Future assignments and modifications to existing assignment are to be made through the Expert Review registration policy <xref target="RFC8126"/> and shall follow the template presented in <xref target="iana-hsa-template" />.</t>
 
                 <section anchor="iana-hsa-template">
@@ -315,6 +316,7 @@ content-length: 18]]></sourcecode>
                 <section anchor="iana-hsa-contents">
                     <name>Initial Contents</name>
                     <t><cref source="MS">The references in this section are problematic as many of the specifications that they refer to are too implementation specific, rather than just pointing to the proper signature and hashing specifications.  A better approach might be just specifying the signature and hashing function specifications, leaving implementers to connect the dots (which are not that hard to connect).</cref></t>
+                    <t><cref source="AB">Initial registry contents should not contain deprecated algorithms.</cref></t>
 
                     <section numbered="false">
                         <name><tt>hs2019</tt></name>
@@ -332,6 +334,7 @@ content-length: 18]]></sourcecode>
                                     <li>ECDSA using curve P-256 <xref target="FIPS186-4"/> and SHA-512 <xref target="RFC6234"/></li>
                                     <li>Ed25519ph, Ed25519ctx, and Ed25519 <xref target="RFC8032"/></li>
                                 </ul>
+                                <t><cref source="AB">Pushing this into <tt>keyId</tt> without guidance on <tt>keyId</tt>'s format hurts interoperability and contradicts the earlier statement that the structure and semantics of <tt>keyId</tt> are out of scope.  These should each be defined as separate algorithms, and the verification steps should require the verifier to confirm that the specified key fits the specified algorithm.</cref></t>
                             </dd>
                         </dl>
                     </section>
@@ -342,7 +345,10 @@ content-length: 18]]></sourcecode>
                             <dt>Algorithm Name</dt>
                             <dd><tt>rsa-sha1</tt></dd>
                             <dt>Status</dt>
-                            <dd>Deprecated; SHA-1 not secure.</dd>
+                            <dd>
+                                <t>Deprecated; SHA-1 not secure.</t>
+                                <t><cref source="AB">What does "not secure" mean in this context?  Should this even be defined if there are security concerns?</cref></t>
+                            </dd>
                             <dt>Description</dt>
                             <dd>RSASSA-PKCS1-v1_5 <xref target="RFC8017"/> using SHA-1 <xref target="RFC6234"/></dd>
                         </dl>
@@ -354,7 +360,10 @@ content-length: 18]]></sourcecode>
                             <dt>Algorithm Name</dt>
                             <dd><tt>rsa-sha256</tt></dd>
                             <dt>Status</dt>
-                            <dd>Deprecated; specifying signature algorithm enables attack vector.</dd>
+                            <dd>
+                                <t>Deprecated; specifying signature algorithm enables attack vector.</t>
+                                <t><cref source="AB">What attack vector?  Can we mitigate it by including <tt>algorithm</tt> in the signing string?</cref></t>
+                            </dd>
                             <dt>Description</dt>
                             <dd>RSASSA-PKCS1-v1_5 <xref target="RFC8017"/> using SHA-256 <xref target="RFC6234"/></dd>
                         </dl>
@@ -366,7 +375,10 @@ content-length: 18]]></sourcecode>
                             <dt>Algorithm Name</dt>
                             <dd><tt>hmac-sha256</tt></dd>
                             <dt>Status</dt>
-                            <dd>Deprecated; specifying signature algorithm enables attack vector.</dd>
+                            <dd>
+                                <t>Deprecated; specifying signature algorithm enables attack vector.</t>
+                                <t><cref source="AB">What attack vector?  Can we mitigate it by including <tt>algorithm</tt> in the signing string?</cref></t>
+                            </dd>
                             <dt>Description</dt>
                             <dd>HMAC using SHA-256 <xref target="RFC6234"/></dd>
                         </dl>
@@ -378,7 +390,10 @@ content-length: 18]]></sourcecode>
                             <dt>Algorithm Name</dt>
                             <dd><tt>ecdsa-sha256</tt></dd>
                             <dt>Status</dt>
-                            <dd>Deprecated; specifying signature algorithm enables attack vector.</dd>
+                            <dd>
+                                <t>Deprecated; specifying signature algorithm enables attack vector.</t>
+                                <t><cref source="AB">What attack vector?  Can we mitigate it by including <tt>algorithm</tt> in the signing string?</cref></t>
+                            </dd>
                             <dt>Description</dt>
                             <dd>ECDSA using curve P-256 <xref target="FIPS186-4"/> and SHA-256 <xref target="RFC6234"/></dd>
                         </dl>
@@ -421,6 +436,7 @@ content-length: 18]]></sourcecode>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6234.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7239.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7515.xml"/>
+                <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7518.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8017.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8032.xml"/>
                 <reference anchor="WP-HTTP-Sig-Audit" target="https://web-payments.org/specs/source/http-signatures-audit/">

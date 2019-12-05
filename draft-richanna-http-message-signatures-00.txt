@@ -82,18 +82,18 @@ Table of Contents
      4.1.  HTTP Signature Algorithms Registry  . . . . . . . . . . .  12
        4.1.1.  Registration Template . . . . . . . . . . . . . . . .  12
        4.1.2.  Initial Contents  . . . . . . . . . . . . . . . . . .  13
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
-   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  15
+   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
      6.1.  Normative References  . . . . . . . . . . . . . . . . . .  15
-     6.2.  Informative References  . . . . . . . . . . . . . . . . .  15
-   Appendix A.  Extensions . . . . . . . . . . . . . . . . . . . . .  16
+     6.2.  Informative References  . . . . . . . . . . . . . . . . .  16
+   Appendix A.  Extensions . . . . . . . . . . . . . . . . . . . . .  17
    Appendix B.  Test Values  . . . . . . . . . . . . . . . . . . . .  17
      B.1.  Default Test  . . . . . . . . . . . . . . . . . . . . . .  18
-     B.2.  Basic Test  . . . . . . . . . . . . . . . . . . . . . . .  18
+     B.2.  Basic Test  . . . . . . . . . . . . . . . . . . . . . . .  19
      B.3.  All Headers Test  . . . . . . . . . . . . . . . . . . . .  19
-   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  19
+   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  20
    Document History  . . . . . . . . . . . . . . . . . . . . . . . .  20
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  20
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  21
 
 
 
@@ -648,6 +648,10 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
 4.1.  HTTP Signature Algorithms Registry
 
+   // JSON Web Algorithms (JWA) [RFC7518] already defines an IANA //
+   registry for cryptographic algorithms.  What is the justification //
+   for defining a new one? // // -- AB
+
    This document defines HTTP Signature Algorithms, for which IANA is
    asked to create and maintain a new registry titled "HTTP Signature
    Algorithms".  Initial values for this registry are given in
@@ -662,10 +666,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
       An identifier for the HTTP Signature Algorithm.  The name MUST be
       an ASCII string consisting only of lower-case characters (""a"" -
       ""z""), digits (""0"" - ""9""), and hyphens (""-""), and SHOULD
-      NOT exceed 20 characters in length.  The identifier MUST be unique
-      within the context of the registry.
-
-
 
 
 
@@ -673,6 +673,9 @@ Backman, et al.            Expires 6 June 2020                 [Page 12]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
+
+      NOT exceed 20 characters in length.  The identifier MUST be unique
+      within the context of the registry.
 
    Status
       A brief text description of the status of the algorithm.  The
@@ -697,6 +700,9 @@ Internet-Draft            Signing HTTP Messages            December 2019
    implementers to connect the dots (which are not that hard to //
    connect). // // -- MS
 
+   // Initial registry contents should not contain deprecated //
+   algorithms. // // -- AB
+
 "hs2019"
 
    Algorithm Name
@@ -717,12 +723,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
       *  Ed25519ph, Ed25519ctx, and Ed25519 [RFC8032]
 
-"rsa-sha1"
-
-   Algorithm Name
-      "rsa-sha1"
-
-
 
 
 Backman, et al.            Expires 6 June 2020                 [Page 13]
@@ -730,8 +730,23 @@ Backman, et al.            Expires 6 June 2020                 [Page 13]
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
+      // Pushing this into "keyId" without guidance on "keyId"'s format
+      // hurts interoperability and contradicts the earlier statement
+      that // the structure and semantics of "keyId" are out of scope.
+      These // should each be defined as separate algorithms, and the //
+      verification steps should require the verifier to confirm that the
+      // specified key fits the specified algorithm. // // -- AB
+
+"rsa-sha1"
+
+   Algorithm Name
+      "rsa-sha1"
+
    Status
       Deprecated; SHA-1 not secure.
+
+      // What does "not secure" mean in this context?  Should this even
+      be // defined if there are security concerns? // // -- AB
 
    Description
       RSASSA-PKCS1-v1_5 [RFC8017] using SHA-1 [RFC6234]
@@ -744,6 +759,9 @@ Internet-Draft            Signing HTTP Messages            December 2019
    Status
       Deprecated; specifying signature algorithm enables attack vector.
 
+      // What attack vector?  Can we mitigate it by including
+      "algorithm" // in the signing string? // // -- AB
+
    Description
       RSASSA-PKCS1-v1_5 [RFC8017] using SHA-256 [RFC6234]
 
@@ -755,8 +773,18 @@ Internet-Draft            Signing HTTP Messages            December 2019
    Status
       Deprecated; specifying signature algorithm enables attack vector.
 
+      // What attack vector?  Can we mitigate it by including
+      "algorithm" // in the signing string? // // -- AB
+
    Description
       HMAC using SHA-256 [RFC6234]
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 14]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
 
 "ecdsa-sha256"
 
@@ -765,6 +793,9 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    Status
       Deprecated; specifying signature algorithm enables attack vector.
+
+      // What attack vector?  Can we mitigate it by including
+      "algorithm" // in the signing string? // // -- AB
 
    Description
       ECDSA using curve P-256 [DSS] and SHA-256 [RFC6234]
@@ -778,13 +809,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
    Signatures [WP-HTTP-Sig-Audit].
 
 6.  References
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 14]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
 
 6.1.  Normative References
 
@@ -809,6 +833,15 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    [RFC7230]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
               Protocol (HTTP/1.1): Message Syntax and Routing",
+
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 15]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
               RFC 7230, DOI 10.17487/RFC7230, June 2014,
               <https://www.rfc-editor.org/info/rfc7230>.
 
@@ -833,15 +866,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
               DOI 10.17487/RFC6234, May 2011,
               <https://www.rfc-editor.org/info/rfc6234>.
 
-
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 15]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
    [RFC7239]  Petersson, A. and M. Nilsson, "Forwarded HTTP Extension",
               RFC 7239, DOI 10.17487/RFC7239, June 2014,
               <https://www.rfc-editor.org/info/rfc7239>.
@@ -849,6 +873,10 @@ Internet-Draft            Signing HTTP Messages            December 2019
    [RFC7515]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web
               Signature (JWS)", RFC 7515, DOI 10.17487/RFC7515, May
               2015, <https://www.rfc-editor.org/info/rfc7515>.
+
+   [RFC7518]  Jones, M., "JSON Web Algorithms (JWA)", RFC 7518,
+              DOI 10.17487/RFC7518, May 2015,
+              <https://www.rfc-editor.org/info/rfc7518>.
 
    [RFC8017]  Moriarty, K., Ed., Kaliski, B., Jonsson, J., and A. Rusch,
               "PKCS #1: RSA Cryptography Specifications Version 2.2",
@@ -862,6 +890,14 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    [WP-HTTP-Sig-Audit]
               Sporny, M., "Security Considerations for HTTP Signatures",
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 16]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
               June 2013, <https://web-payments.org/specs/source/http-
               signatures-audit/>.
 
@@ -890,14 +926,6 @@ Appendix A.  Extensions
 
    If extensions to this specification are made by adding new Signature
    Parameters, those extension parameters MUST be registered in the
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 16]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
    Signature Authentication Scheme Registry.  The registry will be
    created and maintained at (the suggested URI)
    https://www.iana.org/assignments/http-auth-scheme-signature.
@@ -916,6 +944,15 @@ Appendix B.  Test Values
 
    The following test data uses the following RSA 2048-bit keys, which
    we will refer to as "keyId=Test" in the following samples:
+
+
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 17]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
 
    -----BEGIN PUBLIC KEY-----
    MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDCFENGw33yGihy92pDjZQhl0C3
@@ -942,18 +979,6 @@ Appendix B.  Test Values
 
    All examples use this request:
 
-
-
-
-
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 17]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
    POST /foo?param=value&pet=dog HTTP/1.1
    Host: example.com
    Date: Sun, 05 Jan 2014 21:31:40 GMT
@@ -978,6 +1003,13 @@ B.1.  Default Test
    6m79cNfwwb8DMJ5cou1s7uEGKKCs+FLEEaDV5lp7q25WqS+lavg7T8hc0GppauB
    6hbgEKTwblDHYGEtbGmtdHgVCk9SuS13F0hZ8FD0k/5OxEPXe5WozsbM="
 
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 18]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
    The Signature header would be:
 
    Signature: keyId="Test",algorithm="rsa-sha256",
@@ -1001,14 +1033,6 @@ B.2.  Basic Test
        signature="qdx+H7PHHDZgy4y/Ahn9Tny9V3GP6YgBPyUXMmoxWtLbHpUnXS
        2mg2+SbrQDMCJypxBLSPQR2aAjn7ndmw2iicw3HMbe8VfEdKFYRqzic+efkb3
        nndiv/x1xSHDJWeSWkx3ButlYSuBskLu6kd9Fswtemr3lgdDEmn04swr2Os0="
-
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 18]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
 
 B.3.  All Headers Test
 
@@ -1035,6 +1059,13 @@ B.3.  All Headers Test
 
    The Signature header would be:
 
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 19]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
    Signature: keyId="Test",algorithm="rsa-sha256",
        created=1402170695, expires=1402170699,
        headers="(request-target) (created) (expires)
@@ -1058,14 +1089,6 @@ Acknowledgements
    Andrey Kislyuk, Adam Knight, Dave Lehn, Dave Longley, James H.
    Manger, Ilari Liusvaara, Mark Nottingham, Yoav Nir, Adrian Palmer,
    Lucas Pardue, Roberto Polli, Julian Reschke, Michael Richardson,
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 19]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
    Wojciech Rygielski, Adam Scarr, Cory J.  Slep, Dirk Stein, Henry
    Story, Lukasz Szewc, Chris Webber, and Jeffrey Yasskin
 
@@ -1092,6 +1115,13 @@ Document History
          o  Removed informative intro sections on Signatures in HTTP
             Requests/Responses, as they imply specific use cases.
 
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 20]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
          o  Moved BCP 14 message under intro section.
 
          o  Removed "Signature" auth-scheme definition and non-normative
@@ -1112,15 +1142,6 @@ Document History
             suggested URI.
 
 Authors' Addresses
-
-
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 20]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
 
    Annabelle Backman (editor)
    Amazon
@@ -1146,27 +1167,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
    Phone: +1 540 961 4469
    Email: msporny@digitalbazaar.com
    URI:   https://manu.sporny.org/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
