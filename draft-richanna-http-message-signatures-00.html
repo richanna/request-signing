@@ -1155,13 +1155,21 @@ aside > p {
                 <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="xref">3.1</a>.  <a href="#name-signature-metadata-2" class="xref">Signature Metadata</a><a href="#section-toc.1-1.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="toc ulEmpty" id="section-toc.1-1.3.2.2">
-                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="xref">3.2</a>.  <a href="#name-signature-input-construction" class="xref">Signature Input Construction</a><a href="#section-toc.1-1.3.2.2.1" class="pilcrow">¶</a></p>
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="xref">3.2</a>.  <a href="#name-creating-a-signature-2" class="xref">Creating a Signature</a><a href="#section-toc.1-1.3.2.2.1" class="pilcrow">¶</a></p>
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.3.2.2.2.1">
+                    <p id="section-toc.1-1.3.2.2.2.1.1"><a href="#section-3.2.1" class="xref">3.2.1</a>.  <a href="#name-choose-and-set-signature-met" class="xref">Choose and Set Signature Metadata Properties</a><a href="#section-toc.1-1.3.2.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+                  <li class="toc ulEmpty" id="section-toc.1-1.3.2.2.2.2">
+                    <p id="section-toc.1-1.3.2.2.2.2.1"><a href="#section-3.2.2" class="xref">3.2.2</a>.  <a href="#name-create-the-signature-input-2" class="xref">Create the Signature Input</a><a href="#section-toc.1-1.3.2.2.2.2.1" class="pilcrow">¶</a></p>
+</li>
+                  <li class="toc ulEmpty" id="section-toc.1-1.3.2.2.2.3">
+                    <p id="section-toc.1-1.3.2.2.2.3.1"><a href="#section-3.2.3" class="xref">3.2.3</a>.  <a href="#name-sign-the-signature-input-2" class="xref">Sign the Signature Input</a><a href="#section-toc.1-1.3.2.2.2.3.1" class="pilcrow">¶</a></p>
+</li>
+                </ul>
 </li>
               <li class="toc ulEmpty" id="section-toc.1-1.3.2.3">
-                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="xref">3.3</a>.  <a href="#name-creating-a-signature-2" class="xref">Creating a Signature</a><a href="#section-toc.1-1.3.2.3.1" class="pilcrow">¶</a></p>
-</li>
-              <li class="toc ulEmpty" id="section-toc.1-1.3.2.4">
-                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="xref">3.4</a>.  <a href="#name-verifying-a-signature-2" class="xref">Verifying a Signature</a><a href="#section-toc.1-1.3.2.4.1" class="pilcrow">¶</a></p>
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="xref">3.3</a>.  <a href="#name-verifying-a-signature-2" class="xref">Verifying a Signature</a><a href="#section-toc.1-1.3.2.3.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
@@ -1332,16 +1340,8 @@ aside > p {
         <dt id="section-2-4.1">Signer</dt>
         <dd id="section-2-4.2">The entity that is generating or has generated an HTTP Message Signature.<a href="#section-2-4.2" class="pilcrow">¶</a>
 </dd>
-<dt id="section-2-4.3">Signing Algorithm</dt>
-        <dd id="section-2-4.4">
-          <span class="cref">TODO<span class="crefSource">AB</span></span><a href="#section-2-4.4" class="pilcrow">¶</a>
-</dd>
-<dt id="section-2-4.5">Signing String</dt>
-        <dd id="section-2-4.6">
-          <span class="cref">TODO<span class="crefSource">AB</span></span><a href="#section-2-4.6" class="pilcrow">¶</a>
-</dd>
-<dt id="section-2-4.7">Verifier</dt>
-        <dd id="section-2-4.8">An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message.  Note that an HTTP Message Signature may be verified by multiple entities, and thus have multiple verifiers.<a href="#section-2-4.8" class="pilcrow">¶</a>
+<dt id="section-2-4.3">Verifier</dt>
+        <dd id="section-2-4.4">An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message.  Note that an HTTP Message Signature may be verified by multiple entities, and thus have multiple verifiers.<a href="#section-2-4.4" class="pilcrow">¶</a>
 </dd>
 </dl>
 </section>
@@ -1351,7 +1351,7 @@ aside > p {
       <h2 id="name-http-message-signatures-2">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-http-message-signatures-2" class="section-name selfRef">HTTP Message Signatures</a>
       </h2>
-<p id="section-3-1">An HTTP Message Signature represents a signature over a subset of protocol elements within an HTTP message.  It consists of a set of Signature Parameters containing the signature itself along with metadata describing how the signature was generated and which protocol elements are covered by it.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">An HTTP Message Signature is a signature over a string generated from a subset of the content in an HTTP message and metadata about the signature itself.  When successfully verified against an HTTP message, it provides cryptographic proof that with respect to the subset of content that was signed, the message is semantically equivalent to the message for which the signature was generated.  HTTP Message Signature's metadata provides information regarding its generation and/or verification.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <section id="section-3.1">
         <h3 id="name-signature-metadata-2">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-signature-metadata-2" class="section-name selfRef">Signature Metadata</a>
@@ -1359,112 +1359,148 @@ aside > p {
 <p id="section-3.1-1">HTTP Message Signatures have the following metadata properties:<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <dl class="dlNewline" id="section-3.1-2">
           <dt id="section-3.1-2.1">Algorithm</dt>
-          <dd id="section-3.1-2.2">
-            <span class="bcp14">REQUIRED</span>.  An HTTP Signature Algorithm defined in the <span><a href="#hsa-registry" class="xref">IANA HTTP Signature Algorithms registry</a> (<a href="#hsa-registry" class="xref">Section 5.1</a>)</span> defined in this document.  It describes the algorithm(s) used to generate the signature, and the algorithm(s) required to verify the signature.  It is expressed as the name assigned to the HTTP Signature Algorithm in the registry.<a href="#section-3.1-2.2" class="pilcrow">¶</a>
+          <dd id="section-3.1-2.2">An HTTP Signature Algorithm defined in the <span><a href="#hsa-registry" class="xref">IANA HTTP Signature Algorithms registry</a> (<a href="#hsa-registry" class="xref">Section 5.1</a>)</span> defined in this document.  It describes the signing and verification algorithms for the signature.<a href="#section-3.1-2.2" class="pilcrow">¶</a>
 </dd>
 <dt id="section-3.1-2.3">Creation Time</dt>
-          <dd id="section-3.1-2.4">
-            <span class="bcp14">REQUIRED</span>.  A timestamp representing the point in time that the signature was generated.  It is expressed as an integer representing the number of seconds since the Epoch, as defined in <a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</a> of <span>[<a href="#POSIX.1" class="xref">POSIX.1</a>]</span>.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as <span>[<a href="#RFC3339" class="xref">RFC3339</a>]</span>.  Sub-second precision is not supported.<a href="#section-3.1-2.4" class="pilcrow">¶</a>
+          <dd id="section-3.1-2.4">A timestamp representing the point in time that the signature was generated.  Sub-second precision is not supported.  A signature's Creation Time <span class="bcp14">MAY</span> be undefined, indicating that it is unknown.<a href="#section-3.1-2.4" class="pilcrow">¶</a>
 </dd>
-<dt id="section-3.1-2.5">Covered Elements</dt>
-          <dd id="section-3.1-2.6">
-            <span class="bcp14">REQUIRED</span>.  An ordered list of identifiers that indicates the metadata and message content that is covered by the signature.  The order affects signature generation and verification, and therefore <span class="bcp14">MUST</span> be preserved.<a href="#section-3.1-2.6" class="pilcrow">¶</a>
+<dt id="section-3.1-2.5">Covered Content</dt>
+          <dd id="section-3.1-2.6">An ordered list of identifiers that indicates the metadata and message content that is covered by the signature.  The order of identifiers in this list affects signature generation and verification, and therefore <span class="bcp14">MUST</span> be preserved.<a href="#section-3.1-2.6" class="pilcrow">¶</a>
 </dd>
 <dt id="section-3.1-2.7">Expiration Time</dt>
-          <dd id="section-3.1-2.8">
-            <span class="bcp14">OPTIONAL</span>.  A timestamp representing the point in time at which the signature expires.  An expired signature always fails verification.  It is expressed as a decimal representing the number of seconds since the Epoch, as defined in <a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</a> of <span>[<a href="#POSIX.1" class="xref">POSIX.1</a>]</span>.  Absence of this property indicates that the signature does not expire.  Using a Unix timestamp simplifies processing and avoid timezone management existing in <span>[<a href="#RFC3339" class="xref">RFC3339</a>]</span>.  Sub-second precision is allowed using decimal notation.<a href="#section-3.1-2.8" class="pilcrow">¶</a>
+          <dd id="section-3.1-2.8">A timestamp representing the point in time at which the signature expires.  An expired signature always fails verification.  A signature's Expiration Time <span class="bcp14">MAY</span> be undefined, indicating that the signature does not expire.<a href="#section-3.1-2.8" class="pilcrow">¶</a>
 </dd>
-<dt id="section-3.1-2.9">Key Reference</dt>
+<dt id="section-3.1-2.9">Verification Key Material</dt>
           <dd id="section-3.1-2.10">
-            <p id="section-3.1-2.10.1"><span class="bcp14">OPTIONAL</span>.  A string that describes the key material required to verify the signature.  The format and semantics of this string are out of scope for this document.  Absence of this property indicates that verifiers are expected to determine what key material to use via some alternative mechanism not defined in this document.<a href="#section-3.1-2.10.1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2.10.2"><span class="cref">While we need to allow for flexibility in key specification, leaving it completely undefined hurts interoperability.  We could borrow from JOSE and define <code>jwk</code> and <code>jku</code> parameters as extensible ways to specify common types of keys.<span class="crefSource">AB</span></span><a href="#section-3.1-2.10.2" class="pilcrow">¶</a></p>
+            <p id="section-3.1-2.10.1">The key material required to verify the signature.<a href="#section-3.1-2.10.1" class="pilcrow">¶</a></p>
 </dd>
 </dl>
 </section>
-<div id="canonicalization">
+<div id="create">
 <section id="section-3.2">
-        <h3 id="name-signature-input-construction">
-<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-signature-input-construction" class="section-name selfRef">Signature Input Construction</a>
+        <h3 id="name-creating-a-signature-2">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-creating-a-signature-2" class="section-name selfRef">Creating a Signature</a>
         </h3>
-<p id="section-3.2-1">A signed HTTP message needs to be tolerant of some trivial alterations during transmission as it goes through gateways, proxies, and other entities.  These changes are often of little consequence and very benign, but also often not visible to or detectable by either the sender or the recipient.  Simply signing the entire message that was transmitted by the sender is therefore not feasible: Even very minor changes would result in a signature which cannot be verified.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2-2">The signer determines what signature metadata and message content is meaningful, and adds corresponding identifiers for each in the signature's Covered Elements.  The Covered Elements list is then used to construct the intermediate Signature Input, which is what is actually signed.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.2-3">In order to generate Signature Input, the signer <span class="bcp14">MUST</span> construct and use canonicalized values for each identifier in the signature's Covered Elements, in the order they occur in that list.  It is out of scope for this document to dictate what header fields or other information an application will want to enforce, but implementers <span class="bcp14">SHOULD</span> at minimum include the <code>(request-target)</code> and <code>(created)</code> identifiers if the signature's Algorithm name does not start with <code>rsa</code>, <code>hmac</code>, or <code>ecdsa</code>.  Otherwise, <code>(request-target)</code> and <code>date</code> <span class="bcp14">SHOULD</span> be included in the signature.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
-<p id="section-3.2-4">To include the HTTP request target in the signature calculation, use the special <code>(request-target)</code> identifier.  To include the signature's Creation Time, use the special <code>(created)</code> identifier.  To include the signature's Expiration Time, use the special <code>(expires)</code> identifier.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.2-5">The Signature Input is a US-ASCII string created by concatenating together entries for each identifier in the Covered Elements list in the order they occur in the list, with each entry separated by a newline <code>"\n"</code>.  An identifier's entry is a US-ASCII string consisting of the lowercased identifier followed with an ASCII colon <code>":"</code>, an ASCII space <code>" "</code>, and a canonicalized value.<a href="#section-3.2-5" class="pilcrow">¶</a></p>
-<ul>
-<li id="section-3.2-6.1">If the identifier is <code>(request-target)</code> its canonicalized value is constructed by concatenating the lowercased :method, an ASCII space, and the :path pseudo-headers (as specified in <span>HTTP/2 [<a href="#RFC7540" class="xref">RFC7540</a>], <a href="https://rfc-editor.org/rfc/rfc7540#section-8.1.2.3" class="relref">Section 8.1.2.3</a></span>).  Note: For the avoidance of doubt, lowercasing only applies to the :method pseudo-header and not to the :path pseudo-header.<a href="#section-3.2-6.1" class="pilcrow">¶</a>
+<p id="section-3.2-1">In order to create a signature, a signer completes the following process:<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal" id="section-3.2-2">
+          <li id="section-3.2-2.1">Choose key material and algorithm, and set metadata properties (<a href="#choose-metadata" class="xref">Section 3.2.1</a>)<a href="#section-3.2-2.1" class="pilcrow">¶</a>
 </li>
-          <li id="section-3.2-6.2">If the identifier is <code>(created)</code> and the signature's <code>Algorithm</code> name starts with <code>rsa</code>, <code>hmac</code>, or <code>ecdsa</code> an implementation <span class="bcp14">MUST</span> produce an error.  If the signature's Creation Time is undefined, an implementation <span class="bcp14">MUST</span> produce an error.  Otherwise, the canonicalized value is the signature's Creation Time.<a href="#section-3.2-6.2" class="pilcrow">¶</a>
+          <li id="section-3.2-2.2">Create the Signature Input (<a href="#canonicalization" class="xref">Section 3.2.2</a>)<a href="#section-3.2-2.2" class="pilcrow">¶</a>
 </li>
-          <li id="section-3.2-6.3">If the identifier is <code>(expires)</code> and the signature's Algorithm name starts with <code>rsa</code>, <code>hmac</code>, or <code>ecdsa</code> an implementation <span class="bcp14">MUST</span> produce an error.  If the signature does not have an Expiration Time, an implementation <span class="bcp14">MUST</span> produce an error.  Otherwise, the canonicalized value is the signature's Expiration Time.<a href="#section-3.2-6.3" class="pilcrow">¶</a>
+          <li id="section-3.2-2.3">Sign the Signature Input (<a href="#sign-sig-input" class="xref">Section 3.2.3</a>)<a href="#section-3.2-2.3" class="pilcrow">¶</a>
 </li>
-          <li id="section-3.2-6.4">
-            <p id="section-3.2-6.4.1">If the identifier is a header field name, its canonicalized value is the header field's value, stripped of leading and trailing whitespace. If there are multiple instances of the same header field, all header field values associated with the header field <span class="bcp14">MUST</span> be concatenated, separated by a ASCII comma and an ASCII space <code>, </code>, in the order in which they will appear in the transmitted HTTP message.<a href="#section-3.2-6.4.1" class="pilcrow">¶</a></p>
-<p id="section-3.2-6.4.2">If the header value (after removing leading and trailing whitespace) is a zero-length string, the signature string line correlating with that header will simply be the (lowercased) header name, an ASCII colon <code>:</code>, and an ASCII space <code> </code>.<a href="#section-3.2-6.4.2" class="pilcrow">¶</a></p>
-<p id="section-3.2-6.4.3">Any other modification to the header field value <span class="bcp14">MUST NOT</span> be made.  If a header specified in the headers parameter is malformed or cannot be matched with a provided header in the message, the implementation <span class="bcp14">MUST</span> produce an error.<a href="#section-3.2-6.4.3" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-3.2-6.5">If value is not the last value then append an ASCII newline <code>\n</code>.<a href="#section-3.2-6.5" class="pilcrow">¶</a>
-</li>
-        </ul>
-<p id="section-3.2-7">To illustrate the rules specified above, assume a Covered Elements list with the value of <code>(request-target) (created) host date cache-control x-emptyheader x-example</code> and the following HTTP message:<a href="#section-3.2-7" class="pilcrow">¶</a></p>
-<div id="section-3.2-8">
-<pre class="sourcecode">
-GET /foo HTTP/1.1
-Host: example.org
-Date: Tue, 07 Jun 2014 20:51:35 GMT
-X-Example: Example header
-        with some whitespace.
-X-EmptyHeader:
-Cache-Control: max-age=60
-Cache-Control: must-revalidate</pre><a href="#section-3.2-8" class="pilcrow">¶</a>
-</div>
-<p id="section-3.2-9">For the HTTP message above, the corresponding Signature Input is:<a href="#section-3.2-9" class="pilcrow">¶</a></p>
-<div id="section-3.2-10">
-<pre class="sourcecode">
-(request-target): get /foo
-(created): 1402170695
-host: example.org
-date: Tue, 07 Jun 2014 20:51:35 GMT
-cache-control: max-age=60, must-revalidate
-x-emptyheader:
-x-example: Example header with some whitespace.</pre><a href="#section-3.2-10" class="pilcrow">¶</a>
+        </ol>
+<p id="section-3.2-3">The following sections describe each of these steps in detail.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<div id="choose-metadata">
+<section id="section-3.2.1">
+          <h4 id="name-choose-and-set-signature-met">
+<a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a href="#name-choose-and-set-signature-met" class="section-name selfRef">Choose and Set Signature Metadata Properties</a>
+          </h4>
+<p id="section-3.2.1-1">The signer chooses an HTTP Signature Algorithm from those registered in the <span><a href="#hsa-registry" class="xref">IANA HTTP Signature Algorithm Registry</a> (<a href="#hsa-registry" class="xref">Section 5.1</a>)</span> defined by this document, and sets the signature's Algorithm property to that value.  The signer <span class="bcp14">MUST NOT</span> choose an algorithm marked "Deprecated".  The mechanism by which the signer chooses an algorithm is out of scope for this document.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-2">The signer chooses key material to use for signing and verification, and sets the signature's Verification Key Material property to the key material required for verification.  The signer <span class="bcp14">MUST</span> choose key material that is appropriate for the signature's Algorithm, and that conforms to any requirements defined by the Algorithm, such as key size or format.  The mechanism by which the signer chooses key material is out of scope for this document.<a href="#section-3.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-3">The signer sets the signature's Creation Time property to the current time.<a href="#section-3.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-4">The signer sets the signature's Expiration Time property to the time at which the signature is to expire, or to undefined if the signature will not expire.<a href="#section-3.2.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-5">The signer creates an ordered list of identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.  Each identifier <span class="bcp14">MUST</span> be one of those defined in <a href="#content-identifiers" class="xref">Section 3.2.1.1</a>.  This list <span class="bcp14">MUST NOT</span> be empty, as this would result in creating a signature over the empty string.  If the signature's Algorithm name does not start with <code>rsa</code>, <code>hmac</code>, or <code>ecdsa</code>, signers <span class="bcp14">SHOULD</span> include <code>(created)</code> and <code>(request-target)</code> in the list.  If the signature's Algorithm starts with <code>rsa</code>, <code>hmac</code>, or <code>ecdsa</code>, signers <span class="bcp14">SHOULD</span> include <code>date</code> and <code>(request-target)</code> in the list.  Further guidance on what to include in this list and in what order is out of scope for this document.  However, the list order is significant and once established for a given signature it <span class="bcp14">MUST</span> be preserved for that signature.<a href="#section-3.2.1-5" class="pilcrow">¶</a></p>
+<div id="content-identifiers">
+<section id="section-3.2.1.1">
+            <h5 id="name-content-identifiers-2">
+<a href="#section-3.2.1.1" class="section-number selfRef">3.2.1.1. </a><a href="#name-content-identifiers-2" class="section-name selfRef">Content Identifiers</a>
+            </h5>
+<p id="section-3.2.1.1-1">In order to allow signers and verifiers to establish which content is covered by a signature, this document defines identifiers for signature metadata and discrete pieces of message content that may be covered by an HTTP Message Signature.<a href="#section-3.2.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.1-2">HTTP header fields are identified by their corresponding header field name.  While HTTP header field names are case-insensitive, implementations <span class="bcp14">SHOULD</span> use lowercased values (e.g., <code>content-type</code>, <code>date</code>, <code>etag</code>).<a href="#section-3.2.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.2.1.1-3">Additionally, the following identifiers are defined:<a href="#section-3.2.1.1-3" class="pilcrow">¶</a></p>
+<dl class="dlNewline" id="section-3.2.1.1-4">
+              <dt id="section-3.2.1.1-4.1"><code>(created)</code></dt>
+              <dd id="section-3.2.1.1-4.2">The signature's Creation Time.<a href="#section-3.2.1.1-4.2" class="pilcrow">¶</a>
+</dd>
+<dt id="section-3.2.1.1-4.3"><code>(expired)</code></dt>
+              <dd id="section-3.2.1.1-4.4">The signature's Expiration Time.<a href="#section-3.2.1.1-4.4" class="pilcrow">¶</a>
+</dd>
+<dt id="section-3.2.1.1-4.5"><code>(request-target)</code></dt>
+              <dd id="section-3.2.1.1-4.6">The HTTP method, and the path and query of the HTTP request target.<a href="#section-3.2.1.1-4.6" class="pilcrow">¶</a>
+</dd>
+</dl>
+<p id="section-3.2.1.1-5"><span class="cref">This needs to be expanded to allow for more fine-grained inclusion of message elements (e.g., method, scheme, authority, path, query string parameters).<span class="crefSource">AB</span></span><a href="#section-3.2.1.1-5" class="pilcrow">¶</a></p>
+</section>
 </div>
 </section>
 </div>
-<div id="create">
-<section id="section-3.3">
-        <h3 id="name-creating-a-signature-2">
-<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-creating-a-signature-2" class="section-name selfRef">Creating a Signature</a>
-        </h3>
-<p id="section-3.3-1">In order to create a signature, a signer <span class="bcp14">MUST</span>:<a href="#section-3.3-1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal" id="section-3.3-2">
-          <li id="section-3.3-2.1">Choose an algorithm and key material to use, and assign the signature's Algorithm and Key Reference properties accordingly.<a href="#section-3.3-2.1" class="pilcrow">¶</a>
+<div id="canonicalization">
+<section id="section-3.2.2">
+          <h4 id="name-create-the-signature-input-2">
+<a href="#section-3.2.2" class="section-number selfRef">3.2.2. </a><a href="#name-create-the-signature-input-2" class="section-name selfRef">Create the Signature Input</a>
+          </h4>
+<p id="section-3.2.2-1">The Signature Input is a US-ASCII string containing the content that will be signed.  To create it, the signer concatenates together entries for each identifier in the signature's Covered Content in the order it occurs in the list, with each entry separated by a newline <code>"\n"</code>.  An identifier's entry is a US-ASCII string consisting of the lowercased identifier followed with a colon <code>":"</code>, a space <code>" "</code>, and the identifier's canonicalized value (described below).<a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
+<ul>
+<li id="section-3.2.2-2.1">If the identifier is <code>(request-target)</code>, its canonicalized value is constructed by concatenating the lowercased :method pseudo-header, a space, and the :path pseudo-header (as specified in <span>HTTP/2 [<a href="#RFC7540" class="xref">RFC7540</a>], <a href="https://rfc-editor.org/rfc/rfc7540#section-8.1.2.3" class="relref">Section 8.1.2.3</a></span>).  Note: To clarify, lowercasing only applies to the :method pseudo-header and not to the :path pseudo-header.<a href="#section-3.2.2-2.1" class="pilcrow">¶</a>
 </li>
-          <li id="section-3.3-2.2">Create the Signature Input as described in <a href="#canonicalization" class="xref">Section 3.2</a>.<a href="#section-3.3-2.2" class="pilcrow">¶</a>
+            <li id="section-3.2.2-2.2">If the identifier is <code>(created)</code>, its canonicalized value is the signature's Creation Time, expressed as an integer representing the number of seconds since the Epoch, as defined in <a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</a> of <span>[<a href="#POSIX.1" class="xref">POSIX.1</a>]</span>.  If the signature's Creation Time is undefined or the signature's Algorithm name starts with <code>rsa</code>, <code>hmac</code>, or <code>ecdsa</code> an implementation <span class="bcp14">MUST</span> produce an error.<a href="#section-3.2.2-2.2" class="pilcrow">¶</a>
 </li>
-          <li id="section-3.3-2.3">Sign the Signature Input with a chosen key and algorithm, and encode the result as a base 64-encoded string.<a href="#section-3.3-2.3" class="pilcrow">¶</a>
+            <li id="section-3.2.2-2.3">
+              <p id="section-3.2.2-2.3.1">If the identifier is <code>(expires)</code>, its canonicalized value is the signature's Expiration Time, expressed as decimal representing the number of seconds since the Epoch, as defined in <a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</a> of <span>[<a href="#POSIX.1" class="xref">POSIX.1</a>]</span>.  If the signature does not have an Expiration Time or the signature's Algorithm name starts with <code>rsa</code>, <code>hmac</code>, or <code>ecdsa</code> an implementation <span class="bcp14">MUST</span> produce an error.<a href="#section-3.2.2-2.3.1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-2.3.2"><span class="cref">Needs more clarity on "decimal" format, cue arguments over precision.  Do we need sub-second precision?  If we do, can we make this an integer representing milliseconds since the Epoch?  Or replace with a maximum age expressed in milliseconds?<span class="crefSource">AB</span></span><a href="#section-3.2.2-2.3.2" class="pilcrow">¶</a></p>
 </li>
-        </ol>
-<p id="section-3.3-3">For example, assume that the Algorithm is "hs2019" and the key is an EdDSA private key.  This would signal to the application that the the signing algorithm is Ed25519 as defined in <span>RFC 8032 [<a href="#RFC8032" class="xref">RFC8032</a>], <a href="https://rfc-editor.org/rfc/rfc8032#section-5.1" class="relref">Section 5.1</a></span>.  The result of the signature creation algorithm should result in a binary string, which is then base 64 encoded and used as the signature value.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+            <li id="section-3.2.2-2.4">
+              <p id="section-3.2.2-2.4.1">If the identifier is a header field name, its canonicalized value is the header field's value, stripped of leading and trailing whitespace.  If there are multiple instances of the same header field, all header field values associated with the header field <span class="bcp14">MUST</span> be concatenated, separated by a comma and a space <code>, </code>, in the order in which they appear (or will appear) in the HTTP message.<a href="#section-3.2.2-2.4.1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-2.4.2">If the header value (after removing leading and trailing whitespace) is a zero-length string, its canonicalized value is the empty string <code>""</code>.<a href="#section-3.2.2-2.4.2" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-2.4.3">Any other modification to the header field value <span class="bcp14">MUST NOT</span> be made.  If a header specified in the headers parameter is malformed or cannot be matched with a provided header in the message, the implementation <span class="bcp14">MUST</span> produce an error.<a href="#section-3.2.2-2.4.3" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<aside id="section-3.2.2-3">
+            <p id="section-3.2.2-3.1">Expressing timestamps as seconds since the Epoch simplifies processing and avoids timezone management required by specifications such as <span>[<a href="#RFC3339" class="xref">RFC3339</a>]</span>.<a href="#section-3.2.2-3.1" class="pilcrow">¶</a></p>
+</aside>
+<p id="section-3.2.2-4">To illustrate the rules specified above, assume the signature's Covered Content is a list containing <code>(request-target)</code>, <code>(created)</code>, <code>host</code>, <code>date</code>, <code>cache-control</code>, <code>x-emptyheader</code>, and <code>x-example</code>, in order, the signature's Creation Time is equal to the value of the message's Date header, and the following HTTP message:<a href="#section-3.2.2-4" class="pilcrow">¶</a></p>
+<div id="section-3.2.2-5">
+<pre class="sourcecode">
+    GET /foo HTTP/1.1
+    Host: example.org
+    Date: Tue, 07 Jun 2014 20:51:35 GMT
+    X-Example: Example header
+            with some whitespace.
+    X-EmptyHeader:
+    Cache-Control: max-age=60
+    Cache-Control: must-revalidate</pre><a href="#section-3.2.2-5" class="pilcrow">¶</a>
+</div>
+<p id="section-3.2.2-6">For the HTTP message above, the corresponding Signature Input is:<a href="#section-3.2.2-6" class="pilcrow">¶</a></p>
+<div id="section-3.2.2-7">
+<pre class="sourcecode">
+    (request-target): get /foo
+    (created): 1402170695
+    host: example.org
+    date: Tue, 07 Jun 2014 20:51:35 GMT
+    cache-control: max-age=60, must-revalidate
+    x-emptyheader:
+    x-example: Example header with some whitespace.</pre><a href="#section-3.2.2-7" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="sign-sig-input">
+<section id="section-3.2.3">
+          <h4 id="name-sign-the-signature-input-2">
+<a href="#section-3.2.3" class="section-number selfRef">3.2.3. </a><a href="#name-sign-the-signature-input-2" class="section-name selfRef">Sign the Signature Input</a>
+          </h4>
+<p id="section-3.2.3-1">The signer signs the Signature Input using the signing algorithm described by the signature's Algorithm property, and the key material chosen by the signer.  The signer then encodes the result of that operation as a base 64-encoded string <span>[<a href="#RFC4648" class="xref">RFC4648</a>]</span>.  This string is the signature value.<a href="#section-3.2.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.3-2">For example, assume that the Algorithm is "hs2019" and the key is an EdDSA private key.  This would signal to the application that the the signing algorithm is Ed25519 as defined in <span>RFC 8032 [<a href="#RFC8032" class="xref">RFC8032</a>], <a href="https://rfc-editor.org/rfc/rfc8032#section-5.1" class="relref">Section 5.1</a></span>.  The result of the signing algorithm should be a binary string, which once base 64 encoded becomes the signature value.<a href="#section-3.2.3-2" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="verify">
-<section id="section-3.4">
+<section id="section-3.3">
         <h3 id="name-verifying-a-signature-2">
-<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-verifying-a-signature-2" class="section-name selfRef">Verifying a Signature</a>
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-verifying-a-signature-2" class="section-name selfRef">Verifying a Signature</a>
         </h3>
-<p id="section-3.4-1">In order to verify a signature, a verifier <span class="bcp14">MUST</span>:<a href="#section-3.4-1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal" id="section-3.4-2">
-          <li id="section-3.4-2.1">Use the received HTTP message and the signature's metadata to recreate the Signature Input, using the process described in <a href="#canonicalization" class="xref">Section 3.2</a>.<a href="#section-3.4-2.1" class="pilcrow">¶</a>
+<p id="section-3.3-1">In order to verify a signature, a verifier <span class="bcp14">MUST</span>:<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal" id="section-3.3-2">
+          <li id="section-3.3-2.1">Use the received HTTP message and the signature's metadata to recreate the Signature Input, using the process described in <a href="#canonicalization" class="xref">Section 3.2.2</a>.<a href="#section-3.3-2.1" class="pilcrow">¶</a>
 </li>
-          <li id="section-3.4-2.2">Use the signature's Algorithm and Key Reference with the recreated Signing Input to verify the signature value.<a href="#section-3.4-2.2" class="pilcrow">¶</a>
+          <li id="section-3.3-2.2">Use the signature's Algorithm and Verification Key Material with the recreated Signing Input to verify the signature value.<a href="#section-3.3-2.2" class="pilcrow">¶</a>
 </li>
         </ol>
-<p id="section-3.4-3">A signature with a Creation Time that is in the future or an Expiration Time that is in the past <span class="bcp14">MUST NOT</span> be processed. <span class="cref">This wording implies that verifiers are not permitted to account for clock skew during signature verification.<span class="crefSource">AB</span></span><a href="#section-3.4-3" class="pilcrow">¶</a></p>
-<p id="section-3.4-4">The verifier <span class="bcp14">MUST</span> ensure that a signature's Algorithm is appropriate for the key material the verifier will use to verify the signature.  If the Algorithm is not appropriate for the key material, the signature <span class="bcp14">MUST NOT</span> be processed.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
-<p id="section-3.4-5">Note: The application verifying the signature <span class="bcp14">MUST</span> derive the digital signature algorithm from the metadata associated with the <code>keyId</code> and <span class="bcp14">MUST NOT</span> use the value of <code>algorithm</code> from the signed message.<a href="#section-3.4-5" class="pilcrow">¶</a></p>
-<p id="section-3.4-6">If a header field specified in the signature's Covered Elements is absent from the message, the implementation <span class="bcp14">MUST</span> produce an error.  Similarly, if the Covered Elements list contains an identifier corresponding to a metadata property that is undefined (e.g., the list contains <code>expires</code> but the signature does not have an Expiration Time), the implementation <span class="bcp14">MUST</span> produce an error.<a href="#section-3.4-6" class="pilcrow">¶</a></p>
-<p id="section-3.4-7">For example, assume that the Algorithm was "hs2019" and the Key Reference refers to an EdDSA public key.  This would signal to the application that the signing algorithm is Ed25519 as defined in <span>RFC 8032 [<a href="#RFC8032" class="xref">RFC8032</a>], <a href="https://rfc-editor.org/rfc/rfc8032#section-5.1" class="relref">Section 5.1</a></span>.  The result of the signature verification algorithm should result in a successful verification unless the message content or signature metadata protected by the signature were tampered with in transit.<a href="#section-3.4-7" class="pilcrow">¶</a></p>
+<p id="section-3.3-3">A signature with a Creation Time that is in the future or an Expiration Time that is in the past <span class="bcp14">MUST NOT</span> be processed. <span class="cref">This wording implies that verifiers are not permitted to account for clock skew during signature verification.<span class="crefSource">AB</span></span><a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-4">The verifier <span class="bcp14">MUST</span> ensure that a signature's Algorithm is appropriate for the key material the verifier will use to verify the signature.  If the Algorithm is not appropriate for the key material (for example, if it is the wrong size, or in the wrong format), the signature <span class="bcp14">MUST NOT</span> be processed.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.3-5">If a header field specified in the signature's Covered Content is absent from the message, the implementation <span class="bcp14">MUST</span> produce an error.  Similarly, if the Covered Content list contains an identifier corresponding to a metadata property that is undefined (e.g., the list contains <code>expires</code> but the signature does not have an Expiration Time), the implementation <span class="bcp14">MUST</span> produce an error.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.3-6">For example, assume that the Algorithm was "hs2019" and the Verification Key Material is an EdDSA public key.  This would signal to the application that the signing algorithm is Ed25519 as defined in <span>RFC 8032 [<a href="#RFC8032" class="xref">RFC8032</a>], <a href="https://rfc-editor.org/rfc/rfc8032#section-5.1" class="relref">Section 5.1</a></span>.  The result of the signature verification algorithm should result in a successful verification unless the message content or signature metadata protected by the signature were tampered with in transit.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1484,34 +1520,35 @@ x-example: Example header with some whitespace.</pre><a href="#section-3.2-10" c
 <dl class="dlNewline" id="section-4.1-2">
           <dt id="section-4.1-2.1"><code>algorithm</code></dt>
           <dd id="section-4.1-2.2">
-            <p id="section-4.1-2.2.1"><span class="bcp14">RECOMMENDED</span>.  The <code>algorithm</code> parameter contains the signature's Algorithm property.  The Algorithm <span class="bcp14">MUST NOT</span> be marked "deprecated".  Implementers <span class="bcp14">SHOULD</span> derive the digital signature algorithm used by an implementation from the key metadata identified by the <code>keyId</code> rather than from this field.  If <code>algorithm</code> is provided and differs from the key metadata identified by the <code>keyId</code>, for example <code>rsa-sha256</code> but an EdDSA key is identified via <code>keyId</code>, then an implementation <span class="bcp14">MUST</span> produce an error.  Implementers should note that previous versions of the <code>algorithm</code> parameter did not use the key information to derive the digital signature type and thus could be utilized by attackers to expose security vulnerabilities.<a href="#section-4.1-2.2.1" class="pilcrow">¶</a></p>
-<p id="section-4.1-2.2.2"><span class="cref">These instructions are confusing.  Punting algorithm identification into <code>keyId</code> hurts interoperability, since we aren't defining the syntax or semantics of <code>keyId</code>.  It also goes against the statement that we <em>aren't</em> defining <code>keyId</code>'s semantics, as we are dictating that the signing algorithm must be specified by <code>keyId</code> or derivable from it.<span class="crefSource">AB</span></span><a href="#section-4.1-2.2.2" class="pilcrow">¶</a></p>
+            <p id="section-4.1-2.2.1"><span class="bcp14">RECOMMENDED</span>.  The <code>algorithm</code> parameter contains the name of the signature's Algorithm, as registered in the <span><a href="#hsa-registry" class="xref">IANA HTTP Signature Algorithms Registry</a> (<a href="#hsa-registry" class="xref">Section 5.1</a>)</span> defined by this document.  Verifiers<span class="bcp14">MUST</span> determine the signature's Algorithm from the <code>keyId</code> parameter rather than from <code>algorithm</code>.  If <code>algorithm</code> is provided and differs from or is incompatible with the algorithm or key material identified by <code>keyId</code> (for example, <code>algorithm</code> has a value of <code>rsa-sha256</code> but <code>keyId</code> identifies an EdDSA key), then implementations <span class="bcp14">MUST</span> produce an error.  Implementers should note that previous versions of this specification determined the signature's Algorithm using the <code>algorithm</code> parameter only, and thus could be utilized by attackers to expose security vulnerabilities.<a href="#section-4.1-2.2.1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2.2.2"><span class="cref">These instructions are confusing.  Punting algorithm identification into <code>keyId</code> hurts interoperability, since we aren't defining the syntax or semantics of <code>keyId</code>.  It also goes against the statement that we <em>aren't</em> defining <code>keyId</code>'s semantics, as we are dictating that the signing algorithm must be specified by <code>keyId</code> or derivable from it.  If we stick with this, can we just drop <code>algorithm</code> altogether?<span class="crefSource">AB</span></span><a href="#section-4.1-2.2.2" class="pilcrow">¶</a></p>
 </dd>
 <dt id="section-4.1-2.3"><code>created</code></dt>
           <dd id="section-4.1-2.4">
-            <span class="bcp14">RECOMMENDED</span>.  The <code>created</code> parameter contains the signature's Creation Time property.  If not specified, the signature's Creation Time is undefined.  This parameter is useful when signers are not capable of controlling the <code>Date</code> HTTP Header such as when operating in certain web browser environments.<a href="#section-4.1-2.4" class="pilcrow">¶</a>
+            <span class="bcp14">RECOMMENDED</span>.  The <code>created</code> parameter contains the signature's Creation Time, expressed as the canonicalized value of the <code>(created)</code> content identifier, as defined in <a href="#content-identifiers" class="xref">Section 3.2.1.1</a>.  If not specified, the signature's Creation Time is undefined.  This parameter is useful when signers are not capable of controlling the <code>Date</code> HTTP Header such as when operating in certain web browser environments.<a href="#section-4.1-2.4" class="pilcrow">¶</a>
 </dd>
 <dt id="section-4.1-2.5"><code>expires</code></dt>
           <dd id="section-4.1-2.6">
-            <span class="bcp14">OPTIONAL</span>.  The <code>expires</code> parameter contains the signature's Expiration Time property.<a href="#section-4.1-2.6" class="pilcrow">¶</a>
+            <span class="bcp14">OPTIONAL</span>.  The <code>expires</code> parameter contains the signature's Expiration Time, expressed as the canonicalized value of the <code>(expires)</code> content identifier, as defined in <a href="#content-identifiers" class="xref">Section 3.2.1.1</a>.  If the signature does not have an Expiration Time, this parameter <code>MUST</code> be omitted.<a href="#section-4.1-2.6" class="pilcrow">¶</a>
 </dd>
 <dt id="section-4.1-2.7"><code>headers</code></dt>
           <dd id="section-4.1-2.8">
-            <p id="section-4.1-2.8.1"><span class="bcp14">OPTIONAL</span>.  The <code>headers</code> parameter contains the signature's Covered Elements property, expressed as a string containing a quoted list of the identifiers in the list, in the order they occur in the list, with a space <code>" "</code> between each identifier.  If specified, identifiers for header fields <span class="bcp14">SHOULD</span> be lowercased and all others <span class="bcp14">MUST</span> be lowercased.  If not specified, implementations <span class="bcp14">MUST</span> operate as if the parameter were specified with a single value, <code>(created)</code>, in the list of HTTP headers.  If the Covered Elements property is an empty list, this parameter <span class="bcp14">MUST</span> be omitted.  Note:<a href="#section-4.1-2.8.1" class="pilcrow">¶</a></p>
+            <p id="section-4.1-2.8.1"><span class="bcp14">OPTIONAL</span>.  The <code>headers</code> parameter contains the signature's Covered Content, expressed as a string containing a quoted list of the identifiers in the list, in the order they occur in the list, with a space <code>" "</code> between each identifier.  If specified, identifiers for header fields <span class="bcp14">SHOULD</span> be lowercased and all others <span class="bcp14">MUST</span> be lowercased.  If not specified, verifiers <span class="bcp14">MUST</span> assume the signature's Covered Content is a list containing only a single <code>(created)</code> identifier.  Note:<a href="#section-4.1-2.8.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal" id="section-4.1-2.8.2">
-              <li id="section-4.1-2.8.2.1">The list order is important, and <span class="bcp14">MUST</span> be specified in the order the HTTP header field-value pairs are concatenated together during <a href="#canonicalization" class="xref">Signature Input Construction</a> (<a href="#canonicalization" class="xref">Section 3.2</a>) used during signing and verifying.<a href="#section-4.1-2.8.2.1" class="pilcrow">¶</a>
+              <li id="section-4.1-2.8.2.1">The list order is important, and <span class="bcp14">MUST</span> be specified in the order the HTTP header field-value pairs are concatenated together during <a href="#canonicalization" class="xref">Create the Signature Input</a> (<a href="#canonicalization" class="xref">Section 3.2.2</a>) used during signing and verifying.<a href="#section-4.1-2.8.2.1" class="pilcrow">¶</a>
 </li>
             </ol>
 <p id="section-4.1-2.8.3"><span class="cref">The name <code>headers</code> is misleading, as this parameter will contain entries that are not HTTP header field names (e.g., <code>(created)</code>).<span class="crefSource">AB</span></span><a href="#section-4.1-2.8.3" class="pilcrow">¶</a></p>
-<p id="section-4.1-2.8.4"><span class="cref">This needs to be expanded to allow for more fine-grained inclusion of message elements (e.g., method, scheme, authority, path, query string parameters).<span class="crefSource">AB</span></span><a href="#section-4.1-2.8.4" class="pilcrow">¶</a></p>
 </dd>
 <dt id="section-4.1-2.9"><code>keyId</code></dt>
           <dd id="section-4.1-2.10">
-            <span class="bcp14">REQUIRED</span>.  The <code>keyId</code> field contains the signature's <code>Key Reference</code> property.<a href="#section-4.1-2.10" class="pilcrow">¶</a>
+            <p id="section-4.1-2.10.1"><span class="bcp14">REQUIRED</span>.  The <code>keyId</code> parameter is a US-ASCII string whose value can be used by a verifier to identify and/or obtain the signature's <code>Verification Key Material</code>.  The format and semantics of this value are out of scope for this document.<a href="#section-4.1-2.10.1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2.10.2"><span class="cref">This value needs to be constrained to ensure that it does not break parsing of the header field's value as auth-params.<span class="crefSource">AB</span></span><a href="#section-4.1-2.10.2" class="pilcrow">¶</a></p>
+<p id="section-4.1-2.10.3"><span class="cref">While we need to allow for flexibility in key specification, leaving it completely undefined hurts interoperability.  We could borrow from JOSE and define <code>jwk</code> and <code>jku</code> parameters as extensible ways to specify common types of keys.<span class="crefSource">AB</span></span><a href="#section-4.1-2.10.3" class="pilcrow">¶</a></p>
 </dd>
 <dt id="section-4.1-2.11"><code>signature</code></dt>
           <dd id="section-4.1-2.12">
-            <span class="bcp14">REQUIRED</span>.  The <code>signature</code> parameter is the signature value, expressed as a base 64-encoded string, as described in <span>RFC 4648 [<a href="#RFC4648" class="xref">RFC4648</a>], <a href="https://rfc-editor.org/rfc/rfc4648#section-4" class="relref">Section 4</a></span>.<a href="#section-4.1-2.12" class="pilcrow">¶</a>
+            <span class="bcp14">REQUIRED</span>.  The <code>signature</code> parameter contains the signature value, as described in <a href="#sign-sig-input" class="xref">Section 3.2.3</a>.<a href="#section-4.1-2.12" class="pilcrow">¶</a>
 </dd>
 </dl>
 </section>
@@ -2078,6 +2115,18 @@ Jeffrey Yasskin<a href="#section-appendix.c-2" class="pilcrow">¶</a></p>
                 <li id="section-appendix.d-2.1.2.1.2.19">Renamed The Components of a Signature to HTTP Message Signatures. Revised to define message signatures without reference to Authorization or Signature headers.<a href="#section-appendix.d-2.1.2.1.2.19" class="pilcrow">¶</a>
 </li>
                 <li id="section-appendix.d-2.1.2.1.2.20">Added Signature Metadata section.  Moved normative requirements in Signature Parameters out to appropriate places (e.g., signature creation), redefined parameters in terms of metadata properties, and moved them to Signature header section.<a href="#section-appendix.d-2.1.2.1.2.20" class="pilcrow">¶</a>
+</li>
+                <li id="section-appendix.d-2.1.2.1.2.21">Dropped definitions for unused terms Signing Algorithm and Signing String<a href="#section-appendix.d-2.1.2.1.2.21" class="pilcrow">¶</a>
+</li>
+                <li id="section-appendix.d-2.1.2.1.2.22">Moved metadata expressions to canonicalization section.<a href="#section-appendix.d-2.1.2.1.2.22" class="pilcrow">¶</a>
+</li>
+                <li id="section-appendix.d-2.1.2.1.2.23">Added detailed description of signature generation and verification process.<a href="#section-appendix.d-2.1.2.1.2.23" class="pilcrow">¶</a>
+</li>
+                <li id="section-appendix.d-2.1.2.1.2.24">Removed duplication of normative requirements, consolidated requirements for generation and verification to their respective sections.<a href="#section-appendix.d-2.1.2.1.2.24" class="pilcrow">¶</a>
+</li>
+                <li id="section-appendix.d-2.1.2.1.2.25">Replaced Key Reference metadata property with Verification Key Material.<a href="#section-appendix.d-2.1.2.1.2.25" class="pilcrow">¶</a>
+</li>
+                <li id="section-appendix.d-2.1.2.1.2.26">Removed conflicting normative requirements for use of <code>algorithm</code> parameter. Now <span class="bcp14">MUST NOT</span> be relied upon.<a href="#section-appendix.d-2.1.2.1.2.26" class="pilcrow">¶</a>
 </li>
               </ul>
 </li>

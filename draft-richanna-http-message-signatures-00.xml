@@ -130,101 +130,136 @@
             <t keepWithNext="true">In addition to those listed above, this document uses the following terms:</t>
             <dl newline="true">
                 <dt>Signer</dt><dd>The entity that is generating or has generated an HTTP Message Signature.</dd>
-                <dt>Signing Algorithm</dt><dd><cref source="AB">TODO</cref></dd>
-                <dt>Signing String</dt><dd><cref source="AB">TODO</cref></dd>
                 <dt>Verifier</dt><dd>An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message.  Note that an HTTP Message Signature may be verified by multiple entities, and thus have multiple verifiers.</dd>
             </dl>
         </section>
 
         <section anchor="message-signatures">
             <name>HTTP Message Signatures</name>
-            <t>An HTTP Message Signature represents a signature over a subset of protocol elements within an HTTP message.  It consists of a set of Signature Parameters containing the signature itself along with metadata describing how the signature was generated and which protocol elements are covered by it.</t>
+            <t>An HTTP Message Signature is a signature over a string generated from a subset of the content in an HTTP message and metadata about the signature itself.  When successfully verified against an HTTP message, it provides cryptographic proof that with respect to the subset of content that was signed, the message is semantically equivalent to the message for which the signature was generated.  HTTP Message Signature's metadata provides information regarding its generation and/or verification.</t>
 
             <section>
                 <name>Signature Metadata</name>
                 <t keepWithNext="true">HTTP Message Signatures have the following metadata properties:</t>
                 <dl newline="true">
                     <dt>Algorithm</dt>
-                    <dd><bcp14>REQUIRED</bcp14>.  An HTTP Signature Algorithm defined in the <xref target="hsa-registry">IANA HTTP Signature Algorithms registry</xref> defined in this document.  It describes the algorithm(s) used to generate the signature, and the algorithm(s) required to verify the signature.  It is expressed as the name assigned to the HTTP Signature Algorithm in the registry.</dd>
+                    <dd>An HTTP Signature Algorithm defined in the <xref target="hsa-registry">IANA HTTP Signature Algorithms registry</xref> defined in this document.  It describes the signing and verification algorithms for the signature.</dd>
                     <dt>Creation Time</dt>
-                    <dd><bcp14>REQUIRED</bcp14>.  A timestamp representing the point in time that the signature was generated.  It is expressed as an integer representing the number of seconds since the Epoch, as defined in <eref target="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</eref> of <xref target="POSIX.1"/>.  Using a Unix timestamp simplifies processing and avoids timezone management required by specifications such as <xref target="RFC3339"/>.  Sub-second precision is not supported.</dd>
-                    <dt>Covered Elements</dt>
-                    <dd><bcp14>REQUIRED</bcp14>.  An ordered list of identifiers that indicates the metadata and message content that is covered by the signature.  The order affects signature generation and verification, and therefore <bcp14>MUST</bcp14> be preserved.</dd>
+                    <dd>A timestamp representing the point in time that the signature was generated.  Sub-second precision is not supported.  A signature's Creation Time <bcp14>MAY</bcp14> be undefined, indicating that it is unknown.</dd>
+                    <dt>Covered Content</dt>
+                    <dd>An ordered list of identifiers that indicates the metadata and message content that is covered by the signature.  The order of identifiers in this list affects signature generation and verification, and therefore <bcp14>MUST</bcp14> be preserved.</dd>
                     <dt>Expiration Time</dt>
-                    <dd><bcp14>OPTIONAL</bcp14>.  A timestamp representing the point in time at which the signature expires.  An expired signature always fails verification.  It is expressed as a decimal representing the number of seconds since the Epoch, as defined in <eref target="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</eref> of <xref target="POSIX.1"/>.  Absence of this property indicates that the signature does not expire.  Using a Unix timestamp simplifies processing and avoid timezone management existing in <xref target="RFC3339"/>.  Sub-second precision is allowed using decimal notation.</dd>
-                    <dt>Key Reference</dt>
-                    <dd>
-                        <t><bcp14>OPTIONAL</bcp14>.  A string that describes the key material required to verify the signature.  The format and semantics of this string are out of scope for this document.  Absence of this property indicates that verifiers are expected to determine what key material to use via some alternative mechanism not defined in this document.</t>
-                        <t><cref source="AB">While we need to allow for flexibility in key specification, leaving it completely undefined hurts interoperability.  We could borrow from JOSE and define <tt>jwk</tt> and <tt>jku</tt> parameters as extensible ways to specify common types of keys.</cref></t>
-                    </dd>
+                    <dd>A timestamp representing the point in time at which the signature expires.  An expired signature always fails verification.  A signature's Expiration Time <bcp14>MAY</bcp14> be undefined, indicating that the signature does not expire.</dd>
+                    <dt>Verification Key Material</dt>
+                    <dd><t>The key material required to verify the signature.</t></dd>
                 </dl>
-            </section>
-
-            <section anchor="canonicalization">
-                <name>Signature Input Construction</name>
-                <t>A signed HTTP message needs to be tolerant of some trivial alterations during transmission as it goes through gateways, proxies, and other entities.  These changes are often of little consequence and very benign, but also often not visible to or detectable by either the sender or the recipient.  Simply signing the entire message that was transmitted by the sender is therefore not feasible: Even very minor changes would result in a signature which cannot be verified.</t>
-                <t>The signer determines what signature metadata and message content is meaningful, and adds corresponding identifiers for each in the signature's Covered Elements.  The Covered Elements list is then used to construct the intermediate Signature Input, which is what is actually signed.</t>
-                <t>In order to generate Signature Input, the signer <bcp14>MUST</bcp14> construct and use canonicalized values for each identifier in the signature's Covered Elements, in the order they occur in that list.  It is out of scope for this document to dictate what header fields or other information an application will want to enforce, but implementers <bcp14>SHOULD</bcp14> at minimum include the <tt>(request-target)</tt> and <tt>(created)</tt> identifiers if the signature's Algorithm name does not start with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt>.  Otherwise, <tt>(request-target)</tt> and <tt>date</tt> <bcp14>SHOULD</bcp14> be included in the signature.</t>
-                <t>To include the HTTP request target in the signature calculation, use the special <tt>(request-target)</tt> identifier.  To include the signature's Creation Time, use the special <tt>(created)</tt> identifier.  To include the signature's Expiration Time, use the special <tt>(expires)</tt> identifier.
-                </t>
-                <t>The Signature Input is a US-ASCII string created by concatenating together entries for each identifier in the Covered Elements list in the order they occur in the list, with each entry separated by a newline <tt>"\n"</tt>.  An identifier's entry is a US-ASCII string consisting of the lowercased identifier followed with an ASCII colon <tt>":"</tt>, an ASCII space <tt>" "</tt>, and a canonicalized value.</t>
-                <ul>
-                    <li>If the identifier is <tt>(request-target)</tt> its canonicalized value is constructed by concatenating the lowercased :method, an ASCII space, and the :path pseudo-headers (as specified in <xref target="RFC7540" section="8.1.2.3" sectionFormat="comma">HTTP/2</xref>).  Note: For the avoidance of doubt, lowercasing only applies to the :method pseudo-header and not to the :path pseudo-header.</li>
-                    <li>If the identifier is <tt>(created)</tt> and the signature's <tt>Algorithm</tt> name starts with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt> an implementation <bcp14>MUST</bcp14> produce an error.  If the signature's Creation Time is undefined, an implementation <bcp14>MUST</bcp14> produce an error.  Otherwise, the canonicalized value is the signature's Creation Time.</li>
-                    <li>If the identifier is <tt>(expires)</tt> and the signature's Algorithm name starts with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt> an implementation <bcp14>MUST</bcp14> produce an error.  If the signature does not have an Expiration Time, an implementation <bcp14>MUST</bcp14> produce an error.  Otherwise, the canonicalized value is the signature's Expiration Time.</li>
-                    <li>
-                        <t>If the identifier is a header field name, its canonicalized value is the header field's value, stripped of leading and trailing whitespace. If there are multiple instances of the same header field, all header field values associated with the header field <bcp14>MUST</bcp14> be concatenated, separated by a ASCII comma and an ASCII space <tt>, </tt>, in the order in which they will appear in the transmitted HTTP message.</t>
-                        <t>If the header value (after removing leading and trailing whitespace) is a zero-length string, the signature string line correlating with that header will simply be the (lowercased) header name, an ASCII colon <tt>:</tt>, and an ASCII space <tt> </tt>.</t>
-                        <t>Any other modification to the header field value <bcp14>MUST NOT</bcp14> be made.  If a header specified in the headers parameter is malformed or cannot be matched with a provided header in the message, the implementation <bcp14>MUST</bcp14> produce an error.</t>
-                    </li>
-                    <li>If value is not the last value then append an ASCII newline <tt>\n</tt>.</li>
-                </ul>
-                <t keepWithNext="true">To illustrate the rules specified above, assume a Covered Elements list with the value of <tt>(request-target) (created) host date cache-control x-emptyheader x-example</tt> and the following HTTP message:</t>
-                <sourcecode><![CDATA[
-GET /foo HTTP/1.1
-Host: example.org
-Date: Tue, 07 Jun 2014 20:51:35 GMT
-X-Example: Example header
-        with some whitespace.
-X-EmptyHeader:
-Cache-Control: max-age=60
-Cache-Control: must-revalidate]]></sourcecode>
-                <t keepWithNext="true">For the HTTP message above, the corresponding Signature Input is:</t>
-                <sourcecode><![CDATA[
-(request-target): get /foo
-(created): 1402170695
-host: example.org
-date: Tue, 07 Jun 2014 20:51:35 GMT
-cache-control: max-age=60, must-revalidate
-x-emptyheader:
-x-example: Example header with some whitespace.]]></sourcecode>
             </section>
 
             <section anchor="create">
                 <name>Creating a Signature</name>
-                <t>In order to create a signature, a signer <bcp14>MUST</bcp14>:
-                </t>
+                <t>In order to create a signature, a signer completes the following process:</t>
                 <ol>
-                    <li>Choose an algorithm and key material to use, and assign the signature's Algorithm and Key Reference properties accordingly.</li>
-                    <li>Create the Signature Input as described in <xref target="canonicalization"/>.</li>
-                    <li>Sign the Signature Input with a chosen key and algorithm, and encode the result as a base 64-encoded string.</li>
+                    <li>Choose key material and algorithm, and set metadata properties (<xref target="choose-metadata"/>)</li>
+                    <li>Create the Signature Input (<xref target="canonicalization"/>)</li>
+                    <li>Sign the Signature Input (<xref target="sign-sig-input"/>)</li>
                 </ol>
-                <t>For example, assume that the Algorithm is "hs2019" and the key is an EdDSA private key.  This would signal to the application that the the signing algorithm is Ed25519 as defined in <xref target="RFC8032" section="5.1" sectionFormat="comma">RFC 8032</xref>.  The result of the signature creation algorithm should result in a binary string, which is then base 64 encoded and used as the signature value.</t>
+
+                <t>The following sections describe each of these steps in detail.</t>
+
+                <section anchor="choose-metadata">
+                    <name>Choose and Set Signature Metadata Properties</name>
+                    <t>The signer chooses an HTTP Signature Algorithm from those registered in the <xref target="hsa-registry">IANA HTTP Signature Algorithm Registry</xref> defined by this document, and sets the signature's Algorithm property to that value.  The signer <bcp14>MUST NOT</bcp14> choose an algorithm marked "Deprecated".  The mechanism by which the signer chooses an algorithm is out of scope for this document.</t>
+
+                    <t>The signer chooses key material to use for signing and verification, and sets the signature's Verification Key Material property to the key material required for verification.  The signer <bcp14>MUST</bcp14> choose key material that is appropriate for the signature's Algorithm, and that conforms to any requirements defined by the Algorithm, such as key size or format.  The mechanism by which the signer chooses key material is out of scope for this document.</t>
+
+                    <t>The signer sets the signature's Creation Time property to the current time.</t>
+
+                    <t>The signer sets the signature's Expiration Time property to the time at which the signature is to expire, or to undefined if the signature will not expire.</t>
+
+                    <t>The signer creates an ordered list of identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.  Each identifier <bcp14>MUST</bcp14> be one of those defined in <xref target="content-identifiers"/>.  This list <bcp14>MUST NOT</bcp14> be empty, as this would result in creating a signature over the empty string.  If the signature's Algorithm name does not start with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt>, signers <bcp14>SHOULD</bcp14> include <tt>(created)</tt> and <tt>(request-target)</tt> in the list.  If the signature's Algorithm starts with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt>, signers <bcp14>SHOULD</bcp14> include <tt>date</tt> and <tt>(request-target)</tt> in the list.  Further guidance on what to include in this list and in what order is out of scope for this document.  However, the list order is significant and once established for a given signature it <bcp14>MUST</bcp14> be preserved for that signature.</t>
+
+                    <section anchor="content-identifiers">
+                        <name>Content Identifiers</name>
+                        <t>In order to allow signers and verifiers to establish which content is covered by a signature, this document defines identifiers for signature metadata and discrete pieces of message content that may be covered by an HTTP Message Signature.</t>
+
+                        <t>HTTP header fields are identified by their corresponding header field name.  While HTTP header field names are case-insensitive, implementations <bcp14>SHOULD</bcp14> use lowercased values (e.g., <tt>content-type</tt>, <tt>date</tt>, <tt>etag</tt>).</t>
+
+                        <t>Additionally, the following identifiers are defined:</t>
+                        <dl newline="true">
+                            <dt><tt>(created)</tt></dt>
+                            <dd>The signature's Creation Time.</dd>
+                            <dt><tt>(expired)</tt></dt>
+                            <dd>The signature's Expiration Time.</dd>
+                            <dt><tt>(request-target)</tt></dt>
+                            <dd>The HTTP method, and the path and query of the HTTP request target.</dd>
+                        </dl>
+                        <t><cref source="AB">This needs to be expanded to allow for more fine-grained inclusion of message elements (e.g., method, scheme, authority, path, query string parameters).</cref></t>
+                    </section>
+                </section>
+
+                <section anchor="canonicalization">
+                    <name>Create the Signature Input</name>
+                    <t>The Signature Input is a US-ASCII string containing the content that will be signed.  To create it, the signer concatenates together entries for each identifier in the signature's Covered Content in the order it occurs in the list, with each entry separated by a newline <tt>"\n"</tt>.  An identifier's entry is a US-ASCII string consisting of the lowercased identifier followed with a colon <tt>":"</tt>, a space <tt>" "</tt>, and the identifier's canonicalized value (described below).</t>
+
+                    <ul>
+                        <li>If the identifier is <tt>(request-target)</tt>, its canonicalized value is constructed by concatenating the lowercased :method pseudo-header, a space, and the :path pseudo-header (as specified in <xref target="RFC7540" section="8.1.2.3" sectionFormat="comma">HTTP/2</xref>).  Note: To clarify, lowercasing only applies to the :method pseudo-header and not to the :path pseudo-header.</li>
+                        <li>If the identifier is <tt>(created)</tt>, its canonicalized value is the signature's Creation Time, expressed as an integer representing the number of seconds since the Epoch, as defined in <eref target="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</eref> of <xref target="POSIX.1"/>.  If the signature's Creation Time is undefined or the signature's Algorithm name starts with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt> an implementation <bcp14>MUST</bcp14> produce an error.</li>
+                        <li>
+                            <t>If the identifier is <tt>(expires)</tt>, its canonicalized value is the signature's Expiration Time, expressed as decimal representing the number of seconds since the Epoch, as defined in <eref target="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</eref> of <xref target="POSIX.1"/>.  If the signature does not have an Expiration Time or the signature's Algorithm name starts with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt> an implementation <bcp14>MUST</bcp14> produce an error.</t>
+                            <t><cref source="AB">Needs more clarity on "decimal" format, cue arguments over precision.  Do we need sub-second precision?  If we do, can we make this an integer representing milliseconds since the Epoch?  Or replace with a maximum age expressed in milliseconds?</cref></t>
+                        </li>
+                        <li>
+                            <t>If the identifier is a header field name, its canonicalized value is the header field's value, stripped of leading and trailing whitespace.  If there are multiple instances of the same header field, all header field values associated with the header field <bcp14>MUST</bcp14> be concatenated, separated by a comma and a space <tt>, </tt>, in the order in which they appear (or will appear) in the HTTP message.</t>
+                            <t>If the header value (after removing leading and trailing whitespace) is a zero-length string, its canonicalized value is the empty string <tt>""</tt>.</t>
+                            <t>Any other modification to the header field value <bcp14>MUST NOT</bcp14> be made.  If a header specified in the headers parameter is malformed or cannot be matched with a provided header in the message, the implementation <bcp14>MUST</bcp14> produce an error.</t>
+                        </li>
+                    </ul>
+
+                    <aside>
+                        <t>Expressing timestamps as seconds since the Epoch simplifies processing and avoids timezone management required by specifications such as <xref target="RFC3339"/>.</t>
+                    </aside>
+
+                    <t keepWithNext="true">To illustrate the rules specified above, assume the signature's Covered Content is a list containing <tt>(request-target)</tt>, <tt>(created)</tt>, <tt>host</tt>, <tt>date</tt>, <tt>cache-control</tt>, <tt>x-emptyheader</tt>, and <tt>x-example</tt>, in order, the signature's Creation Time is equal to the value of the message's Date header, and the following HTTP message:</t>
+                    <sourcecode><![CDATA[
+    GET /foo HTTP/1.1
+    Host: example.org
+    Date: Tue, 07 Jun 2014 20:51:35 GMT
+    X-Example: Example header
+            with some whitespace.
+    X-EmptyHeader:
+    Cache-Control: max-age=60
+    Cache-Control: must-revalidate]]></sourcecode>
+                    <t keepWithNext="true">For the HTTP message above, the corresponding Signature Input is:</t>
+                    <sourcecode><![CDATA[
+    (request-target): get /foo
+    (created): 1402170695
+    host: example.org
+    date: Tue, 07 Jun 2014 20:51:35 GMT
+    cache-control: max-age=60, must-revalidate
+    x-emptyheader:
+    x-example: Example header with some whitespace.]]></sourcecode>
+                </section>
+
+                <section anchor="sign-sig-input">
+                    <name>Sign the Signature Input</name>
+                    <t>The signer signs the Signature Input using the signing algorithm described by the signature's Algorithm property, and the key material chosen by the signer.  The signer then encodes the result of that operation as a base 64-encoded string <xref target="RFC4648"/>.  This string is the signature value.</t>
+
+                    <t>For example, assume that the Algorithm is "hs2019" and the key is an EdDSA private key.  This would signal to the application that the the signing algorithm is Ed25519 as defined in <xref target="RFC8032" section="5.1" sectionFormat="comma">RFC 8032</xref>.  The result of the signing algorithm should be a binary string, which once base 64 encoded becomes the signature value.</t>
+                </section>
             </section>
 
             <section anchor="verify">
                 <name>Verifying a Signature</name>
-                <t>In order to verify a signature, a verifier <bcp14>MUST</bcp14>:
-                </t>
+                <t>In order to verify a signature, a verifier <bcp14>MUST</bcp14>:</t>
                 <ol>
                     <li>Use the received HTTP message and the signature's metadata to recreate the Signature Input, using the process described in <xref target="canonicalization"/>.</li>
-                    <li>Use the signature's Algorithm and Key Reference with the recreated Signing Input to verify the signature value.</li>
+                    <li>Use the signature's Algorithm and Verification Key Material with the recreated Signing Input to verify the signature value.</li>
                 </ol>
                 <t>A signature with a Creation Time that is in the future or an Expiration Time that is in the past <bcp14>MUST NOT</bcp14> be processed. <cref source="AB">This wording implies that verifiers are not permitted to account for clock skew during signature verification.</cref></t>
-                <t>The verifier <bcp14>MUST</bcp14> ensure that a signature's Algorithm is appropriate for the key material the verifier will use to verify the signature.  If the Algorithm is not appropriate for the key material, the signature <bcp14>MUST NOT</bcp14> be processed.</t>
-                <t>Note: The application verifying the signature <bcp14>MUST</bcp14> derive the digital signature algorithm from the metadata associated with the <tt>keyId</tt> and <bcp14>MUST NOT</bcp14> use the value of <tt>algorithm</tt> from the signed message.</t>
-                <t>If a header field specified in the signature's Covered Elements is absent from the message, the implementation <bcp14>MUST</bcp14> produce an error.  Similarly, if the Covered Elements list contains an identifier corresponding to a metadata property that is undefined (e.g., the list contains <tt>expires</tt> but the signature does not have an Expiration Time), the implementation <bcp14>MUST</bcp14> produce an error.</t>
-                <t>For example, assume that the Algorithm was "hs2019" and the Key Reference refers to an EdDSA public key.  This would signal to the application that the signing algorithm is Ed25519 as defined in <xref target="RFC8032" section="5.1" sectionFormat="comma">RFC 8032</xref>.  The result of the signature verification algorithm should result in a successful verification unless the message content or signature metadata protected by the signature were tampered with in transit.</t>
+                <t>The verifier <bcp14>MUST</bcp14> ensure that a signature's Algorithm is appropriate for the key material the verifier will use to verify the signature.  If the Algorithm is not appropriate for the key material (for example, if it is the wrong size, or in the wrong format), the signature <bcp14>MUST NOT</bcp14> be processed.</t>
+                <t>If a header field specified in the signature's Covered Content is absent from the message, the implementation <bcp14>MUST</bcp14> produce an error.  Similarly, if the Covered Content list contains an identifier corresponding to a metadata property that is undefined (e.g., the list contains <tt>expires</tt> but the signature does not have an Expiration Time), the implementation <bcp14>MUST</bcp14> produce an error.</t>
+
+                <t>For example, assume that the Algorithm was "hs2019" and the Verification Key Material is an EdDSA public key.  This would signal to the application that the signing algorithm is Ed25519 as defined in <xref target="RFC8032" section="5.1" sectionFormat="comma">RFC 8032</xref>.  The result of the signature verification algorithm should result in a successful verification unless the message content or signature metadata protected by the signature were tampered with in transit.</t>
             </section>
         </section>
 
@@ -239,32 +274,34 @@ x-example: Example header with some whitespace.]]></sourcecode>
                 <dl newline="true">
                     <dt anchor="algorithm"><tt>algorithm</tt></dt>
                     <dd>
-                        <t><bcp14>RECOMMENDED</bcp14>.  The <tt>algorithm</tt> parameter contains the signature's Algorithm property.  The Algorithm <bcp14>MUST NOT</bcp14> be marked "deprecated".  Implementers <bcp14>SHOULD</bcp14> derive the digital signature algorithm used by an implementation from the key metadata identified by the <tt>keyId</tt> rather than from this field.  If <tt>algorithm</tt> is provided and differs from the key metadata identified by the <tt>keyId</tt>, for example <tt>rsa-sha256</tt> but an EdDSA key is identified via <tt>keyId</tt>, then an implementation <bcp14>MUST</bcp14> produce an error.  Implementers should note that previous versions of the <tt>algorithm</tt> parameter did not use the key information to derive the digital signature type and thus could be utilized by attackers to expose security vulnerabilities.</t>
-                        <t><cref source="AB">These instructions are confusing.  Punting algorithm identification into <tt>keyId</tt> hurts interoperability, since we aren't defining the syntax or semantics of <tt>keyId</tt>.  It also goes against the statement that we <em>aren't</em> defining <tt>keyId</tt>'s semantics, as we are dictating that the signing algorithm must be specified by <tt>keyId</tt> or derivable from it.</cref></t>
+                        <t><bcp14>RECOMMENDED</bcp14>.  The <tt>algorithm</tt> parameter contains the name of the signature's Algorithm, as registered in the <xref target="hsa-registry">IANA HTTP Signature Algorithms Registry</xref> defined by this document.  Verifiers<bcp14>MUST</bcp14> determine the signature's Algorithm from the <tt>keyId</tt> parameter rather than from <tt>algorithm</tt>.  If <tt>algorithm</tt> is provided and differs from or is incompatible with the algorithm or key material identified by <tt>keyId</tt> (for example, <tt>algorithm</tt> has a value of <tt>rsa-sha256</tt> but <tt>keyId</tt> identifies an EdDSA key), then implementations <bcp14>MUST</bcp14> produce an error.  Implementers should note that previous versions of this specification determined the signature's Algorithm using the <tt>algorithm</tt> parameter only, and thus could be utilized by attackers to expose security vulnerabilities.</t>
+                        <t><cref source="AB">These instructions are confusing.  Punting algorithm identification into <tt>keyId</tt> hurts interoperability, since we aren't defining the syntax or semantics of <tt>keyId</tt>.  It also goes against the statement that we <em>aren't</em> defining <tt>keyId</tt>'s semantics, as we are dictating that the signing algorithm must be specified by <tt>keyId</tt> or derivable from it.  If we stick with this, can we just drop <tt>algorithm</tt> altogether?</cref></t>
                     </dd>
 
                     <dt anchor="created"><tt>created</tt></dt>
-                        <dd><bcp14>RECOMMENDED</bcp14>.  The <tt>created</tt> parameter contains the signature's Creation Time property.  If not specified, the signature's Creation Time is undefined.  This parameter is useful when signers are not capable of controlling the <tt>Date</tt> HTTP Header such as when operating in certain web browser environments.</dd>
+                    <dd><bcp14>RECOMMENDED</bcp14>.  The <tt>created</tt> parameter contains the signature's Creation Time, expressed as the canonicalized value of the <tt>(created)</tt> content identifier, as defined in <xref target="content-identifiers"/>.  If not specified, the signature's Creation Time is undefined.  This parameter is useful when signers are not capable of controlling the <tt>Date</tt> HTTP Header such as when operating in certain web browser environments.</dd>
 
                     <dt anchor="expires"><tt>expires</tt></dt>
-                    <dd><bcp14>OPTIONAL</bcp14>.  The <tt>expires</tt> parameter contains the signature's Expiration Time property.</dd>
+                    <dd><bcp14>OPTIONAL</bcp14>.  The <tt>expires</tt> parameter contains the signature's Expiration Time, expressed as the canonicalized value of the <tt>(expires)</tt> content identifier, as defined in <xref target="content-identifiers"/>.  If the signature does not have an Expiration Time, this parameter <tt>MUST</tt> be omitted.</dd>
 
                     <dt anchor="headers"><tt>headers</tt></dt>
                     <dd>
-                        <t><bcp14>OPTIONAL</bcp14>.  The <tt>headers</tt> parameter contains the signature's Covered Elements property, expressed as a string containing a quoted list of the identifiers in the list, in the order they occur in the list, with a space <tt>" "</tt> between each identifier.  If specified, identifiers for header fields <bcp14>SHOULD</bcp14> be lowercased and all others <bcp14>MUST</bcp14> be lowercased.  If not specified, implementations <bcp14>MUST</bcp14> operate as if the parameter were specified with a single value, <tt>(created)</tt>, in the list of HTTP headers.  If the Covered Elements property is an empty list, this parameter <bcp14>MUST</bcp14> be omitted.  Note:
-                        </t>
+                        <t><bcp14>OPTIONAL</bcp14>.  The <tt>headers</tt> parameter contains the signature's Covered Content, expressed as a string containing a quoted list of the identifiers in the list, in the order they occur in the list, with a space <tt>" "</tt> between each identifier.  If specified, identifiers for header fields <bcp14>SHOULD</bcp14> be lowercased and all others <bcp14>MUST</bcp14> be lowercased.  If not specified, verifiers <bcp14>MUST</bcp14> assume the signature's Covered Content is a list containing only a single <tt>(created)</tt> identifier.  Note:</t>
                         <ol>
                             <li>The list order is important, and <bcp14>MUST</bcp14> be specified in the order the HTTP header field-value pairs are concatenated together during <xref target="canonicalization" format="title"/> (<xref target="canonicalization"/>) used during signing and verifying.</li>
                         </ol>
                         <t><cref source="AB">The name <tt>headers</tt> is misleading, as this parameter will contain entries that are not HTTP header field names (e.g., <tt>(created)</tt>).</cref></t>
-                        <t><cref source="AB">This needs to be expanded to allow for more fine-grained inclusion of message elements (e.g., method, scheme, authority, path, query string parameters).</cref></t>
                     </dd>
 
                     <dt anchor="keyId"><tt>keyId</tt></dt>
-                    <dd><bcp14>REQUIRED</bcp14>.  The <tt>keyId</tt> field contains the signature's <tt>Key Reference</tt> property.</dd>
+                    <dd>
+                        <t><bcp14>REQUIRED</bcp14>.  The <tt>keyId</tt> parameter is a US-ASCII string whose value can be used by a verifier to identify and/or obtain the signature's <tt>Verification Key Material</tt>.  The format and semantics of this value are out of scope for this document.</t>
+                        <t><cref source="AB">This value needs to be constrained to ensure that it does not break parsing of the header field's value as auth-params.</cref></t>
+                        <t><cref source="AB">While we need to allow for flexibility in key specification, leaving it completely undefined hurts interoperability.  We could borrow from JOSE and define <tt>jwk</tt> and <tt>jku</tt> parameters as extensible ways to specify common types of keys.</cref></t>
+                    </dd>
 
                     <dt anchor="signature"><tt>signature</tt></dt>
-                    <dd><bcp14>REQUIRED</bcp14>.  The <tt>signature</tt> parameter is the signature value, expressed as a base 64-encoded string, as described in <xref target="RFC4648" section="4" sectionFormat="comma">RFC 4648</xref>.</dd>
+                    <dd><bcp14>REQUIRED</bcp14>.  The <tt>signature</tt> parameter contains the signature value, as described in <xref target="sign-sig-input"/>.</dd>
                 </dl>
             </section>
 
@@ -694,6 +731,12 @@ Jeffrey Yasskin
                                 <li>Added definition of signature as applying to both digital signatures and MACs.</li>
                                 <li>Renamed The Components of a Signature to HTTP Message Signatures. Revised to define message signatures without reference to Authorization or Signature headers.</li>
                                 <li>Added Signature Metadata section.  Moved normative requirements in Signature Parameters out to appropriate places (e.g., signature creation), redefined parameters in terms of metadata properties, and moved them to Signature header section.</li>
+                                <li>Dropped definitions for unused terms Signing Algorithm and Signing String</li>
+                                <li>Moved metadata expressions to canonicalization section.</li>
+                                <li>Added detailed description of signature generation and verification process.</li>
+                                <li>Removed duplication of normative requirements, consolidated requirements for generation and verification to their respective sections.</li>
+                                <li>Replaced Key Reference metadata property with Verification Key Material.</li>
+                                <li>Removed conflicting normative requirements for use of <tt>algorithm</tt> parameter. Now <bcp14>MUST NOT</bcp14> be relied upon.</li>
                             </ul>
                         </li>
                     </ul>
