@@ -99,7 +99,7 @@ Table of Contents
      B.1.  Default Test  . . . . . . . . . . . . . . . . . . . . . .  23
      B.2.  Basic Test  . . . . . . . . . . . . . . . . . . . . . . .  24
      B.3.  All Headers Test  . . . . . . . . . . . . . . . . . . . .  24
-   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  25
+   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  24
    Document History  . . . . . . . . . . . . . . . . . . . . . . . .  25
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  27
 
@@ -1270,25 +1270,10 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
 B.1.  Default Test
 
-   If a list of headers is not included, the date is the only header
-   that is signed by default for rsa-sha256.  The string to sign would
-   be:
+   // This statement about default Covered Content is inaccurate. // //
+   -- AB"rsa-sha256".  The string to sign would be:
 
    date: Sun, 05 Jan 2014 21:31:40 GMT
-
-   The Authorization header would be:
-
-   Authorization: Signature keyId="Test",algorithm="rsa-sha256",
-   signature="SjWJWbWN7i0wzBvtPl8rbASWz5xQW6mcJmn+ibttBqtifLN7Sazz
-   6m79cNfwwb8DMJ5cou1s7uEGKKCs+FLEEaDV5lp7q25WqS+lavg7T8hc0GppauB
-   6hbgEKTwblDHYGEtbGmtdHgVCk9SuS13F0hZ8FD0k/5OxEPXe5WozsbM="
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 23]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
 
    The Signature header would be:
 
@@ -1297,18 +1282,27 @@ Internet-Draft            Signing HTTP Messages            December 2019
    6m79cNfwwb8DMJ5cou1s7uEGKKCs+FLEEaDV5lp7q25WqS+lavg7T8hc0GppauB
    6hbgEKTwblDHYGEtbGmtdHgVCk9SuS13F0hZ8FD0k/5OxEPXe5WozsbM="
 
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 23]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
 B.2.  Basic Test
 
-   The minimum recommended data to sign is the (request-target), host,
-   and date.  In this case, the string to sign would be:
+   // This statement about minimum recommended Covered Content is //
+   inaccurate. // // -- AB"(request-target)", "host", and "date".  In
+   this case, the string to sign would be:
 
    (request-target): post /foo?param=value&pet=dog
    host: example.com
    date: Sun, 05 Jan 2014 21:31:40 GMT
 
-   The Authorization header would be:
+   The Signature header would be:
 
-   Authorization: Signature keyId="Test",algorithm="rsa-sha256",
+   Signature: keyId="Test",algorithm="rsa-sha256",
        headers="(request-target) host date",
        signature="qdx+H7PHHDZgy4y/Ahn9Tny9V3GP6YgBPyUXMmoxWtLbHpUnXS
        2mg2+SbrQDMCJypxBLSPQR2aAjn7ndmw2iicw3HMbe8VfEdKFYRqzic+efkb3
@@ -1327,24 +1321,7 @@ B.3.  All Headers Test
    digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
    content-length: 18
 
-   The Authorization header would be:
-
-   Authorization: Signature keyId="Test",algorithm="rsa-sha256",
-       created=1402170695, expires=1402170699,
-       headers="(request-target) (created) (expires)
-           host date content-type digest content-length",
-       signature="vSdrb+dS3EceC9bcwHSo4MlyKS59iFIrhgYkz8+oVLEEzmYZZvRs
-           8rgOp+63LEM3v+MFHB32NfpB2bEKBIvB1q52LaEUHFv120V01IL+TAD48XaER
-           ZFukWgHoBTLMhYS2Gb51gWxpeIq8knRmPnYePbF5MOkR0Zkly4zKH7s1dE="
-
    The Signature header would be:
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 24]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
 
    Signature: keyId="Test",algorithm="rsa-sha256",
        created=1402170695, expires=1402170699,
@@ -1360,6 +1337,14 @@ Acknowledgements
    draft.  The editor would like to thank the authors of that draft,
    Mark Cavage and Manu Sporny, for their work on that draft and their
    continuing contributions.
+
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 24]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
 
    The editor would also like to thank the following individuals for
    feedback on and implementations of the draft-cavage-http-signatures
@@ -1395,13 +1380,6 @@ Document History
          o  Removed informative intro sections on Signatures in HTTP
             Requests/Responses, as they imply specific use cases.
 
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 25]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
          o  Moved BCP 14 message under intro section.
 
          o  Removed "Signature" auth-scheme definition and non-normative
@@ -1416,6 +1394,13 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
          o  Combined HTTP Signature Algorithms registry entry algorithm
             fields into a "Description" field.
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 25]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
 
          o  Revised HTTP Signature Algorithms registry definition.
             Added change control policy and registry template.  Removed
@@ -1450,14 +1435,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
             terms of metadata properties, and moved them to Signature
             header section.
 
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 26]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
          o  Dropped definitions for unused terms Signing Algorithm and
             Signing String
 
@@ -1472,6 +1449,14 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
          o  Replaced Key Reference metadata property with Verification
             Key Material.
+
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 26]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
 
          o  Removed conflicting normative requirements for use of
             "algorithm" parameter.  Now MUST NOT be relied upon.
@@ -1506,14 +1491,6 @@ Authors' Addresses
    Manu Sporny
    Digital Bazaar
    203 Roanoke Street W.
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 27]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
    Blacksburg, VA 24060
    United States of America
 
@@ -1532,37 +1509,4 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 28]
+Backman, et al.            Expires 6 June 2020                 [Page 27]
