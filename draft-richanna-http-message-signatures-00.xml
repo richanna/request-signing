@@ -123,33 +123,169 @@
 
         <section anchor="definitions">
             <name>Definitions</name>
-            <t>The terms "HTTP message", "HTTP request", "HTTP response", "header field", "sender", and "recipient" take their meaning from <xref target="RFC7230">HTTP</xref>.</t>
+            <t>The terms "HTTP message", "HTTP method", "HTTP request", "HTTP response", "effective request URI", "header field", "sender", and "recipient" take their meaning from <xref target="RFC7230">HTTP</xref>.</t>
 
             <t>For brevity, the term "signature" on its own is used in this document to refer to both digital signatures and keyed MACs. Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given input string. The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.</t>
 
             <t keepWithNext="true">In addition to those listed above, this document uses the following terms:</t>
             <dl newline="true">
+                <dt>Decimal String</dt><dd>An Integer String optionally concatenated with a period <tt>"."</tt> followed by a second Integer String, representing a positive real number expressed in base 10.  The first Integer String represents the integral portion of the number, while the optional second Integer String represents the fractional portion of the number. <cref source="AB">There's got to be a definition for this that we can reference.  Do we have a max value or a limit on precision?</cref></dd>
+                <dt>Integer String</dt><dd>A US-ASCII string of one or more digits <tt>"0-9"</tt>, representing a positive integer in base 10.  <cref source="AB">There's got to be a definition for this that we can reference.  Do we have a max value?</cref></dd>
                 <dt>Signer</dt><dd>The entity that is generating or has generated an HTTP Message Signature.</dd>
-                <dt>Verifier</dt><dd>An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message.  Note that an HTTP Message Signature may be verified by multiple entities, and thus have multiple verifiers.</dd>
+                <dt>Verifier</dt><dd>An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message.  Note that an HTTP Message Signature may be verified multiple times, potentially by different entities.</dd>
             </dl>
         </section>
 
         <section anchor="content-identifiers">
-            <name>Content Identifiers</name>
+            <name>Identifying and Canonicalizing Content</name>
             <t>In order to allow signers and verifiers to establish which content is covered by a signature, this document defines content identifiers for signature metadata and discrete pieces of message content that may be covered by an HTTP Message Signature.</t>
 
-            <t>HTTP header fields are identified by their corresponding header field name.  While HTTP header field names are case-insensitive, implementations <bcp14>SHOULD</bcp14> use lowercased values (e.g., <tt>content-type</tt>, <tt>date</tt>, <tt>etag</tt>).</t>
+            <t>Some content within HTTP messages may undergo transformations that change the bitwise value without altering meaning of the content (for example, the merging together of header fields with the same name).  Message content must therefore be canonicalized before it is signed, to ensure that a signature can be verified despite such innocuous transformations.  This document defines rules for each content identifier that transform the identifier's associated content into such a canonical form.</t>
 
-            <t>Additionally, the following identifiers are defined:</t>
-            <dl newline="true">
-                <dt><tt>(created)</tt></dt>
-                <dd>The signature's Creation Time, as defined in <xref target="signature-metadata"/>.</dd>
-                <dt><tt>(expired)</tt></dt>
-                <dd>The signature's Expiration Time, as defined in <xref target="signature-metadata"/>.</dd>
-                <dt><tt>(request-target)</tt></dt>
-                <dd>The HTTP method, and the path and query of the HTTP request target.</dd>
-            </dl>
+            <t>The following sections define content identifiers, their associated content, and their canonicalization rules.</t>
+
             <t><cref source="AB">This needs to be expanded to allow for more fine-grained inclusion of message elements (e.g., method, scheme, authority, path, query string parameters).</cref></t>
+
+            <section>
+                <name>HTTP Header Fields</name>
+                <t>An HTTP header field value is identified by its header field name.  While HTTP header field names are case-insensitive, implementations <bcp14>SHOULD</bcp14> use lowercased field names (e.g., <tt>content-type</tt>, <tt>date</tt>, <tt>etag</tt>) when using them as content identifiers.</t>
+
+                <t keepWithNext="true">An HTTP header field value is canonicalized as follows:</t>
+                <ol>
+                    <li>Create an ordered list of the field values of each instance of the header field in the message, in the order that they occur (or will occur) in the messge.</li>
+                    <li>Strip leading and trailing whitespace from each item in the list.</li>
+                    <li>Concatenate the list items together, with a comma <tt>","</tt> and space <tt>" "</tt> between each item.  The resulting string is the canonicalized value.</li>
+                </ol>
+
+                <section toc="exclude">
+                    <name>Canonicalization Examples</name>
+                    <t keepWithNext="true">This section contains non-normative examples of canonicalized values for header fields, given the following example HTTP message:</t>
+                    <sourcecode><![CDATA[
+HTTP/1.1 200 OK
+Server: www.example.com
+Date: Tue, 07 Jun 2014 20:51:35 GMT
+X-OWS-Header:   Leading and trailing whitespace.   
+X-Obs-Fold-Header: Obsolete  
+    line folding.
+X-Empty-Header: 
+Cache-Control: max-age=60
+Cache-Control:    must-revalidate
+]]></sourcecode>
+
+                    <t keepWithNext="true">The following table shows example canonicalized values for header fields, given that message:</t>
+                    <table>
+                        <name>Non-normative examples of header field canoncialization.</name>
+                        <thead>
+                            <tr><th>Header Field</th><th>Canonicalized Value</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><tt>(cache-control)</tt></td>
+                                <td><tt>max-age=60, must-revalidate</tt></td>
+                            </tr>
+                            <tr>
+                                <td><tt>(date)</tt></td>
+                                <td><tt>Tue, 07 Jun 2014 20:51:35 GMT</tt></td>
+                            </tr>
+                            <tr>
+                                <td><tt>(server)</tt></td>
+                                <td><tt>www.example.com</tt></td>
+                            </tr>
+                            <tr>
+                                <td><tt>(x-empty-header)</tt></td>
+                                <td><tt></tt></td>
+                            </tr>
+                            <tr>
+                                <td><tt>(x-obs-fold-header)</tt></td>
+                                <td><tt>Obsolete line folding.</tt></td>
+                            </tr>
+                            <tr>
+                                <td><tt>(x-ows-header)</tt></td>
+                                <td><tt>Leading and trailing whitespace.</tt></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </section>
+
+            <section>
+                <name>Signature Creation Time</name>
+                <t>The signature's Creation Time (<xref target="signature-metadata"/>) is identified by the <tt>(created)</tt> identifier.</t>
+
+                <t>Its canoncalized value is an Integer String containing the signature's Creation Time expressed as the number of seconds since the Epoch, as defined in <eref target="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</eref> of <xref target="POSIX.1"/>.</t>
+
+                <aside>
+                    <t>The use of seconds since the Epoch to canonicalize a timestamp simplifies processing and avoids timezone management required by specifications such as <xref target="RFC3339"/>.</t>
+                </aside>
+            </section>
+
+            <section>
+                <name>Signature Expiration Time</name>
+                <t>The signature's Expiration Time (<xref target="signature-metadata"/>) is identified by the <tt>(expired)</tt> identifier.</t>
+
+                <t>Its canonicalized value is a Decimal String containing the signature's Expiration Time expressed as the number of seconds since the Epoch, as defined in <eref target="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</eref> of <xref target="POSIX.1"/>.</t>
+
+                <t><cref source="AB">Needs more clarity on "decimal" format, cue arguments over precision.  Do we need sub-second precision?  If we do, can we make this an integer representing milliseconds since the Epoch?  Or replace with a maximum age expressed in milliseconds?</cref></t>
+            </section>
+
+            <section>
+                <name>Target Endpoint</name>
+                <t>The request target endpoint, consisting of the HTTP method and the path and query of the effective request URI, is identified by the <tt>(request-target)</tt> identifier.</t>
+
+                <t keepWithNext="true">Its value is canonicalized as follows:</t>
+                <ol>
+                    <li>Take the lowercased HTTP method of the message.</li>
+                    <li>Append a space <tt>" "</tt>.</li>
+                    <li>Append the path and query of the request target of the message, formatted according to the rules defined for the <tt>:path</tt> pseudo-header in <xref target="RFC7540" section="8.1.2.3" sectionFormat="comma">HTTP/2</xref>.  The resulting string is the canonicalized value.</li>
+                </ol>
+
+                <section toc="exclude">
+                    <name>Canonicalization Examples</name>
+                    <t>The following table contains non-normative example HTTP messages and their canonicalized <tt>(request-target)</tt> values.</t>
+                    <table>
+                        <name>Non-normative examples of <tt>(request-target)</tt> canonicalization.</name>
+                        <thead>
+                            <tr><th>HTTP Message</th><th><tt>(request-target)</tt></th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><sourcecode><![CDATA[
+POST /?param=value HTTP/1.1
+Host: www.example.com]]></sourcecode></td>
+                                <td><tt>post /?param=value</tt></td>
+                            </tr>
+                            <tr>
+                                <td><sourcecode><![CDATA[
+POST /a/b HTTP/1.1
+Host: www.example.com]]></sourcecode></td>
+                                <td><tt>post /a/b</tt></td>
+                            </tr>
+                            <tr>
+                                <td><sourcecode><![CDATA[
+GET http://www.example.com/a/ HTTP/1.1]]></sourcecode></td>
+                                <td><tt>get /a/</tt></td>
+                            </tr>
+                            <tr>
+                                <td><sourcecode><![CDATA[
+GET http://www.example.com HTTP/1.1]]></sourcecode></td>
+                                <td><tt>get /</tt></td>
+                            </tr>
+                            <tr>
+                                <td><sourcecode><![CDATA[
+CONNECT server.example.com:80 HTTP/1.1
+Host: server.example.com]]></sourcecode></td>
+                                <td><tt>connect /</tt></td>
+                            </tr>
+                            <tr>
+                                <td><sourcecode><![CDATA[
+OPTIONS * HTTP/1.1
+Host: server.example.com]]></sourcecode></td>
+                                <td><tt>options *</tt></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </section>
         </section>
 
         <section anchor="message-signatures">
@@ -201,23 +337,11 @@
                     <name>Create the Signature Input</name>
                     <t>The Signature Input is a US-ASCII string containing the content that will be signed.  To create it, the signer concatenates together entries for each identifier in the signature's Covered Content in the order it occurs in the list, with each entry separated by a newline <tt>"\n"</tt>.  An identifier's entry is a US-ASCII string consisting of the lowercased identifier followed with a colon <tt>":"</tt>, a space <tt>" "</tt>, and the identifier's canonicalized value (described below).</t>
 
-                    <ul>
-                        <li>If the identifier is <tt>(request-target)</tt>, its canonicalized value is constructed by concatenating the lowercased :method pseudo-header, a space, and the :path pseudo-header (as specified in <xref target="RFC7540" section="8.1.2.3" sectionFormat="comma">HTTP/2</xref>).  Note: To clarify, lowercasing only applies to the :method pseudo-header and not to the :path pseudo-header.</li>
-                        <li>If the identifier is <tt>(created)</tt>, its canonicalized value is the signature's Creation Time, expressed as an integer representing the number of seconds since the Epoch, as defined in <eref target="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</eref> of <xref target="POSIX.1"/>.  If the signature's Creation Time is undefined or the signature's Algorithm name starts with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt> an implementation <bcp14>MUST</bcp14> produce an error.</li>
-                        <li>
-                            <t>If the identifier is <tt>(expires)</tt>, its canonicalized value is the signature's Expiration Time, expressed as decimal representing the number of seconds since the Epoch, as defined in <eref target="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</eref> of <xref target="POSIX.1"/>.  If the signature does not have an Expiration Time or the signature's Algorithm name starts with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt> an implementation <bcp14>MUST</bcp14> produce an error.</t>
-                            <t><cref source="AB">Needs more clarity on "decimal" format, cue arguments over precision.  Do we need sub-second precision?  If we do, can we make this an integer representing milliseconds since the Epoch?  Or replace with a maximum age expressed in milliseconds?</cref></t>
-                        </li>
-                        <li>
-                            <t>If the identifier is a header field name, its canonicalized value is the header field's value, stripped of leading and trailing whitespace.  If there are multiple instances of the same header field, all header field values associated with the header field <bcp14>MUST</bcp14> be concatenated, separated by a comma and a space <tt>, </tt>, in the order in which they appear (or will appear) in the HTTP message.</t>
-                            <t>If the header value (after removing leading and trailing whitespace) is a zero-length string, its canonicalized value is the empty string <tt>""</tt>.</t>
-                            <t>Any other modification to the header field value <bcp14>MUST NOT</bcp14> be made.  If a header specified in the headers parameter is malformed or cannot be matched with a provided header in the message, the implementation <bcp14>MUST</bcp14> produce an error.</t>
-                        </li>
-                    </ul>
+                    <t>If Covered Content contains <tt>(created)</tt> and the signature's Creation Time is undefined or the signature's Algorithm name starts with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt> an implementation <bcp14>MUST</bcp14> produce an error.</t>
 
-                    <aside>
-                        <t>Expressing timestamps as seconds since the Epoch simplifies processing and avoids timezone management required by specifications such as <xref target="RFC3339"/>.</t>
-                    </aside>
+                    <t>If Covered Content contains <tt>(expires)</tt> and the signature does not have an Expiration Time or the signature's Algorithm name starts with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt> an implementation <bcp14>MUST</bcp14> produce an error.</t>
+
+                    <t>If Covered Content contains an identifier for a header field that is not present or malformed in the message, the implementation <bcp14>MUST</bcp14> produce an error.</t>
 
                     <t keepWithNext="true">To illustrate the rules specified above, assume the signature's Covered Content is a list containing <tt>(request-target)</tt>, <tt>(created)</tt>, <tt>host</tt>, <tt>date</tt>, <tt>cache-control</tt>, <tt>x-emptyheader</tt>, and <tt>x-example</tt>, in order, the signature's Creation Time is equal to the value of the message's Date header, and the following HTTP message:</t>
                     <sourcecode><![CDATA[
@@ -255,9 +379,10 @@
                     <li>Use the received HTTP message and the signature's metadata to recreate the Signature Input, using the process described in <xref target="canonicalization"/>.</li>
                     <li>Use the signature's Algorithm and Verification Key Material with the recreated Signing Input to verify the signature value.</li>
                 </ol>
+
                 <t>A signature with a Creation Time that is in the future or an Expiration Time that is in the past <bcp14>MUST NOT</bcp14> be processed. <cref source="AB">This wording implies that verifiers are not permitted to account for clock skew during signature verification.</cref></t>
+
                 <t>The verifier <bcp14>MUST</bcp14> ensure that a signature's Algorithm is appropriate for the key material the verifier will use to verify the signature.  If the Algorithm is not appropriate for the key material (for example, if it is the wrong size, or in the wrong format), the signature <bcp14>MUST NOT</bcp14> be processed.</t>
-                <t>If a header field specified in the signature's Covered Content is absent from the message, the implementation <bcp14>MUST</bcp14> produce an error.  Similarly, if the Covered Content list contains an identifier corresponding to a metadata property that is undefined (e.g., the list contains <tt>expires</tt> but the signature does not have an Expiration Time), the implementation <bcp14>MUST</bcp14> produce an error.</t>
 
                 <t>For example, assume that the Algorithm was "hs2019" and the Verification Key Material is an EdDSA public key.  This would signal to the application that the signing algorithm is Ed25519 as defined in <xref target="RFC8032" section="5.1" sectionFormat="comma">RFC 8032</xref>.  The result of the signature verification algorithm should result in a successful verification unless the message content or signature metadata protected by the signature were tampered with in transit.</t>
             </section>
@@ -286,10 +411,7 @@
 
                     <dt anchor="headers"><tt>headers</tt></dt>
                     <dd>
-                        <t><bcp14>OPTIONAL</bcp14>.  The <tt>headers</tt> parameter contains the signature's Covered Content, expressed as a string containing a quoted list of the identifiers in the list, in the order they occur in the list, with a space <tt>" "</tt> between each identifier.  If specified, identifiers for header fields <bcp14>SHOULD</bcp14> be lowercased and all others <bcp14>MUST</bcp14> be lowercased.  If not specified, verifiers <bcp14>MUST</bcp14> assume the signature's Covered Content is a list containing only a single <tt>(created)</tt> identifier.  Note:</t>
-                        <ol>
-                            <li>The list order is important, and <bcp14>MUST</bcp14> be specified in the order the HTTP header field-value pairs are concatenated together during <xref target="canonicalization" format="title"/> (<xref target="canonicalization"/>) used during signing and verifying.</li>
-                        </ol>
+                        <t><bcp14>OPTIONAL</bcp14>.  The <tt>headers</tt> parameter contains the signature's Covered Content, expressed as a string containing a quoted list of the identifiers in the list, in the order they occur in the list, with a space <tt>" "</tt> between each identifier.  If specified, identifiers for header fields <bcp14>SHOULD</bcp14> be lowercased and all others <bcp14>MUST</bcp14> be lowercased.  If not specified, verifiers <bcp14>MUST</bcp14> assume the signature's Covered Content is a list containing only a single <tt>(created)</tt> identifier.</t>
                         <t><cref source="AB">The name <tt>headers</tt> is misleading, as this parameter will contain entries that are not HTTP header field names (e.g., <tt>(created)</tt>).</cref></t>
                     </dd>
 
@@ -738,6 +860,9 @@ Jeffrey Yasskin
                                 <li>Replaced Key Reference metadata property with Verification Key Material.</li>
                                 <li>Removed conflicting normative requirements for use of <tt>algorithm</tt> parameter. Now <bcp14>MUST NOT</bcp14> be relied upon.</li>
                                 <li>Moved Content Identifiers up to its own top-level section.</li>
+                                <li>Explicitly defined Integer String and Decimal String.</li>
+                                <li>Consolidated content identifiers and canonicalization rules into a single section.</li>
+                                <li>Added examples for header field and <tt>(request-target)</tt> canonicalization.</li>
                             </ul>
                         </li>
                     </ul>
