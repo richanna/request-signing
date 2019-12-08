@@ -290,11 +290,11 @@ Host: server.example.com]]></sourcecode></td>
 
         <section anchor="message-signatures">
             <name>HTTP Message Signatures</name>
-            <t>An HTTP Message Signature is a signature over a string generated from a subset of the content in an HTTP message and metadata about the signature itself.  When successfully verified against an HTTP message, it provides cryptographic proof that with respect to the subset of content that was signed, the message is semantically equivalent to the message for which the signature was generated.  HTTP Message Signature's metadata provides information regarding its generation and/or verification.</t>
+            <t>An HTTP Message Signature is a signature over a string generated from a subset of the content in an HTTP message and metadata about the signature itself.  When successfully verified against an HTTP message, it provides cryptographic proof that with respect to the subset of content that was signed, the message is semantically equivalent to the message for which the signature was generated.</t>
 
             <section anchor="signature-metadata">
                 <name>Signature Metadata</name>
-                <t keepWithNext="true">HTTP Message Signatures have the following metadata properties:</t>
+                <t keepWithNext="true">HTTP Message Signatures have metadata properties that provide information regarding the signature's generation and/or verification.  The following metadata properties are defined:</t>
                 <dl newline="true">
                     <dt>Algorithm</dt>
                     <dd>An HTTP Signature Algorithm defined in the <xref target="hsa-registry">IANA HTTP Signature Algorithms registry</xref> defined in this document.  It describes the signing and verification algorithms for the signature.</dd>
@@ -322,15 +322,17 @@ Host: server.example.com]]></sourcecode></td>
 
                 <section anchor="choose-metadata">
                     <name>Choose and Set Signature Metadata Properties</name>
-                    <t>The signer chooses an HTTP Signature Algorithm from those registered in the <xref target="hsa-registry">IANA HTTP Signature Algorithm Registry</xref> defined by this document, and sets the signature's Algorithm property to that value.  The signer <bcp14>MUST NOT</bcp14> choose an algorithm marked "Deprecated".  The mechanism by which the signer chooses an algorithm is out of scope for this document.</t>
+                    <ol>
+                        <li>The signer chooses an HTTP Signature Algorithm from those registered in the <xref target="hsa-registry">IANA HTTP Signature Algorithm Registry</xref> defined by this document, and sets the signature's Algorithm property to that value.  The signer <bcp14>MUST NOT</bcp14> choose an algorithm marked "Deprecated".  The mechanism by which the signer chooses an algorithm is out of scope for this document.</li>
 
-                    <t>The signer chooses key material to use for signing and verification, and sets the signature's Verification Key Material property to the key material required for verification.  The signer <bcp14>MUST</bcp14> choose key material that is appropriate for the signature's Algorithm, and that conforms to any requirements defined by the Algorithm, such as key size or format.  The mechanism by which the signer chooses key material is out of scope for this document.</t>
+                        <li>The signer chooses key material to use for signing and verification, and sets the signature's Verification Key Material property to the key material required for verification.  The signer <bcp14>MUST</bcp14> choose key material that is appropriate for the signature's Algorithm, and that conforms to any requirements defined by the Algorithm, such as key size or format.  The mechanism by which the signer chooses key material is out of scope for this document.</li>
 
-                    <t>The signer sets the signature's Creation Time property to the current time.</t>
+                        <li>The signer sets the signature's Creation Time property to the current time.</li>
 
-                    <t>The signer sets the signature's Expiration Time property to the time at which the signature is to expire, or to undefined if the signature will not expire.</t>
+                        <li>The signer sets the signature's Expiration Time property to the time at which the signature is to expire, or to undefined if the signature will not expire.</li>
 
-                    <t>The signer creates an ordered list of content identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.  Each identifier <bcp14>MUST</bcp14> be one of those defined in <xref target="content-identifiers"/>.  This list <bcp14>MUST NOT</bcp14> be empty, as this would result in creating a signature over the empty string.  If the signature's Algorithm name does not start with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt>, signers <bcp14>SHOULD</bcp14> include <tt>(created)</tt> and <tt>(request-target)</tt> in the list.  If the signature's Algorithm starts with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt>, signers <bcp14>SHOULD</bcp14> include <tt>date</tt> and <tt>(request-target)</tt> in the list.  Further guidance on what to include in this list and in what order is out of scope for this document.  However, the list order is significant and once established for a given signature it <bcp14>MUST</bcp14> be preserved for that signature.</t>
+                        <li>The signer creates an ordered list of content identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.  Each identifier <bcp14>MUST</bcp14> be one of those defined in <xref target="content-identifiers"/>.  This list <bcp14>MUST NOT</bcp14> be empty, as this would result in creating a signature over the empty string.  If the signature's Algorithm name does not start with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt>, signers <bcp14>SHOULD</bcp14> include <tt>(created)</tt> and <tt>(request-target)</tt> in the list.  If the signature's Algorithm starts with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt>, signers <bcp14>SHOULD</bcp14> include <tt>date</tt> and <tt>(request-target)</tt> in the list.  Further guidance on what to include in this list and in what order is out of scope for this document.  However, the list order is significant and once established for a given signature it <bcp14>MUST</bcp14> be preserved for that signature.</li>
+                    </ol>
                 </section>
 
                 <section anchor="canonicalization">
@@ -345,23 +347,23 @@ Host: server.example.com]]></sourcecode></td>
 
                     <t keepWithNext="true">To illustrate the rules specified above, assume the signature's Covered Content is a list containing <tt>(request-target)</tt>, <tt>(created)</tt>, <tt>host</tt>, <tt>date</tt>, <tt>cache-control</tt>, <tt>x-emptyheader</tt>, and <tt>x-example</tt>, in order, the signature's Creation Time is equal to the value of the message's Date header, and the following HTTP message:</t>
                     <sourcecode><![CDATA[
-    GET /foo HTTP/1.1
-    Host: example.org
-    Date: Tue, 07 Jun 2014 20:51:35 GMT
-    X-Example: Example header
-            with some whitespace.
-    X-EmptyHeader:
-    Cache-Control: max-age=60
-    Cache-Control: must-revalidate]]></sourcecode>
+GET /foo HTTP/1.1
+Host: example.org
+Date: Tue, 07 Jun 2014 20:51:35 GMT
+X-Example: Example header
+        with some whitespace.
+X-EmptyHeader:
+Cache-Control: max-age=60
+Cache-Control: must-revalidate]]></sourcecode>
                     <t keepWithNext="true">For the HTTP message above, the corresponding Signature Input is:</t>
                     <sourcecode><![CDATA[
-    (request-target): get /foo
-    (created): 1402170695
-    host: example.org
-    date: Tue, 07 Jun 2014 20:51:35 GMT
-    cache-control: max-age=60, must-revalidate
-    x-emptyheader:
-    x-example: Example header with some whitespace.]]></sourcecode>
+(request-target): get /foo
+(created): 1402170695
+host: example.org
+date: Tue, 07 Jun 2014 20:51:35 GMT
+cache-control: max-age=60, must-revalidate
+x-emptyheader:
+x-example: Example header with some whitespace.]]></sourcecode>
                 </section>
 
                 <section anchor="sign-sig-input">
@@ -399,7 +401,7 @@ Host: server.example.com]]></sourcecode></td>
                 <dl newline="true">
                     <dt anchor="algorithm"><tt>algorithm</tt></dt>
                     <dd>
-                        <t><bcp14>RECOMMENDED</bcp14>.  The <tt>algorithm</tt> parameter contains the name of the signature's Algorithm, as registered in the <xref target="hsa-registry">IANA HTTP Signature Algorithms Registry</xref> defined by this document.  Verifiers<bcp14>MUST</bcp14> determine the signature's Algorithm from the <tt>keyId</tt> parameter rather than from <tt>algorithm</tt>.  If <tt>algorithm</tt> is provided and differs from or is incompatible with the algorithm or key material identified by <tt>keyId</tt> (for example, <tt>algorithm</tt> has a value of <tt>rsa-sha256</tt> but <tt>keyId</tt> identifies an EdDSA key), then implementations <bcp14>MUST</bcp14> produce an error.  Implementers should note that previous versions of this specification determined the signature's Algorithm using the <tt>algorithm</tt> parameter only, and thus could be utilized by attackers to expose security vulnerabilities.</t>
+                        <t><bcp14>RECOMMENDED</bcp14>.  The <tt>algorithm</tt> parameter contains the name of the signature's Algorithm, as registered in the <xref target="hsa-registry">IANA HTTP Signature Algorithms Registry</xref> defined by this document.  Verifiers <bcp14>MUST</bcp14> determine the signature's Algorithm from the <tt>keyId</tt> parameter rather than from <tt>algorithm</tt>.  If <tt>algorithm</tt> is provided and differs from or is incompatible with the algorithm or key material identified by <tt>keyId</tt> (for example, <tt>algorithm</tt> has a value of <tt>rsa-sha256</tt> but <tt>keyId</tt> identifies an EdDSA key), then implementations <bcp14>MUST</bcp14> produce an error.  Implementers should note that previous versions of this specification determined the signature's Algorithm using the <tt>algorithm</tt> parameter only, and thus could be utilized by attackers to expose security vulnerabilities.</t>
                         <t><cref source="AB">These instructions are confusing.  Punting algorithm identification into <tt>keyId</tt> hurts interoperability, since we aren't defining the syntax or semantics of <tt>keyId</tt>.  It also goes against the statement that we <em>aren't</em> defining <tt>keyId</tt>'s semantics, as we are dictating that the signing algorithm must be specified by <tt>keyId</tt> or derivable from it.  If we stick with this, can we just drop <tt>algorithm</tt> altogether?</cref></t>
                     </dd>
 

@@ -1607,13 +1607,13 @@ Host: server.example.com</pre><a href="#section-3.4.1-2.2.6.1.1" class="pilcrow"
       <h2 id="name-http-message-signatures-2">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-http-message-signatures-2" class="section-name selfRef">HTTP Message Signatures</a>
       </h2>
-<p id="section-4-1">An HTTP Message Signature is a signature over a string generated from a subset of the content in an HTTP message and metadata about the signature itself.  When successfully verified against an HTTP message, it provides cryptographic proof that with respect to the subset of content that was signed, the message is semantically equivalent to the message for which the signature was generated.  HTTP Message Signature's metadata provides information regarding its generation and/or verification.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">An HTTP Message Signature is a signature over a string generated from a subset of the content in an HTTP message and metadata about the signature itself.  When successfully verified against an HTTP message, it provides cryptographic proof that with respect to the subset of content that was signed, the message is semantically equivalent to the message for which the signature was generated.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <div id="signature-metadata">
 <section id="section-4.1">
         <h3 id="name-signature-metadata-2">
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-signature-metadata-2" class="section-name selfRef">Signature Metadata</a>
         </h3>
-<p id="section-4.1-1">HTTP Message Signatures have the following metadata properties:<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-1">HTTP Message Signatures have metadata properties that provide information regarding the signature's generation and/or verification.  The following metadata properties are defined:<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <dl class="dlNewline" id="section-4.1-2">
           <dt id="section-4.1-2.1">Algorithm</dt>
           <dd id="section-4.1-2.2">An HTTP Signature Algorithm defined in the <span><a href="#hsa-registry" class="xref">IANA HTTP Signature Algorithms registry</a> (<a href="#hsa-registry" class="xref">Section 6.1</a>)</span> defined in this document.  It describes the signing and verification algorithms for the signature.<a href="#section-4.1-2.2" class="pilcrow">¶</a>
@@ -1654,11 +1654,18 @@ Host: server.example.com</pre><a href="#section-3.4.1-2.2.6.1.1" class="pilcrow"
           <h4 id="name-choose-and-set-signature-met">
 <a href="#section-4.2.1" class="section-number selfRef">4.2.1. </a><a href="#name-choose-and-set-signature-met" class="section-name selfRef">Choose and Set Signature Metadata Properties</a>
           </h4>
-<p id="section-4.2.1-1">The signer chooses an HTTP Signature Algorithm from those registered in the <span><a href="#hsa-registry" class="xref">IANA HTTP Signature Algorithm Registry</a> (<a href="#hsa-registry" class="xref">Section 6.1</a>)</span> defined by this document, and sets the signature's Algorithm property to that value.  The signer <span class="bcp14">MUST NOT</span> choose an algorithm marked "Deprecated".  The mechanism by which the signer chooses an algorithm is out of scope for this document.<a href="#section-4.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.2.1-2">The signer chooses key material to use for signing and verification, and sets the signature's Verification Key Material property to the key material required for verification.  The signer <span class="bcp14">MUST</span> choose key material that is appropriate for the signature's Algorithm, and that conforms to any requirements defined by the Algorithm, such as key size or format.  The mechanism by which the signer chooses key material is out of scope for this document.<a href="#section-4.2.1-2" class="pilcrow">¶</a></p>
-<p id="section-4.2.1-3">The signer sets the signature's Creation Time property to the current time.<a href="#section-4.2.1-3" class="pilcrow">¶</a></p>
-<p id="section-4.2.1-4">The signer sets the signature's Expiration Time property to the time at which the signature is to expire, or to undefined if the signature will not expire.<a href="#section-4.2.1-4" class="pilcrow">¶</a></p>
-<p id="section-4.2.1-5">The signer creates an ordered list of content identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.  Each identifier <span class="bcp14">MUST</span> be one of those defined in <a href="#content-identifiers" class="xref">Section 3</a>.  This list <span class="bcp14">MUST NOT</span> be empty, as this would result in creating a signature over the empty string.  If the signature's Algorithm name does not start with <code>rsa</code>, <code>hmac</code>, or <code>ecdsa</code>, signers <span class="bcp14">SHOULD</span> include <code>(created)</code> and <code>(request-target)</code> in the list.  If the signature's Algorithm starts with <code>rsa</code>, <code>hmac</code>, or <code>ecdsa</code>, signers <span class="bcp14">SHOULD</span> include <code>date</code> and <code>(request-target)</code> in the list.  Further guidance on what to include in this list and in what order is out of scope for this document.  However, the list order is significant and once established for a given signature it <span class="bcp14">MUST</span> be preserved for that signature.<a href="#section-4.2.1-5" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal" id="section-4.2.1-1">
+            <li id="section-4.2.1-1.1">The signer chooses an HTTP Signature Algorithm from those registered in the <span><a href="#hsa-registry" class="xref">IANA HTTP Signature Algorithm Registry</a> (<a href="#hsa-registry" class="xref">Section 6.1</a>)</span> defined by this document, and sets the signature's Algorithm property to that value.  The signer <span class="bcp14">MUST NOT</span> choose an algorithm marked "Deprecated".  The mechanism by which the signer chooses an algorithm is out of scope for this document.<a href="#section-4.2.1-1.1" class="pilcrow">¶</a>
+</li>
+            <li id="section-4.2.1-1.2">The signer chooses key material to use for signing and verification, and sets the signature's Verification Key Material property to the key material required for verification.  The signer <span class="bcp14">MUST</span> choose key material that is appropriate for the signature's Algorithm, and that conforms to any requirements defined by the Algorithm, such as key size or format.  The mechanism by which the signer chooses key material is out of scope for this document.<a href="#section-4.2.1-1.2" class="pilcrow">¶</a>
+</li>
+            <li id="section-4.2.1-1.3">The signer sets the signature's Creation Time property to the current time.<a href="#section-4.2.1-1.3" class="pilcrow">¶</a>
+</li>
+            <li id="section-4.2.1-1.4">The signer sets the signature's Expiration Time property to the time at which the signature is to expire, or to undefined if the signature will not expire.<a href="#section-4.2.1-1.4" class="pilcrow">¶</a>
+</li>
+            <li id="section-4.2.1-1.5">The signer creates an ordered list of content identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.  Each identifier <span class="bcp14">MUST</span> be one of those defined in <a href="#content-identifiers" class="xref">Section 3</a>.  This list <span class="bcp14">MUST NOT</span> be empty, as this would result in creating a signature over the empty string.  If the signature's Algorithm name does not start with <code>rsa</code>, <code>hmac</code>, or <code>ecdsa</code>, signers <span class="bcp14">SHOULD</span> include <code>(created)</code> and <code>(request-target)</code> in the list.  If the signature's Algorithm starts with <code>rsa</code>, <code>hmac</code>, or <code>ecdsa</code>, signers <span class="bcp14">SHOULD</span> include <code>date</code> and <code>(request-target)</code> in the list.  Further guidance on what to include in this list and in what order is out of scope for this document.  However, the list order is significant and once established for a given signature it <span class="bcp14">MUST</span> be preserved for that signature.<a href="#section-4.2.1-1.5" class="pilcrow">¶</a>
+</li>
+          </ol>
 </section>
 </div>
 <div id="canonicalization">
@@ -1673,25 +1680,25 @@ Host: server.example.com</pre><a href="#section-3.4.1-2.2.6.1.1" class="pilcrow"
 <p id="section-4.2.2-5">To illustrate the rules specified above, assume the signature's Covered Content is a list containing <code>(request-target)</code>, <code>(created)</code>, <code>host</code>, <code>date</code>, <code>cache-control</code>, <code>x-emptyheader</code>, and <code>x-example</code>, in order, the signature's Creation Time is equal to the value of the message's Date header, and the following HTTP message:<a href="#section-4.2.2-5" class="pilcrow">¶</a></p>
 <div id="section-4.2.2-6">
 <pre class="sourcecode">
-    GET /foo HTTP/1.1
-    Host: example.org
-    Date: Tue, 07 Jun 2014 20:51:35 GMT
-    X-Example: Example header
-            with some whitespace.
-    X-EmptyHeader:
-    Cache-Control: max-age=60
-    Cache-Control: must-revalidate</pre><a href="#section-4.2.2-6" class="pilcrow">¶</a>
+GET /foo HTTP/1.1
+Host: example.org
+Date: Tue, 07 Jun 2014 20:51:35 GMT
+X-Example: Example header
+        with some whitespace.
+X-EmptyHeader:
+Cache-Control: max-age=60
+Cache-Control: must-revalidate</pre><a href="#section-4.2.2-6" class="pilcrow">¶</a>
 </div>
 <p id="section-4.2.2-7">For the HTTP message above, the corresponding Signature Input is:<a href="#section-4.2.2-7" class="pilcrow">¶</a></p>
 <div id="section-4.2.2-8">
 <pre class="sourcecode">
-    (request-target): get /foo
-    (created): 1402170695
-    host: example.org
-    date: Tue, 07 Jun 2014 20:51:35 GMT
-    cache-control: max-age=60, must-revalidate
-    x-emptyheader:
-    x-example: Example header with some whitespace.</pre><a href="#section-4.2.2-8" class="pilcrow">¶</a>
+(request-target): get /foo
+(created): 1402170695
+host: example.org
+date: Tue, 07 Jun 2014 20:51:35 GMT
+cache-control: max-age=60, must-revalidate
+x-emptyheader:
+x-example: Example header with some whitespace.</pre><a href="#section-4.2.2-8" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1740,7 +1747,7 @@ Host: server.example.com</pre><a href="#section-3.4.1-2.2.6.1.1" class="pilcrow"
 <dl class="dlNewline" id="section-5.1-2">
           <dt id="section-5.1-2.1"><code>algorithm</code></dt>
           <dd id="section-5.1-2.2">
-            <p id="section-5.1-2.2.1"><span class="bcp14">RECOMMENDED</span>.  The <code>algorithm</code> parameter contains the name of the signature's Algorithm, as registered in the <span><a href="#hsa-registry" class="xref">IANA HTTP Signature Algorithms Registry</a> (<a href="#hsa-registry" class="xref">Section 6.1</a>)</span> defined by this document.  Verifiers<span class="bcp14">MUST</span> determine the signature's Algorithm from the <code>keyId</code> parameter rather than from <code>algorithm</code>.  If <code>algorithm</code> is provided and differs from or is incompatible with the algorithm or key material identified by <code>keyId</code> (for example, <code>algorithm</code> has a value of <code>rsa-sha256</code> but <code>keyId</code> identifies an EdDSA key), then implementations <span class="bcp14">MUST</span> produce an error.  Implementers should note that previous versions of this specification determined the signature's Algorithm using the <code>algorithm</code> parameter only, and thus could be utilized by attackers to expose security vulnerabilities.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.2.1"><span class="bcp14">RECOMMENDED</span>.  The <code>algorithm</code> parameter contains the name of the signature's Algorithm, as registered in the <span><a href="#hsa-registry" class="xref">IANA HTTP Signature Algorithms Registry</a> (<a href="#hsa-registry" class="xref">Section 6.1</a>)</span> defined by this document.  Verifiers <span class="bcp14">MUST</span> determine the signature's Algorithm from the <code>keyId</code> parameter rather than from <code>algorithm</code>.  If <code>algorithm</code> is provided and differs from or is incompatible with the algorithm or key material identified by <code>keyId</code> (for example, <code>algorithm</code> has a value of <code>rsa-sha256</code> but <code>keyId</code> identifies an EdDSA key), then implementations <span class="bcp14">MUST</span> produce an error.  Implementers should note that previous versions of this specification determined the signature's Algorithm using the <code>algorithm</code> parameter only, and thus could be utilized by attackers to expose security vulnerabilities.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
 <p id="section-5.1-2.2.2"><span class="cref">These instructions are confusing.  Punting algorithm identification into <code>keyId</code> hurts interoperability, since we aren't defining the syntax or semantics of <code>keyId</code>.  It also goes against the statement that we <em>aren't</em> defining <code>keyId</code>'s semantics, as we are dictating that the signing algorithm must be specified by <code>keyId</code> or derivable from it.  If we stick with this, can we just drop <code>algorithm</code> altogether?<span class="crefSource">AB</span></span><a href="#section-5.1-2.2.2" class="pilcrow">¶</a></p>
 </dd>
 <dt id="section-5.1-2.3"><code>created</code></dt>

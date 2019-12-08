@@ -87,13 +87,13 @@ Table of Contents
        5.2.1.  RSA Example . . . . . . . . . . . . . . . . . . . . .  15
        5.2.2.  HMAC Example  . . . . . . . . . . . . . . . . . . . .  16
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16
-     6.1.  HTTP Signature Algorithms Registry  . . . . . . . . . . .  16
+     6.1.  HTTP Signature Algorithms Registry  . . . . . . . . . . .  17
        6.1.1.  Registration Template . . . . . . . . . . . . . . . .  17
        6.1.2.  Initial Contents  . . . . . . . . . . . . . . . . . .  17
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  19
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  19
-     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  19
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .  20
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  20
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .  21
    Appendix A.  Extensions . . . . . . . . . . . . . . . . . . . . .  22
    Appendix B.  Test Values  . . . . . . . . . . . . . . . . . . . .  22
      B.1.  Default Test  . . . . . . . . . . . . . . . . . . . . . .  23
@@ -481,12 +481,12 @@ Internet-Draft            Signing HTTP Messages            December 2019
    message, it provides cryptographic proof that with respect to the
    subset of content that was signed, the message is semantically
    equivalent to the message for which the signature was generated.
-   HTTP Message Signature's metadata provides information regarding its
-   generation and/or verification.
 
 4.1.  Signature Metadata
 
-   HTTP Message Signatures have the following metadata properties:
+   HTTP Message Signatures have metadata properties that provide
+   information regarding the signature's generation and/or verification.
+   The following metadata properties are defined:
 
    Algorithm
       An HTTP Signature Algorithm defined in the IANA HTTP Signature
@@ -537,23 +537,23 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
 4.2.1.  Choose and Set Signature Metadata Properties
 
-   The signer chooses an HTTP Signature Algorithm from those registered
-   in the IANA HTTP Signature Algorithm Registry (Section 6.1) defined
-   by this document, and sets the signature's Algorithm property to that
-   value.  The signer MUST NOT choose an algorithm marked "Deprecated".
-   The mechanism by which the signer chooses an algorithm is out of
-   scope for this document.
+   1.  The signer chooses an HTTP Signature Algorithm from those
+       registered in the IANA HTTP Signature Algorithm Registry
+       (Section 6.1) defined by this document, and sets the signature's
+       Algorithm property to that value.  The signer MUST NOT choose an
+       algorithm marked "Deprecated".  The mechanism by which the signer
+       chooses an algorithm is out of scope for this document.
 
-   The signer chooses key material to use for signing and verification,
-   and sets the signature's Verification Key Material property to the
-   key material required for verification.  The signer MUST choose key
-   material that is appropriate for the signature's Algorithm, and that
-   conforms to any requirements defined by the Algorithm, such as key
-   size or format.  The mechanism by which the signer chooses key
-   material is out of scope for this document.
+   2.  The signer chooses key material to use for signing and
+       verification, and sets the signature's Verification Key Material
+       property to the key material required for verification.  The
+       signer MUST choose key material that is appropriate for the
+       signature's Algorithm, and that conforms to any requirements
+       defined by the Algorithm, such as key size or format.  The
+       mechanism by which the signer chooses key material is out of
+       scope for this document.
 
-   The signer sets the signature's Creation Time property to the current
-   time.
+
 
 
 
@@ -562,24 +562,28 @@ Backman, et al.            Expires 6 June 2020                 [Page 10]
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
-   The signer sets the signature's Expiration Time property to the time
-   at which the signature is to expire, or to undefined if the signature
-   will not expire.
+   3.  The signer sets the signature's Creation Time property to the
+       current time.
 
-   The signer creates an ordered list of content identifiers
-   representing the message content and signature metadata to be covered
-   by the signature, and assigns this list as the signature's Covered
-   Content.  Each identifier MUST be one of those defined in Section 3.
-   This list MUST NOT be empty, as this would result in creating a
-   signature over the empty string.  If the signature's Algorithm name
-   does not start with "rsa", "hmac", or "ecdsa", signers SHOULD include
-   "(created)" and "(request-target)" in the list.  If the signature's
-   Algorithm starts with "rsa", "hmac", or "ecdsa", signers SHOULD
-   include "date" and "(request-target)" in the list.  Further guidance
-   on what to include in this list and in what order is out of scope for
-   this document.  However, the list order is significant and once
-   established for a given signature it MUST be preserved for that
-   signature.
+   4.  The signer sets the signature's Expiration Time property to the
+       time at which the signature is to expire, or to undefined if the
+       signature will not expire.
+
+   5.  The signer creates an ordered list of content identifiers
+       representing the message content and signature metadata to be
+       covered by the signature, and assigns this list as the
+       signature's Covered Content.  Each identifier MUST be one of
+       those defined in Section 3.  This list MUST NOT be empty, as this
+       would result in creating a signature over the empty string.  If
+       the signature's Algorithm name does not start with "rsa", "hmac",
+       or "ecdsa", signers SHOULD include "(created)" and "(request-
+       target)" in the list.  If the signature's Algorithm starts with
+       "rsa", "hmac", or "ecdsa", signers SHOULD include "date" and
+       "(request-target)" in the list.  Further guidance on what to
+       include in this list and in what order is out of scope for this
+       document.  However, the list order is significant and once
+       established for a given signature it MUST be preserved for that
+       signature.
 
 4.2.2.  Create the Signature Input
 
@@ -606,10 +610,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
    To illustrate the rules specified above, assume the signature's
    Covered Content is a list containing "(request-target)", "(created)",
    "host", "date", "cache-control", "x-emptyheader", and "x-example", in
-   order, the signature's Creation Time is equal to the value of the
-   message's Date header, and the following HTTP message:
-
-
 
 
 
@@ -618,24 +618,27 @@ Backman, et al.            Expires 6 June 2020                 [Page 11]
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
-       GET /foo HTTP/1.1
-       Host: example.org
-       Date: Tue, 07 Jun 2014 20:51:35 GMT
-       X-Example: Example header
-               with some whitespace.
-       X-EmptyHeader:
-       Cache-Control: max-age=60
-       Cache-Control: must-revalidate
+   order, the signature's Creation Time is equal to the value of the
+   message's Date header, and the following HTTP message:
+
+   GET /foo HTTP/1.1
+   Host: example.org
+   Date: Tue, 07 Jun 2014 20:51:35 GMT
+   X-Example: Example header
+           with some whitespace.
+   X-EmptyHeader:
+   Cache-Control: max-age=60
+   Cache-Control: must-revalidate
 
    For the HTTP message above, the corresponding Signature Input is:
 
-       (request-target): get /foo
-       (created): 1402170695
-       host: example.org
-       date: Tue, 07 Jun 2014 20:51:35 GMT
-       cache-control: max-age=60, must-revalidate
-       x-emptyheader:
-       x-example: Example header with some whitespace.
+   (request-target): get /foo
+   (created): 1402170695
+   host: example.org
+   date: Tue, 07 Jun 2014 20:51:35 GMT
+   cache-control: max-age=60, must-revalidate
+   x-emptyheader:
+   x-example: Example header with some whitespace.
 
 4.2.3.  Sign the Signature Input
 
@@ -662,10 +665,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
    2.  Use the signature's Algorithm and Verification Key Material with
        the recreated Signing Input to verify the signature value.
 
-   A signature with a Creation Time that is in the future or an
-   Expiration Time that is in the past MUST NOT be processed. // This
-   wording implies that verifiers are not permitted to account // for
-   clock skew during signature verification. // // -- AB
+
 
 
 
@@ -673,6 +673,11 @@ Backman, et al.            Expires 6 June 2020                 [Page 12]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
+
+   A signature with a Creation Time that is in the future or an
+   Expiration Time that is in the past MUST NOT be processed. // This
+   wording implies that verifiers are not permitted to account // for
+   clock skew during signature verification. // // -- AB
 
    The verifier MUST ensure that a signature's Algorithm is appropriate
    for the key material the verifier will use to verify the signature.
@@ -711,17 +716,12 @@ Internet-Draft            Signing HTTP Messages            December 2019
       RECOMMENDED.  The "algorithm" parameter contains the name of the
       signature's Algorithm, as registered in the IANA HTTP Signature
       Algorithms Registry (Section 6.1) defined by this document.
-      VerifiersMUST determine the signature's Algorithm from the "keyId"
-      parameter rather than from "algorithm".  If "algorithm" is
+      Verifiers MUST determine the signature's Algorithm from the
+      "keyId" parameter rather than from "algorithm".  If "algorithm" is
       provided and differs from or is incompatible with the algorithm or
       key material identified by "keyId" (for example, "algorithm" has a
       value of "rsa-sha256" but "keyId" identifies an EdDSA key), then
       implementations MUST produce an error.  Implementers should note
-      that previous versions of this specification determined the
-      signature's Algorithm using the "algorithm" parameter only, and
-      thus could be utilized by attackers to expose security
-      vulnerabilities.
-
 
 
 
@@ -729,6 +729,11 @@ Backman, et al.            Expires 6 June 2020                 [Page 13]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
+
+      that previous versions of this specification determined the
+      signature's Algorithm using the "algorithm" parameter only, and
+      thus could be utilized by attackers to expose security
+      vulnerabilities.
 
       // These instructions are confusing.  Punting algorithm //
       identification into "keyId" hurts interoperability, since we //
@@ -774,17 +779,16 @@ Internet-Draft            Signing HTTP Messages            December 2019
       signature's "Verification Key Material".  The format and semantics
       of this value are out of scope for this document.
 
-      // This value needs to be constrained to ensure that it does not
-      // break parsing of the header field's value as auth-params. // //
-      -- AB
-
-
 
 
 Backman, et al.            Expires 6 June 2020                 [Page 14]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
+
+      // This value needs to be constrained to ensure that it does not
+      // break parsing of the header field's value as auth-params. // //
+      -- AB
 
       // While we need to allow for flexibility in key specification, //
       leaving it completely undefined hurts interoperability.  We could
@@ -827,13 +831,9 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    The signature header and signature would be generated as:
 
-   Signature: keyId="rsa-key-1",algorithm="hs2019",
-       created=1402170695, expires=1402170995,
-       headers="(request-target) (created) (expires)
-           host date digest content-length",
-       signature="Base64(RSA-SHA256(signing string))"
 
-   The signer would compose the signing string as:
+
+
 
 
 
@@ -841,6 +841,14 @@ Backman, et al.            Expires 6 June 2020                 [Page 15]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
+
+   Signature: keyId="rsa-key-1",algorithm="hs2019",
+       created=1402170695, expires=1402170995,
+       headers="(request-target) (created) (expires)
+           host date digest content-length",
+       signature="Base64(RSA-SHA256(signing string))"
+
+   The signer would compose the signing string as:
 
    (request-target): post /foo\n
    (created): 1402170695
@@ -882,14 +890,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
 6.  IANA Considerations
 
-6.1.  HTTP Signature Algorithms Registry
-
-   // JSON Web Algorithms (JWA) [RFC7518] already defines an IANA //
-   registry for cryptographic algorithms.  What is the justification //
-   for defining a new one? // // -- AB
-
-   This document defines HTTP Signature Algorithms, for which IANA is
-   asked to create and maintain a new registry titled "HTTP Signature
 
 
 
@@ -898,6 +898,14 @@ Backman, et al.            Expires 6 June 2020                 [Page 16]
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
+6.1.  HTTP Signature Algorithms Registry
+
+   // JSON Web Algorithms (JWA) [RFC7518] already defines an IANA //
+   registry for cryptographic algorithms.  What is the justification //
+   for defining a new one? // // -- AB
+
+   This document defines HTTP Signature Algorithms, for which IANA is
+   asked to create and maintain a new registry titled "HTTP Signature
    Algorithms".  Initial values for this registry are given in
    Section 6.1.2.  Future assignments and modifications to existing
    assignment are to be made through the Expert Review registration
@@ -939,6 +947,13 @@ Internet-Draft            Signing HTTP Messages            December 2019
    // Initial registry contents should not contain deprecated //
    algorithms. // // -- AB
 
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 17]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
 "hs2019"
 
    Algorithm Name
@@ -946,13 +961,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    Status
       active
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 17]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
 
    Description
       Derived from metadata associated with "keyId".  Recommend support
@@ -995,20 +1003,18 @@ Internet-Draft            Signing HTTP Messages            December 2019
    Status
       Deprecated; specifying signature algorithm enables attack vector.
 
-      // What attack vector?  Can we mitigate it by including
-      "algorithm" // in the signing string? // // -- AB
-
-   Description
-      RSASSA-PKCS1-v1_5 [RFC8017] using SHA-256 [RFC6234]
-
-
-
 
 
 Backman, et al.            Expires 6 June 2020                 [Page 18]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
+
+      // What attack vector?  Can we mitigate it by including
+      "algorithm" // in the signing string? // // -- AB
+
+   Description
+      RSASSA-PKCS1-v1_5 [RFC8017] using SHA-256 [RFC6234]
 
 "hmac-sha256"
 
@@ -1052,12 +1058,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
 8.  References
 
-8.1.  Normative References
-
-   [BCP 26]   Cotton, M., Leiba, B., and T. Narten, "Guidelines for
-              Writing an IANA Considerations Section in RFCs", BCP 26,
-              RFC 8126, DOI 10.17487/RFC8126, June 2017,
-              <https://www.rfc-editor.org/info/rfc8126>.
 
 
 
@@ -1065,6 +1065,13 @@ Backman, et al.            Expires 6 June 2020                 [Page 19]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
+
+8.1.  Normative References
+
+   [BCP 26]   Cotton, M., Leiba, B., and T. Narten, "Guidelines for
+              Writing an IANA Considerations Section in RFCs", BCP 26,
+              RFC 8126, DOI 10.17487/RFC8126, June 2017,
+              <https://www.rfc-editor.org/info/rfc8126>.
 
    [DSS]      NIST, "Digital Signature Standard (DSS)", FIPS 186-4,
               DOI 10.6028/NIST.FIPS.186-4, July 2013,
@@ -1106,6 +1113,15 @@ Internet-Draft            Signing HTTP Messages            December 2019
               <https://www.rfc-editor.org/info/rfc7540>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+
+
+
+
+Backman, et al.            Expires 6 June 2020                 [Page 20]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
@@ -1114,13 +1130,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
    [RFC3339]  Klyne, G. and C. Newman, "Date and Time on the Internet:
               Timestamps", RFC 3339, DOI 10.17487/RFC3339, July 2002,
               <https://www.rfc-editor.org/info/rfc3339>.
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 20]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
 
    [RFC6234]  Eastlake 3rd, D. and T. Hansen, "US Secure Hash Algorithms
               (SHA and SHA-based HMAC and HKDF)", RFC 6234,
@@ -1161,15 +1170,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    [WP-HTTP-Sig-Trailers]
               Sporny, M., "HTTP Signature Trailers", July 2013,
-              <https://web-payments.org/specs/source/http-signature-
-              trailers/>.
-
-
-
-
-
-
-
 
 
 
@@ -1177,6 +1177,9 @@ Backman, et al.            Expires 6 June 2020                 [Page 21]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
+
+              <https://web-payments.org/specs/source/http-signature-
+              trailers/>.
 
 Appendix A.  Extensions
 
@@ -1211,9 +1214,6 @@ Appendix B.  Test Values
 
    The following test data uses the following RSA 2048-bit keys, which
    we will refer to as "keyId=Test" in the following samples:
-
-
-
 
 
 
