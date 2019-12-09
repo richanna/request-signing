@@ -73,7 +73,7 @@
         <middle>
             <section anchor="intro">
                 <name>Introduction</name>
-                <t>Message integrity and authenticity are important security properties that are critical to the secure operation of many <xref target="RFC7230">HTTP</xref> applications.  Application developers typically rely on the transport layer to provide these properties, by operating their application over <xref target="RFC8446">TLS</xref>.  However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance).  In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application.  Additionally, some operating environments present obstacles that make it impractical to use TLS, or to use features necessary to provide message authenticity.  Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.</t>
+                <t>Message integrity and authenticity are important security properties that are critical to the secure operation of many <xref target="RFC7230"/> applications.  Application developers typically rely on the transport layer to provide these properties, by operating their application over <xref target="RFC8446">TLS</xref>.  However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance).  In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application.  Additionally, some operating environments present obstacles that make it impractical to use TLS, or to use features necessary to provide message authenticity.  Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.</t>
 
                 <t>This document defines a mechanism for providing end-to-end integrity and authenticity for content within an HTTP message.  The mechanism allows applications to create digital signatures or message authentication codes (MACs) over only that content within the message that is meaningful and appropriate for the application.  Strict canonicalization rules ensure that the verifier can verify the signature even if the message has been transformed in any of the many ways permitted by HTTP.</t>
 
@@ -95,11 +95,11 @@
                     <name>HTTP Message Transformations</name>
                     <t>As mentioned earlier, HTTP explicitly permits and in some cases requires implementations to transform messages in a variety of ways.  Implementations are required to tolerate many of these transformations.  What follows is a non-normative and non-exhaustive list of transformations that may occur under HTTP, provided as context:</t>
                     <ul>
-                        <li>Re-ordering of header fields with different header field names <relref target="RFC7230" section="3.2.2" displayFormat="parens"/>.</li>
-                        <li>Combination of header fields with the same field name <relref target="RFC7230" section="3.2.2" displayFormat="parens"/>.</li>
-                        <li>Removal of header fields listed in the <tt>Connection</tt> header field <relref target="RFC7230" section="6.1" displayFormat="parens"/>.</li>
-                        <li>Addition of header fields that indicate control options <relref target="RFC7230" section="6.1" displayFormat="parens"/>.</li>
-                        <li>Addition or removal of a transfer coding <relref target="RFC7230" section="5.7.2" displayFormat="parens"/>.</li>
+                        <li>Re-ordering of header fields with different header field names (<relref target="RFC7230" section="3.2.2" displayFormat="comma"/>).</li>
+                        <li>Combination of header fields with the same field name (<relref target="RFC7230" section="3.2.2" displayFormat="comma"/>).</li>
+                        <li>Removal of header fields listed in the <tt>Connection</tt> header field (<relref target="RFC7230" section="6.1" displayFormat="comma"/>).</li>
+                        <li>Addition of header fields that indicate control options (<relref target="RFC7230" section="6.1" displayFormat="comma"/>).</li>
+                        <li>Addition or removal of a transfer coding (<relref target="RFC7230" section="5.7.2" displayFormat="comma"/>).</li>
                         <li>Addition of header fields such as <tt>Via</tt> (<relref target="RFC7230" section="5.7.1" displayFormat="comma"/>) and <tt>Forwarded</tt> (<relref target="RFC7239" section="4" displayFormat="comma"/>).</li>
                     </ul>
                 </section>
@@ -124,7 +124,7 @@
                 <name>Conventions and Terminology</name>
                 <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119">BCP14</xref> <xref target="RFC8174"/> when, and only when, they appear in all capitals, as shown here.</t>
 
-                <t>The terms "HTTP message", "HTTP method", "HTTP request", "HTTP response", <tt>absolute-form</tt>, <tt>absolute-path</tt>, "effective request URI", "gateway", "header field", "intermediary", <tt>request-target</tt>, "sender", and "recipient" are used as defined in <xref target="RFC7230">HTTP</xref>.</t>
+                <t>The terms "HTTP message", "HTTP method", "HTTP request", "HTTP response", <tt>absolute-form</tt>, <tt>absolute-path</tt>, "effective request URI", "gateway", "header field", "intermediary", <tt>request-target</tt>, "sender", and "recipient" are used as defined in <xref target="RFC7230"/>.</t>
 
                 <t>For brevity, the term "signature" on its own is used in this document to refer to both digital signatures and keyed MACs. Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given input string. The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.</t>
 
@@ -238,7 +238,7 @@ Cache-Control:    must-revalidate
                 <ol>
                     <li>Take the lowercased HTTP method of the message.</li>
                     <li>Append a space <tt>" "</tt>.</li>
-                    <li>Append the path and query of the request target of the message, formatted according to the rules defined for the <tt>:path</tt> pseudo-header in <xref target="RFC7540" section="8.1.2.3" sectionFormat="comma">HTTP/2</xref>.  The resulting string is the canonicalized value.</li>
+                    <li>Append the path and query of the request target of the message, formatted according to the rules defined for the <tt>:path</tt> pseudo-header in <xref target="RFC7540" section="8.1.2.3" sectionFormat="comma"/>.  The resulting string is the canonicalized value.</li>
                 </ol>
 
                 <section toc="exclude">
@@ -299,7 +299,7 @@ Host: server.example.com]]></sourcecode></td>
                 <t keepWithNext="true">HTTP Message Signatures have metadata properties that provide information regarding the signature's generation and/or verification.  The following metadata properties are defined:</t>
                 <dl newline="true">
                     <dt>Algorithm</dt>
-                    <dd>An HTTP Signature Algorithm defined in the <xref target="hsa-registry">IANA HTTP Signature Algorithms registry</xref> defined in this document.  It describes the signing and verification algorithms for the signature.</dd>
+                    <dd>An HTTP Signature Algorithm defined in the <xref target="hsa-registry" format="title"/> defined in this document.  It describes the signing and verification algorithms for the signature.</dd>
                     <dt>Creation Time</dt>
                     <dd>A timestamp representing the point in time that the signature was generated.  Sub-second precision is not supported.  A signature's Creation Time <bcp14>MAY</bcp14> be undefined, indicating that it is unknown.</dd>
                     <dt>Covered Content</dt>
@@ -325,7 +325,7 @@ Host: server.example.com]]></sourcecode></td>
                 <section anchor="choose-metadata">
                     <name>Choose and Set Signature Metadata Properties</name>
                     <ol>
-                        <li>The signer chooses an HTTP Signature Algorithm from those registered in the <xref target="hsa-registry">IANA HTTP Signature Algorithm Registry</xref> defined by this document, and sets the signature's Algorithm property to that value.  The signer <bcp14>MUST NOT</bcp14> choose an algorithm marked "Deprecated".  The mechanism by which the signer chooses an algorithm is out of scope for this document.</li>
+                        <li>The signer chooses an HTTP Signature Algorithm from those registered in the <xref target="hsa-registry" format="title"/> defined by this document, and sets the signature's Algorithm property to that value.  The signer <bcp14>MUST NOT</bcp14> choose an algorithm marked "Deprecated".  The mechanism by which the signer chooses an algorithm is out of scope for this document.</li>
 
                         <li>The signer chooses key material to use for signing and verification, and sets the signature's Verification Key Material property to the key material required for verification.  The signer <bcp14>MUST</bcp14> choose key material that is appropriate for the signature's Algorithm, and that conforms to any requirements defined by the Algorithm, such as key size or format.  The mechanism by which the signer chooses key material is out of scope for this document.</li>
 
@@ -410,7 +410,7 @@ sig-param    = token BWS "=" BWS ( token / quoted-string )]]></sourcecode>
                 <dl newline="true">
                     <dt anchor="algorithm"><tt>algorithm</tt></dt>
                     <dd>
-                        <t><bcp14>RECOMMENDED</bcp14>.  The <tt>algorithm</tt> parameter contains the name of the signature's Algorithm, as registered in the <xref target="hsa-registry">IANA HTTP Signature Algorithms Registry</xref> defined by this document.  Verifiers <bcp14>MUST</bcp14> determine the signature's Algorithm from the <tt>keyId</tt> parameter rather than from <tt>algorithm</tt>.  If <tt>algorithm</tt> is provided and differs from or is incompatible with the algorithm or key material identified by <tt>keyId</tt> (for example, <tt>algorithm</tt> has a value of <tt>rsa-sha256</tt> but <tt>keyId</tt> identifies an EdDSA key), then implementations <bcp14>MUST</bcp14> produce an error.  Implementers should note that previous versions of this specification determined the signature's Algorithm using the <tt>algorithm</tt> parameter only, and thus could be utilized by attackers to expose security vulnerabilities.</t>
+                        <t><bcp14>RECOMMENDED</bcp14>.  The <tt>algorithm</tt> parameter contains the name of the signature's Algorithm, as registered in the <xref target="hsa-registry" format="title"/> defined by this document.  Verifiers <bcp14>MUST</bcp14> determine the signature's Algorithm from the <tt>keyId</tt> parameter rather than from <tt>algorithm</tt>.  If <tt>algorithm</tt> is provided and differs from or is incompatible with the algorithm or key material identified by <tt>keyId</tt> (for example, <tt>algorithm</tt> has a value of <tt>rsa-sha256</tt> but <tt>keyId</tt> identifies an EdDSA key), then implementations <bcp14>MUST</bcp14> produce an error.  Implementers should note that previous versions of this specification determined the signature's Algorithm using the <tt>algorithm</tt> parameter only, and thus could be utilized by attackers to expose security vulnerabilities.</t>
                         <t><cref source="AB">These instructions are confusing.  Punting algorithm identification into <tt>keyId</tt> hurts interoperability, since we aren't defining the syntax or semantics of <tt>keyId</tt>.  It also goes against the statement that we <em>aren't</em> defining <tt>keyId</tt>'s semantics, as we are dictating that the signing algorithm must be specified by <tt>keyId</tt> or derivable from it.  If we stick with this, can we just drop <tt>algorithm</tt> altogether?</cref></t>
                     </dd>
 
@@ -607,6 +607,8 @@ content-length: 18]]></sourcecode>
     </middle>
     <back>
         <displayreference target="FIPS186-4" to="DSS"/>
+        <displayreference target="RFC7230" to="HTTP"/>
+        <displayreference target="RFC7540" to="HTTP2"/>
         <displayreference target="RFC8126" to="BCP 26"/>
         <references>
             <name>References</name>

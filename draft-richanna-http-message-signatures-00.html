@@ -1274,7 +1274,7 @@ aside > p {
       <h2 id="name-introduction-2">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction-2" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">Message integrity and authenticity are important security properties that are critical to the secure operation of many <span><a href="#RFC7230" class="xref">HTTP</a> [<a href="#RFC7230" class="xref">RFC7230</a>]</span> applications.  Application developers typically rely on the transport layer to provide these properties, by operating their application over <span><a href="#RFC8446" class="xref">TLS</a> [<a href="#RFC8446" class="xref">RFC8446</a>]</span>.  However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance).  In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application.  Additionally, some operating environments present obstacles that make it impractical to use TLS, or to use features necessary to provide message authenticity.  Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-1">Message integrity and authenticity are important security properties that are critical to the secure operation of many <span>[<a href="#RFC7230" class="xref">HTTP</a>]</span> applications.  Application developers typically rely on the transport layer to provide these properties, by operating their application over <span><a href="#RFC8446" class="xref">TLS</a> [<a href="#RFC8446" class="xref">RFC8446</a>]</span>.  However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance).  In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application.  Additionally, some operating environments present obstacles that make it impractical to use TLS, or to use features necessary to provide message authenticity.  Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">This document defines a mechanism for providing end-to-end integrity and authenticity for content within an HTTP message.  The mechanism allows applications to create digital signatures or message authentication codes (MACs) over only that content within the message that is meaningful and appropriate for the application.  Strict canonicalization rules ensure that the verifier can verify the signature even if the message has been transformed in any of the many ways permitted by HTTP.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">The mechanism described in this document consists of three parts:<a href="#section-1-3" class="pilcrow">¶</a></p>
 <ul>
@@ -1300,17 +1300,17 @@ aside > p {
         </h3>
 <p id="section-1.2-1">As mentioned earlier, HTTP explicitly permits and in some cases requires implementations to transform messages in a variety of ways.  Implementations are required to tolerate many of these transformations.  What follows is a non-normative and non-exhaustive list of transformations that may occur under HTTP, provided as context:<a href="#section-1.2-1" class="pilcrow">¶</a></p>
 <ul>
-<li id="section-1.2-2.1">Re-ordering of header fields with different header field names <span>[<a href="#RFC7230" class="xref">RFC7230</a>] (<a href="https://rfc-editor.org/rfc/rfc7230#section-3.2.2" class="relref">Section 3.2.2</a>)</span>.<a href="#section-1.2-2.1" class="pilcrow">¶</a>
+<li id="section-1.2-2.1">Re-ordering of header fields with different header field names (<span>[<a href="#RFC7230" class="xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc7230#section-3.2.2" class="relref">Section 3.2.2</a></span>).<a href="#section-1.2-2.1" class="pilcrow">¶</a>
 </li>
-          <li id="section-1.2-2.2">Combination of header fields with the same field name <span>[<a href="#RFC7230" class="xref">RFC7230</a>] (<a href="https://rfc-editor.org/rfc/rfc7230#section-3.2.2" class="relref">Section 3.2.2</a>)</span>.<a href="#section-1.2-2.2" class="pilcrow">¶</a>
+          <li id="section-1.2-2.2">Combination of header fields with the same field name (<span>[<a href="#RFC7230" class="xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc7230#section-3.2.2" class="relref">Section 3.2.2</a></span>).<a href="#section-1.2-2.2" class="pilcrow">¶</a>
 </li>
-          <li id="section-1.2-2.3">Removal of header fields listed in the <code>Connection</code> header field <span>[<a href="#RFC7230" class="xref">RFC7230</a>] (<a href="https://rfc-editor.org/rfc/rfc7230#section-6.1" class="relref">Section 6.1</a>)</span>.<a href="#section-1.2-2.3" class="pilcrow">¶</a>
+          <li id="section-1.2-2.3">Removal of header fields listed in the <code>Connection</code> header field (<span>[<a href="#RFC7230" class="xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc7230#section-6.1" class="relref">Section 6.1</a></span>).<a href="#section-1.2-2.3" class="pilcrow">¶</a>
 </li>
-          <li id="section-1.2-2.4">Addition of header fields that indicate control options <span>[<a href="#RFC7230" class="xref">RFC7230</a>] (<a href="https://rfc-editor.org/rfc/rfc7230#section-6.1" class="relref">Section 6.1</a>)</span>.<a href="#section-1.2-2.4" class="pilcrow">¶</a>
+          <li id="section-1.2-2.4">Addition of header fields that indicate control options (<span>[<a href="#RFC7230" class="xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc7230#section-6.1" class="relref">Section 6.1</a></span>).<a href="#section-1.2-2.4" class="pilcrow">¶</a>
 </li>
-          <li id="section-1.2-2.5">Addition or removal of a transfer coding <span>[<a href="#RFC7230" class="xref">RFC7230</a>] (<a href="https://rfc-editor.org/rfc/rfc7230#section-5.7.2" class="relref">Section 5.7.2</a>)</span>.<a href="#section-1.2-2.5" class="pilcrow">¶</a>
+          <li id="section-1.2-2.5">Addition or removal of a transfer coding (<span>[<a href="#RFC7230" class="xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc7230#section-5.7.2" class="relref">Section 5.7.2</a></span>).<a href="#section-1.2-2.5" class="pilcrow">¶</a>
 </li>
-          <li id="section-1.2-2.6">Addition of header fields such as <code>Via</code> (<span>[<a href="#RFC7230" class="xref">RFC7230</a>], <a href="https://rfc-editor.org/rfc/rfc7230#section-5.7.1" class="relref">Section 5.7.1</a></span>) and <code>Forwarded</code> (<span>[<a href="#RFC7239" class="xref">RFC7239</a>], <a href="https://rfc-editor.org/rfc/rfc7239#section-4" class="relref">Section 4</a></span>).<a href="#section-1.2-2.6" class="pilcrow">¶</a>
+          <li id="section-1.2-2.6">Addition of header fields such as <code>Via</code> (<span>[<a href="#RFC7230" class="xref">HTTP</a>], <a href="https://rfc-editor.org/rfc/rfc7230#section-5.7.1" class="relref">Section 5.7.1</a></span>) and <code>Forwarded</code> (<span>[<a href="#RFC7239" class="xref">RFC7239</a>], <a href="https://rfc-editor.org/rfc/rfc7239#section-4" class="relref">Section 4</a></span>).<a href="#section-1.2-2.6" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
@@ -1333,7 +1333,7 @@ aside > p {
 </li>
           <li id="section-1.3-2.6">Addition or removal of <code>obs-fold</code>s.<a href="#section-1.3-2.6" class="pilcrow">¶</a>
 </li>
-          <li id="section-1.3-2.7">Changes to the request-target and Host header field that when applied together do not result in a change to the message's effective request URI, as defined in <span><a href="https://rfc-editor.org/rfc/rfc7230#section-5.5" class="relref">Section 5.5</a> of [<a href="#RFC7230" class="xref">RFC7230</a>]</span>.<a href="#section-1.3-2.7" class="pilcrow">¶</a>
+          <li id="section-1.3-2.7">Changes to the request-target and Host header field that when applied together do not result in a change to the message's effective request URI, as defined in <span><a href="https://rfc-editor.org/rfc/rfc7230#section-5.5" class="relref">Section 5.5</a> of [<a href="#RFC7230" class="xref">HTTP</a>]</span>.<a href="#section-1.3-2.7" class="pilcrow">¶</a>
 </li>
         </ul>
 <p id="section-1.3-3">Additionally, all changes to content not covered by the signature are considered safe.<a href="#section-1.3-3" class="pilcrow">¶</a></p>
@@ -1344,7 +1344,7 @@ aside > p {
 <a href="#section-1.4" class="section-number selfRef">1.4. </a><a href="#name-conventions-and-terminology-2" class="section-name selfRef">Conventions and Terminology</a>
         </h3>
 <p id="section-1.4-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <span><a href="#RFC2119" class="xref">BCP14</a> [<a href="#RFC2119" class="xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="xref">RFC8174</a>]</span> when, and only when, they appear in all capitals, as shown here.<a href="#section-1.4-1" class="pilcrow">¶</a></p>
-<p id="section-1.4-2">The terms "HTTP message", "HTTP method", "HTTP request", "HTTP response", <code>absolute-form</code>, <code>absolute-path</code>, "effective request URI", "gateway", "header field", "intermediary", <code>request-target</code>, "sender", and "recipient" are used as defined in <span><a href="#RFC7230" class="xref">HTTP</a> [<a href="#RFC7230" class="xref">RFC7230</a>]</span>.<a href="#section-1.4-2" class="pilcrow">¶</a></p>
+<p id="section-1.4-2">The terms "HTTP message", "HTTP method", "HTTP request", "HTTP response", <code>absolute-form</code>, <code>absolute-path</code>, "effective request URI", "gateway", "header field", "intermediary", <code>request-target</code>, "sender", and "recipient" are used as defined in <span>[<a href="#RFC7230" class="xref">HTTP</a>]</span>.<a href="#section-1.4-2" class="pilcrow">¶</a></p>
 <p id="section-1.4-3">For brevity, the term "signature" on its own is used in this document to refer to both digital signatures and keyed MACs. Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given input string. The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.<a href="#section-1.4-3" class="pilcrow">¶</a></p>
 <p id="section-1.4-4">In addition to those listed above, this document uses the following terms:<a href="#section-1.4-4" class="pilcrow">¶</a></p>
 <dl class="dlNewline" id="section-1.4-5">
@@ -1500,7 +1500,7 @@ Cache-Control:    must-revalidate
 </li>
           <li id="section-2.4-3.2">Append a space <code>" "</code>.<a href="#section-2.4-3.2" class="pilcrow">¶</a>
 </li>
-          <li id="section-2.4-3.3">Append the path and query of the request target of the message, formatted according to the rules defined for the <code>:path</code> pseudo-header in <span>HTTP/2 [<a href="#RFC7540" class="xref">RFC7540</a>], <a href="https://rfc-editor.org/rfc/rfc7540#section-8.1.2.3" class="relref">Section 8.1.2.3</a></span>.  The resulting string is the canonicalized value.<a href="#section-2.4-3.3" class="pilcrow">¶</a>
+          <li id="section-2.4-3.3">Append the path and query of the request target of the message, formatted according to the rules defined for the <code>:path</code> pseudo-header in <span>[<a href="#RFC7540" class="xref">HTTP2</a>], <a href="https://rfc-editor.org/rfc/rfc7540#section-8.1.2.3" class="relref">Section 8.1.2.3</a></span>.  The resulting string is the canonicalized value.<a href="#section-2.4-3.3" class="pilcrow">¶</a>
 </li>
         </ol>
 <section id="section-2.4.1">
@@ -1612,7 +1612,7 @@ Host: server.example.com</pre><a href="#section-2.4.1-2.2.6.1.1" class="pilcrow"
 <p id="section-3.1-1">HTTP Message Signatures have metadata properties that provide information regarding the signature's generation and/or verification.  The following metadata properties are defined:<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <dl class="dlNewline" id="section-3.1-2">
           <dt id="section-3.1-2.1">Algorithm</dt>
-          <dd id="section-3.1-2.2">An HTTP Signature Algorithm defined in the <span><a href="#hsa-registry" class="xref">IANA HTTP Signature Algorithms registry</a> (<a href="#hsa-registry" class="xref">Section 5.1</a>)</span> defined in this document.  It describes the signing and verification algorithms for the signature.<a href="#section-3.1-2.2" class="pilcrow">¶</a>
+          <dd id="section-3.1-2.2">An HTTP Signature Algorithm defined in the <a href="#hsa-registry" class="xref">HTTP Signature Algorithms Registry</a> defined in this document.  It describes the signing and verification algorithms for the signature.<a href="#section-3.1-2.2" class="pilcrow">¶</a>
 </dd>
 <dt id="section-3.1-2.3">Creation Time</dt>
           <dd id="section-3.1-2.4">A timestamp representing the point in time that the signature was generated.  Sub-second precision is not supported.  A signature's Creation Time <span class="bcp14">MAY</span> be undefined, indicating that it is unknown.<a href="#section-3.1-2.4" class="pilcrow">¶</a>
@@ -1651,7 +1651,7 @@ Host: server.example.com</pre><a href="#section-2.4.1-2.2.6.1.1" class="pilcrow"
 <a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a href="#name-choose-and-set-signature-met" class="section-name selfRef">Choose and Set Signature Metadata Properties</a>
           </h4>
 <ol start="1" type="1" class="normal" id="section-3.2.1-1">
-            <li id="section-3.2.1-1.1">The signer chooses an HTTP Signature Algorithm from those registered in the <span><a href="#hsa-registry" class="xref">IANA HTTP Signature Algorithm Registry</a> (<a href="#hsa-registry" class="xref">Section 5.1</a>)</span> defined by this document, and sets the signature's Algorithm property to that value.  The signer <span class="bcp14">MUST NOT</span> choose an algorithm marked "Deprecated".  The mechanism by which the signer chooses an algorithm is out of scope for this document.<a href="#section-3.2.1-1.1" class="pilcrow">¶</a>
+            <li id="section-3.2.1-1.1">The signer chooses an HTTP Signature Algorithm from those registered in the <a href="#hsa-registry" class="xref">HTTP Signature Algorithms Registry</a> defined by this document, and sets the signature's Algorithm property to that value.  The signer <span class="bcp14">MUST NOT</span> choose an algorithm marked "Deprecated".  The mechanism by which the signer chooses an algorithm is out of scope for this document.<a href="#section-3.2.1-1.1" class="pilcrow">¶</a>
 </li>
             <li id="section-3.2.1-1.2">The signer chooses key material to use for signing and verification, and sets the signature's Verification Key Material property to the key material required for verification.  The signer <span class="bcp14">MUST</span> choose key material that is appropriate for the signature's Algorithm, and that conforms to any requirements defined by the Algorithm, such as key size or format.  The mechanism by which the signer chooses key material is out of scope for this document.<a href="#section-3.2.1-1.2" class="pilcrow">¶</a>
 </li>
@@ -1733,7 +1733,7 @@ x-example: Example header with some whitespace.</pre><a href="#section-3.2.2-8" 
       <h2 id="name-the-signature-http-header-2">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-the-signature-http-header-2" class="section-name selfRef">The 'Signature' HTTP Header</a>
       </h2>
-<p id="section-4-1">The "Signature" HTTP header provides a mechanism to attach a signature to the HTTP message from which it was generated.  The header field name is "Signature" and its value is a list of parameters and values, formatted according to the <code>signature</code> syntax defined below, using the extended Augmented Backus-Naur Form (ABNF) notation used in <span>[<a href="#RFC7230" class="xref">RFC7230</a>]</span>.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">The "Signature" HTTP header provides a mechanism to attach a signature to the HTTP message from which it was generated.  The header field name is "Signature" and its value is a list of parameters and values, formatted according to the <code>signature</code> syntax defined below, using the extended Augmented Backus-Naur Form (ABNF) notation used in <span>[<a href="#RFC7230" class="xref">HTTP</a>]</span>.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <div id="section-4-2">
 <pre class="sourcecode">
 signature    = #( sig-param )
@@ -1750,7 +1750,7 @@ sig-param    = token BWS "=" BWS ( token / quoted-string )</pre><a href="#sectio
 <dl class="dlNewline" id="section-4.1-2">
           <dt id="section-4.1-2.1"><code>algorithm</code></dt>
           <dd id="section-4.1-2.2">
-            <p id="section-4.1-2.2.1"><span class="bcp14">RECOMMENDED</span>.  The <code>algorithm</code> parameter contains the name of the signature's Algorithm, as registered in the <span><a href="#hsa-registry" class="xref">IANA HTTP Signature Algorithms Registry</a> (<a href="#hsa-registry" class="xref">Section 5.1</a>)</span> defined by this document.  Verifiers <span class="bcp14">MUST</span> determine the signature's Algorithm from the <code>keyId</code> parameter rather than from <code>algorithm</code>.  If <code>algorithm</code> is provided and differs from or is incompatible with the algorithm or key material identified by <code>keyId</code> (for example, <code>algorithm</code> has a value of <code>rsa-sha256</code> but <code>keyId</code> identifies an EdDSA key), then implementations <span class="bcp14">MUST</span> produce an error.  Implementers should note that previous versions of this specification determined the signature's Algorithm using the <code>algorithm</code> parameter only, and thus could be utilized by attackers to expose security vulnerabilities.<a href="#section-4.1-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-4.1-2.2.1"><span class="bcp14">RECOMMENDED</span>.  The <code>algorithm</code> parameter contains the name of the signature's Algorithm, as registered in the <a href="#hsa-registry" class="xref">HTTP Signature Algorithms Registry</a> defined by this document.  Verifiers <span class="bcp14">MUST</span> determine the signature's Algorithm from the <code>keyId</code> parameter rather than from <code>algorithm</code>.  If <code>algorithm</code> is provided and differs from or is incompatible with the algorithm or key material identified by <code>keyId</code> (for example, <code>algorithm</code> has a value of <code>rsa-sha256</code> but <code>keyId</code> identifies an EdDSA key), then implementations <span class="bcp14">MUST</span> produce an error.  Implementers should note that previous versions of this specification determined the signature's Algorithm using the <code>algorithm</code> parameter only, and thus could be utilized by attackers to expose security vulnerabilities.<a href="#section-4.1-2.2.1" class="pilcrow">¶</a></p>
 <p id="section-4.1-2.2.2"><span class="cref">These instructions are confusing.  Punting algorithm identification into <code>keyId</code> hurts interoperability, since we aren't defining the syntax or semantics of <code>keyId</code>.  It also goes against the statement that we <em>aren't</em> defining <code>keyId</code>'s semantics, as we are dictating that the signing algorithm must be specified by <code>keyId</code> or derivable from it.  If we stick with this, can we just drop <code>algorithm</code> altogether?<span class="crefSource">AB</span></span><a href="#section-4.1-2.2.2" class="pilcrow">¶</a></p>
 </dd>
 <dt id="section-4.1-2.3"><code>created</code></dt>
@@ -1795,7 +1795,7 @@ Content-Length: 18
 
 {"hello": "world"}</pre><a href="#section-4.2-2" class="pilcrow">¶</a>
 </div>
-<p id="section-4.2-3">The following examples assume that the "rsa-key-1" keyId provided by the signer is meaningful to the verifier.  Note that to improve readability, some header values are split into multiple lines, using the <code>obs-fold</code> syntax.  This syntax is deprecated in <span>[<a href="#RFC7230" class="xref">RFC7230</a>]</span>, and senders <span class="bcp14">MUST NOT</span> generate messages that include it.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2-3">The following examples assume that the "rsa-key-1" keyId provided by the signer is meaningful to the verifier.  Note that to improve readability, some header values are split into multiple lines, using the <code>obs-fold</code> syntax.  This syntax is deprecated in <span>[<a href="#RFC7230" class="xref">HTTP</a>]</span>, and senders <span class="bcp14">MUST NOT</span> generate messages that include it.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
 <div id="sig-rsa-example">
 <section id="section-4.2.1">
           <h4 id="name-rsa-example-2">
@@ -2020,6 +2020,12 @@ content-length: 18</pre><a href="#section-4.2.2-4" class="pilcrow">¶</a>
 <dt id="FIPS186-4">[DSS]</dt>
         <dd>
 <span class="refAuthor">NIST</span>, <span class="refTitle">"Digital Signature Standard (DSS)"</span>, <span class="seriesInfo">FIPS 186-4</span>, <span class="seriesInfo">DOI 10.6028/NIST.FIPS.186-4</span>, <time datetime="2013-07">July 2013</time>, <span>&lt;<a href="https://csrc.nist.gov/publications/detail/fips/186/4/final">https://csrc.nist.gov/publications/detail/fips/186/4/final</a>&gt;</span>. </dd>
+<dt id="RFC7230">[HTTP]</dt>
+        <dd>
+<span class="refAuthor">Fielding, R., Ed.</span><span class="refAuthor"> and J. Reschke, Ed.</span>, <span class="refTitle">"Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing"</span>, <span class="seriesInfo">RFC 7230</span>, <span class="seriesInfo">DOI 10.17487/RFC7230</span>, <time datetime="2014-06">June 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7230">https://www.rfc-editor.org/info/rfc7230</a>&gt;</span>. </dd>
+<dt id="RFC7540">[HTTP2]</dt>
+        <dd>
+<span class="refAuthor">Belshe, M.</span><span class="refAuthor">, Peon, R.</span><span class="refAuthor">, and M. Thomson, Ed.</span>, <span class="refTitle">"Hypertext Transfer Protocol Version 2 (HTTP/2)"</span>, <span class="seriesInfo">RFC 7540</span>, <span class="seriesInfo">DOI 10.17487/RFC7540</span>, <time datetime="2015-05">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7540">https://www.rfc-editor.org/info/rfc7540</a>&gt;</span>. </dd>
 <dt id="POSIX.1">[POSIX.1]</dt>
         <dd>
 <span class="refAuthor">IEEE</span><span class="refAuthor"> and The Open Group</span>, <span class="refTitle">"The Open Group Base Specifications Issue 7, 2018 edition"</span>, <span class="seriesInfo">IEEE Std 1003.1-2017</span>, <time datetime="2018">2018</time>, <span>&lt;<a href="https://pubs.opengroup.org/onlinepubs/9699919799/">https://pubs.opengroup.org/onlinepubs/9699919799/</a>&gt;</span>. </dd>
@@ -2032,12 +2038,6 @@ content-length: 18</pre><a href="#section-4.2.2-4" class="pilcrow">¶</a>
 <dt id="RFC4648">[RFC4648]</dt>
         <dd>
 <span class="refAuthor">Josefsson, S.</span>, <span class="refTitle">"The Base16, Base32, and Base64 Data Encodings"</span>, <span class="seriesInfo">RFC 4648</span>, <span class="seriesInfo">DOI 10.17487/RFC4648</span>, <time datetime="2006-10">October 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc4648">https://www.rfc-editor.org/info/rfc4648</a>&gt;</span>. </dd>
-<dt id="RFC7230">[RFC7230]</dt>
-        <dd>
-<span class="refAuthor">Fielding, R., Ed.</span><span class="refAuthor"> and J. Reschke, Ed.</span>, <span class="refTitle">"Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing"</span>, <span class="seriesInfo">RFC 7230</span>, <span class="seriesInfo">DOI 10.17487/RFC7230</span>, <time datetime="2014-06">June 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7230">https://www.rfc-editor.org/info/rfc7230</a>&gt;</span>. </dd>
-<dt id="RFC7540">[RFC7540]</dt>
-        <dd>
-<span class="refAuthor">Belshe, M.</span><span class="refAuthor">, Peon, R.</span><span class="refAuthor">, and M. Thomson, Ed.</span>, <span class="refTitle">"Hypertext Transfer Protocol Version 2 (HTTP/2)"</span>, <span class="seriesInfo">RFC 7540</span>, <span class="seriesInfo">DOI 10.17487/RFC7540</span>, <time datetime="2015-05">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7540">https://www.rfc-editor.org/info/rfc7540</a>&gt;</span>. </dd>
 <dt id="RFC8174">[RFC8174]</dt>
       <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>

@@ -117,7 +117,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
 1.  Introduction
 
    Message integrity and authenticity are important security properties
-   that are critical to the secure operation of many HTTP [RFC7230]
+   that are critical to the secure operation of many [HTTP]
    applications.  Application developers typically rely on the transport
    layer to provide these properties, by operating their application
    over TLS [RFC8446].  However, TLS only guarantees these properties
@@ -202,22 +202,22 @@ Internet-Draft            Signing HTTP Messages            December 2019
    context:
 
    *  Re-ordering of header fields with different header field names
-      [RFC7230] (Section 3.2.2).
+      ([HTTP], Section 3.2.2).
 
-   *  Combination of header fields with the same field name [RFC7230]
-      (Section 3.2.2).
+   *  Combination of header fields with the same field name ([HTTP],
+      Section 3.2.2).
 
    *  Removal of header fields listed in the "Connection" header field
-      [RFC7230] (Section 6.1).
+      ([HTTP], Section 6.1).
 
-   *  Addition of header fields that indicate control options [RFC7230]
-      (Section 6.1).
+   *  Addition of header fields that indicate control options ([HTTP],
+      Section 6.1).
 
-   *  Addition or removal of a transfer coding [RFC7230]
-      (Section 5.7.2).
+   *  Addition or removal of a transfer coding ([HTTP], Section 5.7.2).
 
-   *  Addition of header fields such as "Via" ([RFC7230], Section 5.7.1)
+   *  Addition of header fields such as "Via" ([HTTP], Section 5.7.1)
       and "Forwarded" ([RFC7239], Section 4).
+
 
 
 
@@ -251,7 +251,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    *  Changes to the request-target and Host header field that when
       applied together do not result in a change to the message's
-      effective request URI, as defined in Section 5.5 of [RFC7230].
+      effective request URI, as defined in Section 5.5 of [HTTP].
 
    Additionally, all changes to content not covered by the signature are
    considered safe.
@@ -267,7 +267,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
    The terms "HTTP message", "HTTP method", "HTTP request", "HTTP
    response", "absolute-form", "absolute-path", "effective request URI",
    "gateway", "header field", "intermediary", "request-target",
-   "sender", and "recipient" are used as defined in HTTP [RFC7230].
+   "sender", and "recipient" are used as defined in [HTTP].
 
    For brevity, the term "signature" on its own is used in this document
    to refer to both digital signatures and keyed MACs.  Similarly, the
@@ -464,8 +464,8 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    3.  Append the path and query of the request target of the message,
        formatted according to the rules defined for the ":path" pseudo-
-       header in HTTP/2 [RFC7540], Section 8.1.2.3.  The resulting
-       string is the canonicalized value.
+       header in [HTTP2], Section 8.1.2.3.  The resulting string is the
+       canonicalized value.
 
 2.4.1.  Canonicalization Examples
 
@@ -522,10 +522,9 @@ Internet-Draft            Signing HTTP Messages            December 2019
    The following metadata properties are defined:
 
    Algorithm
-      An HTTP Signature Algorithm defined in the IANA HTTP Signature
-      Algorithms registry (Section 5.1) defined in this document.  It
-      describes the signing and verification algorithms for the
-      signature.
+      An HTTP Signature Algorithm defined in the HTTP Signature
+      Algorithms Registry defined in this document.  It describes the
+      signing and verification algorithms for the signature.
 
    Creation Time
       A timestamp representing the point in time that the signature was
@@ -557,6 +556,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
 
 
+
 Backman, et al.           Expires 10 June 2020                 [Page 10]
 
 Internet-Draft            Signing HTTP Messages            December 2019
@@ -571,11 +571,11 @@ Internet-Draft            Signing HTTP Messages            December 2019
 3.2.1.  Choose and Set Signature Metadata Properties
 
    1.  The signer chooses an HTTP Signature Algorithm from those
-       registered in the IANA HTTP Signature Algorithm Registry
-       (Section 5.1) defined by this document, and sets the signature's
-       Algorithm property to that value.  The signer MUST NOT choose an
-       algorithm marked "Deprecated".  The mechanism by which the signer
-       chooses an algorithm is out of scope for this document.
+       registered in the HTTP Signature Algorithms Registry defined by
+       this document, and sets the signature's Algorithm property to
+       that value.  The signer MUST NOT choose an algorithm marked
+       "Deprecated".  The mechanism by which the signer chooses an
+       algorithm is out of scope for this document.
 
    2.  The signer chooses key material to use for signing and
        verification, and sets the signature's Verification Key Material
@@ -737,7 +737,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
    header field name is "Signature" and its value is a list of
    parameters and values, formatted according to the "signature" syntax
    defined below, using the extended Augmented Backus-Naur Form (ABNF)
-   notation used in [RFC7230].
+   notation used in [HTTP].
 
    signature    = #( sig-param )
 
@@ -755,13 +755,13 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    "algorithm"
       RECOMMENDED.  The "algorithm" parameter contains the name of the
-      signature's Algorithm, as registered in the IANA HTTP Signature
-      Algorithms Registry (Section 5.1) defined by this document.
-      Verifiers MUST determine the signature's Algorithm from the
-      "keyId" parameter rather than from "algorithm".  If "algorithm" is
-      provided and differs from or is incompatible with the algorithm or
-      key material identified by "keyId" (for example, "algorithm" has a
-      value of "rsa-sha256" but "keyId" identifies an EdDSA key), then
+      signature's Algorithm, as registered in the HTTP Signature
+      Algorithms Registry defined by this document.  Verifiers MUST
+      determine the signature's Algorithm from the "keyId" parameter
+      rather than from "algorithm".  If "algorithm" is provided and
+      differs from or is incompatible with the algorithm or key material
+      identified by "keyId" (for example, "algorithm" has a value of
+      "rsa-sha256" but "keyId" identifies an EdDSA key), then
       implementations MUST produce an error.  Implementers should note
       that previous versions of this specification determined the
       signature's Algorithm using the "algorithm" parameter only, and
@@ -859,7 +859,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
    The following examples assume that the "rsa-key-1" keyId provided by
    the signer is meaningful to the verifier.  Note that to improve
    readability, some header values are split into multiple lines, using
-   the "obs-fold" syntax.  This syntax is deprecated in [RFC7230], and
+   the "obs-fold" syntax.  This syntax is deprecated in [HTTP], and
    senders MUST NOT generate messages that include it.
 
 4.2.1.  RSA Example
@@ -1092,6 +1092,16 @@ Internet-Draft            Signing HTTP Messages            December 2019
               <https://csrc.nist.gov/publications/detail/fips/186/4/
               final>.
 
+   [HTTP]     Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
+              Protocol (HTTP/1.1): Message Syntax and Routing",
+              RFC 7230, DOI 10.17487/RFC7230, June 2014,
+              <https://www.rfc-editor.org/info/rfc7230>.
+
+   [HTTP2]    Belshe, M., Peon, R., and M. Thomson, Ed., "Hypertext
+              Transfer Protocol Version 2 (HTTP/2)", RFC 7540,
+              DOI 10.17487/RFC7540, May 2015,
+              <https://www.rfc-editor.org/info/rfc7540>.
+
    [POSIX.1]  IEEE and The Open Group, "The Open Group Base
               Specifications Issue 7, 2018 edition", IEEE
               Std 1003.1-2017, 2018,
@@ -1104,16 +1114,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/info/rfc2119>.
-
-   [RFC4648]  Josefsson, S., "The Base16, Base32, and Base64 Data
-              Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006,
-              <https://www.rfc-editor.org/info/rfc4648>.
-
-   [RFC7230]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
-              Protocol (HTTP/1.1): Message Syntax and Routing",
-
 
 
 
@@ -1122,13 +1122,12 @@ Backman, et al.           Expires 10 June 2020                 [Page 20]
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
-              RFC 7230, DOI 10.17487/RFC7230, June 2014,
-              <https://www.rfc-editor.org/info/rfc7230>.
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC7540]  Belshe, M., Peon, R., and M. Thomson, Ed., "Hypertext
-              Transfer Protocol Version 2 (HTTP/2)", RFC 7540,
-              DOI 10.17487/RFC7540, May 2015,
-              <https://www.rfc-editor.org/info/rfc7540>.
+   [RFC4648]  Josefsson, S., "The Base16, Base32, and Base64 Data
+              Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006,
+              <https://www.rfc-editor.org/info/rfc4648>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -1169,7 +1168,8 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    [WP-HTTP-Sig-Audit]
               Sporny, M., "Security Considerations for HTTP Signatures",
-
+              June 2013, <https://web-payments.org/specs/source/http-
+              signatures-audit/>.
 
 
 
@@ -1177,9 +1177,6 @@ Backman, et al.           Expires 10 June 2020                 [Page 21]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
-
-              June 2013, <https://web-payments.org/specs/source/http-
-              signatures-audit/>.
 
 Appendix A.  Examples
 
@@ -1224,6 +1221,9 @@ Appendix A.  Examples
    -----END RSA PRIVATE KEY-----
 
    All examples use this HTTP message:
+
+
+
 
 
 
