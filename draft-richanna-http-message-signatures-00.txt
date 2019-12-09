@@ -5,10 +5,10 @@
 HTTPbis Working Group                                    A. Backman, Ed.
 Internet-Draft                                                    Amazon
 Intended status: Standards Track                               J. Richer
-Expires: 6 June 2020                                                    
+Expires: 10 June 2020                                                   
                                                                M. Sporny
                                                           Digital Bazaar
-                                                         4 December 2019
+                                                         8 December 2019
 
 
                          Signing HTTP Messages
@@ -18,10 +18,10 @@ Abstract
 
    This document describes a mechanism for creating, encoding, and
    verifying digital signatures or message authentication codes over
-   subsets of elements within HTTP messages.  This mechanism supports
-   use cases where the full HTTP message may not be known to the signer,
-   and where the message may be transformed (e.g., by intermediaries)
-   before reaching the verifier.
+   content within an HTTP message.  This mechanism supports use cases
+   where the full HTTP message may not be known to the signer, and where
+   the message may be transformed (e.g., by intermediaries) before
+   reaching the verifier.
 
 Status of This Memo
 
@@ -38,7 +38,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 June 2020.
+   This Internet-Draft will expire on 10 June 2020.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Backman, et al.            Expires 6 June 2020                  [Page 1]
+Backman, et al.           Expires 10 June 2020                  [Page 1]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
@@ -65,42 +65,42 @@ Internet-Draft            Signing HTTP Messages            December 2019
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
-     1.1.  Signing Challenges for HTTP . . . . . . . . . . . . . . .   3
-     1.2.  Innocuous Transformations . . . . . . . . . . . . . . . .   4
-     1.3.  Conventions and Terminology . . . . . . . . . . . . . . .   5
-   2.  Definitions . . . . . . . . . . . . . . . . . . . . . . . . .   5
-   3.  Identifying and Canonicalizing Content  . . . . . . . . . . .   6
-     3.1.  HTTP Header Fields  . . . . . . . . . . . . . . . . . . .   6
-     3.2.  Signature Creation Time . . . . . . . . . . . . . . . . .   7
-     3.3.  Signature Expiration Time . . . . . . . . . . . . . . . .   8
-     3.4.  Target Endpoint . . . . . . . . . . . . . . . . . . . . .   8
-   4.  HTTP Message Signatures . . . . . . . . . . . . . . . . . . .   9
-     4.1.  Signature Metadata  . . . . . . . . . . . . . . . . . . .   9
-     4.2.  Creating a Signature  . . . . . . . . . . . . . . . . . .  10
-       4.2.1.  Choose and Set Signature Metadata Properties  . . . .  10
-       4.2.2.  Create the Signature Input  . . . . . . . . . . . . .  11
-       4.2.3.  Sign the Signature Input  . . . . . . . . . . . . . .  12
-     4.3.  Verifying a Signature . . . . . . . . . . . . . . . . . .  12
-   5.  The 'Signature' HTTP Header . . . . . . . . . . . . . . . . .  13
-     5.1.  Signature Parameters  . . . . . . . . . . . . . . . . . .  13
-     5.2.  Signature Header  . . . . . . . . . . . . . . . . . . . .  15
-       5.2.1.  RSA Example . . . . . . . . . . . . . . . . . . . . .  15
-       5.2.2.  HMAC Example  . . . . . . . . . . . . . . . . . . . .  16
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16
-     6.1.  HTTP Signature Algorithms Registry  . . . . . . . . . . .  17
-       6.1.1.  Registration Template . . . . . . . . . . . . . . . .  17
-       6.1.2.  Initial Contents  . . . . . . . . . . . . . . . . . .  17
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  19
-   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  19
-     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  20
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .  21
-   Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  21
-     A.1.  Default Test  . . . . . . . . . . . . . . . . . . . . . .  23
-     A.2.  Basic Test  . . . . . . . . . . . . . . . . . . . . . . .  23
-     A.3.  All Headers Test  . . . . . . . . . . . . . . . . . . . .  23
-   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  24
-   Document History  . . . . . . . . . . . . . . . . . . . . . . . .  24
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  26
+     1.1.  Requirements Discussion . . . . . . . . . . . . . . . . .   3
+     1.2.  HTTP Message Transformations  . . . . . . . . . . . . . .   4
+     1.3.  Safe Transformations  . . . . . . . . . . . . . . . . . .   5
+     1.4.  Conventions and Terminology . . . . . . . . . . . . . . .   5
+   2.  Identifying and Canonicalizing Content  . . . . . . . . . . .   6
+     2.1.  HTTP Header Fields  . . . . . . . . . . . . . . . . . . .   7
+     2.2.  Signature Creation Time . . . . . . . . . . . . . . . . .   8
+     2.3.  Signature Expiration Time . . . . . . . . . . . . . . . .   8
+     2.4.  Target Endpoint . . . . . . . . . . . . . . . . . . . . .   9
+   3.  HTTP Message Signatures . . . . . . . . . . . . . . . . . . .  10
+     3.1.  Signature Metadata  . . . . . . . . . . . . . . . . . . .  10
+     3.2.  Creating a Signature  . . . . . . . . . . . . . . . . . .  10
+       3.2.1.  Choose and Set Signature Metadata Properties  . . . .  11
+       3.2.2.  Create the Signature Input  . . . . . . . . . . . . .  12
+       3.2.3.  Sign the Signature Input  . . . . . . . . . . . . . .  13
+     3.3.  Verifying a Signature . . . . . . . . . . . . . . . . . .  13
+   4.  The 'Signature' HTTP Header . . . . . . . . . . . . . . . . .  14
+     4.1.  Signature Parameters  . . . . . . . . . . . . . . . . . .  14
+     4.2.  Signature Header  . . . . . . . . . . . . . . . . . . . .  16
+       4.2.1.  RSA Example . . . . . . . . . . . . . . . . . . . . .  16
+       4.2.2.  HMAC Example  . . . . . . . . . . . . . . . . . . . .  17
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  17
+     5.1.  HTTP Signature Algorithms Registry  . . . . . . . . . . .  17
+       5.1.1.  Registration Template . . . . . . . . . . . . . . . .  18
+       5.1.2.  Initial Contents  . . . . . . . . . . . . . . . . . .  18
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  20
+   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  20
+     7.1.  Normative References  . . . . . . . . . . . . . . . . . .  20
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .  21
+   Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  22
+     A.1.  Default Test  . . . . . . . . . . . . . . . . . . . . . .  24
+     A.2.  Basic Test  . . . . . . . . . . . . . . . . . . . . . . .  24
+     A.3.  All Headers Test  . . . . . . . . . . . . . . . . . . . .  24
+   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  25
+   Document History  . . . . . . . . . . . . . . . . . . . . . . . .  25
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  28
 
 
 
@@ -109,103 +109,132 @@ Table of Contents
 
 
 
-Backman, et al.            Expires 6 June 2020                  [Page 2]
+Backman, et al.           Expires 10 June 2020                  [Page 2]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
 1.  Introduction
 
-   This document describes a mechanism for creating, encoding, and
-   verifying digital signatures or message authentication codes (MACs)
-   over subsets of elements within HTTP messages [RFC7230].  HTTP
-   presents particular challenges for digital signatures and MACs, both
-   due to its design and popular usage patterns.  The generic mechanism
-   presented in this document overcomes these challenges, allowing
-   applications built on HTTP to create signatures over those elements
-   of HTTP messages that are relevant to the application, such that
-   changes to other elements of the message do not prevent verification
-   of the signature.
+   Message integrity and authenticity are important security properties
+   that are critical to the secure operation of many HTTP [RFC7230]
+   applications.  Application developers typically rely on the transport
+   layer to provide these properties, by operating their application
+   over TLS [RFC8446].  However, TLS only guarantees these properties
+   over a single TLS connection, and the path between client and
+   application may be composed of multiple independent TLS connections
+   (for example, if the application is hosted behind a TLS-terminating
+   gateway or if the client is behind a TLS Inspection appliance).  In
+   such cases, TLS cannot guarantee end-to-end message integrity or
+   authenticity between the client and application.  Additionally, some
+   operating environments present obstacles that make it impractical to
+   use TLS, or to use features necessary to provide message
+   authenticity.  Consequently, while TLS can meet message integrity and
+   authenticity needs for many HTTP-based applications, it is not a
+   universal solution.
 
-   The mechanism described in this document consists of four parts:
+   This document defines a mechanism for providing end-to-end integrity
+   and authenticity for content within an HTTP message.  The mechanism
+   allows applications to create digital signatures or message
+   authentication codes (MACs) over only that content within the message
+   that is meaningful and appropriate for the application.  Strict
+   canonicalization rules ensure that the verifier can verify the
+   signature even if the message has been transformed in any of the many
+   ways permitted by HTTP.
 
-   *  Rules for creating canonical representations of message elements
-      for the purpose of signing
+   The mechanism described in this document consists of three parts:
 
-   *  Rules for signing a set of these canonical representations
+   *  A common nomenclature and canonicalization rule set for the
+      different protocol elements and other content within HTTP
+      messages.
+
+   *  Algorithms for generating and verifying signatures over HTTP
+      message content using this nomenclature and rule set.
 
    *  A mechanism for attaching a signature and related metadata to an
-      HTTP message
+      HTTP message.
 
-   *  Instructions on how to verify an HTTP message signature
+1.1.  Requirements Discussion
 
-1.1.  Signing Challenges for HTTP
-
-   Digital signatures and MACs are cryptographic tools that can be used
-   to provide various security properties, such as message integrity or
-   sender authentication.  While several digital signature and MAC
-   algorithms exist, they generally share the constraint that any party
-   wishing to verify a signature must be able to reconstruct the exact
-   byte sequence of the message that was signed.  In cases where the
-   signed message and signature are both sent to the verifier (such as
-   with JSON Web Signatures (JWS) [RFC7515]), reconstruction is trivial.
-   Unfortunately, HTTP explicitly permits transformations that mean we
-   cannot assume that a recipient of a message receives the exact byte
-   sequence that was transmitted by the original sender.  For example,
-   the following types of transformations are allowed by HTTP:
-
-   *  Re-ordering of header fields, provided the order of header fields
-      with the same field name is preserved [RFC7230] (Section 3.2.2)
-
-   *  Combination of header fields with the same field name [RFC7230]
-      (Section 3.2.2)
-
-   *  Removal of header fields listed in the "Connection" header field
-      [RFC7230] (Section 6.1)
+   HTTP permits and sometimes requires intermediaries to transform
+   messages in a variety of ways.  This may result in a recipient
+   receiving a message that is not bitwise equivalent to the message
+   that was oringally sent.  In such a case, the recipient will be
+   unable to verify a signature over the raw bytes of the sender's HTTP
+   message, as verifying digital signatures or MACs requires both signer
 
 
 
-Backman, et al.            Expires 6 June 2020                  [Page 3]
+Backman, et al.           Expires 10 June 2020                  [Page 3]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
-   *  Addition of header fields that indicate control options [RFC7230]
-      (Section 6.1)
+   and verifier to have the exact same signed content.  Since the raw
+   bytes of the message cannot be relied upon as signed content, the
+   signer and verifier must derive the signed content from their
+   respective versions of the message, via a mechanism that is resilient
+   to safe changes that do not alter the meaning of the message.
 
-   *  Addition or removal of a transfer coding [RFC7230] (Section 5.7.2)
+   For a variety of reasons, it is impractical to strictly define what
+   constitutes a safe change versus an unsafe one.  Applications use
+   HTTP in a wide variety of ways, and may disagree on whether a
+   particular piece of information in a message (e.g., the body, or the
+   Date header field) is relevant.  Thus a general purpose solution must
+   provide signers with some degree of control over which message
+   content is signed.
+
+   HTTP applications may be running in environments that do not provide
+   complete access to or control over HTTP messages (such as a web
+   browser's JavaScript environment), or may be using libraries that
+   abstract away the details of the protocol (such as the Java
+   HTTPClient library (https://openjdk.java.net/groups/net/httpclient/
+   intro.html)).  These applications need to be able to generate and
+   verify signatures despite incomplete knowledge of the HTTP message.
+
+1.2.  HTTP Message Transformations
+
+   As mentioned earlier, HTTP explicitly permits and in some cases
+   requires implementations to transform messages in a variety of ways.
+   Implementations are required to tolerate many of these
+   transformations.  What follows is a non-normative and non-exhaustive
+   list of transformations that may occur under HTTP, provided as
+   context:
+
+   *  Re-ordering of header fields with different header field names
+      [RFC7230] (Section 3.2.2).
+
+   *  Combination of header fields with the same field name [RFC7230]
+      (Section 3.2.2).
+
+   *  Removal of header fields listed in the "Connection" header field
+      [RFC7230] (Section 6.1).
+
+   *  Addition of header fields that indicate control options [RFC7230]
+      (Section 6.1).
+
+   *  Addition or removal of a transfer coding [RFC7230]
+      (Section 5.7.2).
 
    *  Addition of header fields such as "Via" ([RFC7230], Section 5.7.1)
-      and "Forwarded" ([RFC7239], Section 4)
+      and "Forwarded" ([RFC7239], Section 4).
 
-   Additionally, environments or software libraries may abstract away
-   some of the details of HTTP, such that an application using the
-   library may not be able to perfectly reconstruct the message.  For
-   example:
 
-   *  An application may use an HTTP library that provides abstract
-      object representations of HTTP messages, such as the Java HTTP
-      Client (https://openjdk.java.net/groups/net/httpclient/
-      intro.html).
 
-   *  A JavaScript application making a cross-origin request using the
-      Fetch API (https://fetch.spec.whatwg.org/) may not have full
-      control or view of the header fields in the actual HTTP request
-      transmitted by the user agent.
+Backman, et al.           Expires 10 June 2020                  [Page 4]
+
+Internet-Draft            Signing HTTP Messages            December 2019
 
-1.2.  Innocuous Transformations
 
-   The mechanism described in this document is designed to tolerate
-   "innocuous" transformations by allowing the signer to specify
-   precisely which elements in the message are to be protected, and
-   ensuring that transformations that do not alter the value of
-   protected elements do not prevent signature verification.
-   Specifically, the following list describes transformations that are
-   considered innocuous:
+1.3.  Safe Transformations
 
-   *  Addition or removal of a non-protected header field.
+   Based on the definition of HTTP and the requirements described above,
+   we can identify certain types of transformations that should not
+   prevent signature verification, even when performed on content
+   covered by the signature.  The following list describes those
+   transformations:
 
-   *  Consolidation of header fields with the same field name.
+   *  Combination of header fields with the same field name.
 
    *  Reordering of header fields with different names.
 
@@ -213,20 +242,21 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    *  Changes in casing (e.g., "Origin" to "origin") of header field
       names, request URI scheme or host, or any other case-insensitive
-      element.
+      content.
 
-   *  Changes to the value of a non-protected element.
+   *  Addition or removal of leading or trailing whitespace to a header
+      field value.
 
+   *  Addition or removal of "obs-fold"s.
 
+   *  Changes to the request-target and Host header field that when
+      applied together do not result in a change to the message's
+      effective request URI, as defined in Section 5.5 of [RFC7230].
 
+   Additionally, all changes to content not covered by the signature are
+   considered safe.
 
-
-Backman, et al.            Expires 6 June 2020                  [Page 4]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
-1.3.  Conventions and Terminology
+1.4.  Conventions and Terminology
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -234,16 +264,24 @@ Internet-Draft            Signing HTTP Messages            December 2019
    BCP14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-2.  Definitions
-
    The terms "HTTP message", "HTTP method", "HTTP request", "HTTP
-   response", "effective request URI", "header field", "sender", and
-   "recipient" take their meaning from HTTP [RFC7230].
+   response", "absolute-form", "absolute-path", "effective request URI",
+   "gateway", "header field", "intermediary", "request-target",
+   "sender", and "recipient" are used as defined in HTTP [RFC7230].
 
    For brevity, the term "signature" on its own is used in this document
    to refer to both digital signatures and keyed MACs.  Similarly, the
    verb "sign" refers to the generation of either a digital signature or
    keyed MAC over a given input string.  The qualified term "digital
+
+
+
+
+Backman, et al.           Expires 10 June 2020                  [Page 5]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
    signature" refers specifically to the output of an asymmetric
    cryptographic signing operation.
 
@@ -275,14 +313,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
       Signature may be verified multiple times, potentially by different
       entities.
 
-
-
-Backman, et al.            Expires 6 June 2020                  [Page 5]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
-3.  Identifying and Canonicalizing Content
+2.  Identifying and Canonicalizing Content
 
    In order to allow signers and verifiers to establish which content is
    covered by a signature, this document defines content identifiers for
@@ -298,6 +329,15 @@ Internet-Draft            Signing HTTP Messages            December 2019
    identifier that transform the identifier's associated content into
    such a canonical form.
 
+
+
+
+
+Backman, et al.           Expires 10 June 2020                  [Page 6]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
    The following sections define content identifiers, their associated
    content, and their canonicalization rules.
 
@@ -305,7 +345,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
    // of message elements (e.g., method, scheme, authority, path, query
    // string parameters). // // -- AB
 
-3.1.  HTTP Header Fields
+2.1.  HTTP Header Fields
 
    An HTTP header field value is identified by its header field name.
    While HTTP header field names are case-insensitive, implementations
@@ -324,19 +364,10 @@ Internet-Draft            Signing HTTP Messages            December 2019
        "" "" between each item.  The resulting string is the
        canonicalized value.
 
-3.1.1.  Canonicalization Examples
+2.1.1.  Canonicalization Examples
 
    This section contains non-normative examples of canonicalized values
    for header fields, given the following example HTTP message:
-
-
-
-
-
-Backman, et al.            Expires 6 June 2020                  [Page 6]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
 
    HTTP/1.1 200 OK
    Server: www.example.com
@@ -355,6 +386,14 @@ Internet-Draft            Signing HTTP Messages            December 2019
       | Header Field          | Canonicalized Value                |
       +=======================+====================================+
       | "(cache-control)"     | "max-age=60, must-revalidate"      |
+
+
+
+Backman, et al.           Expires 10 June 2020                  [Page 7]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
       +-----------------------+------------------------------------+
       | "(date)"              | "Tue, 07 Jun 2014 20:51:35 GMT"    |
       +-----------------------+------------------------------------+
@@ -370,9 +409,9 @@ Internet-Draft            Signing HTTP Messages            December 2019
              Table 1: Non-normative examples of header field
                             canoncialization.
 
-3.2.  Signature Creation Time
+2.2.  Signature Creation Time
 
-   The signature's Creation Time (Section 4.1) is identified by the
+   The signature's Creation Time (Section 3.1) is identified by the
    "(created)" identifier.
 
    Its canoncalized value is an Integer String containing the
@@ -385,18 +424,9 @@ Internet-Draft            Signing HTTP Messages            December 2019
       |  simplifies processing and avoids timezone management required
       |  by specifications such as [RFC3339].
 
+2.3.  Signature Expiration Time
 
-
-
-
-Backman, et al.            Expires 6 June 2020                  [Page 7]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
-3.3.  Signature Expiration Time
-
-   The signature's Expiration Time (Section 4.1) is identified by the
+   The signature's Expiration Time (Section 3.1) is identified by the
    "(expired)" identifier.
 
    Its canonicalized value is a Decimal String containing the
@@ -410,7 +440,17 @@ Internet-Draft            Signing HTTP Messages            December 2019
    make this an integer representing milliseconds since the Epoch? // Or
    replace with a maximum age expressed in milliseconds? // // -- AB
 
-3.4.  Target Endpoint
+
+
+
+
+
+Backman, et al.           Expires 10 June 2020                  [Page 8]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
+2.4.  Target Endpoint
 
    The request target endpoint, consisting of the HTTP method and the
    path and query of the effective request URI, is identified by the
@@ -427,28 +467,10 @@ Internet-Draft            Signing HTTP Messages            December 2019
        header in HTTP/2 [RFC7540], Section 8.1.2.3.  The resulting
        string is the canonicalized value.
 
-3.4.1.  Canonicalization Examples
+2.4.1.  Canonicalization Examples
 
    The following table contains non-normative example HTTP messages and
    their canonicalized "(request-target)" values.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Backman, et al.            Expires 6 June 2020                  [Page 8]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
 
    +-------------------------------------------+----------------------+
    | HTTP Message                              | "(request-target)"   |
@@ -473,7 +495,18 @@ Internet-Draft            Signing HTTP Messages            December 2019
           Table 2: Non-normative examples of "(request-target)"
                             canonicalization.
 
-4.  HTTP Message Signatures
+
+
+
+
+
+
+Backman, et al.           Expires 10 June 2020                  [Page 9]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
+3.  HTTP Message Signatures
 
    An HTTP Message Signature is a signature over a string generated from
    a subset of the content in an HTTP message and metadata about the
@@ -482,7 +515,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
    subset of content that was signed, the message is semantically
    equivalent to the message for which the signature was generated.
 
-4.1.  Signature Metadata
+3.1.  Signature Metadata
 
    HTTP Message Signatures have metadata properties that provide
    information regarding the signature's generation and/or verification.
@@ -490,7 +523,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    Algorithm
       An HTTP Signature Algorithm defined in the IANA HTTP Signature
-      Algorithms registry (Section 6.1) defined in this document.  It
+      Algorithms registry (Section 5.1) defined in this document.  It
       describes the signing and verification algorithms for the
       signature.
 
@@ -499,15 +532,8 @@ Internet-Draft            Signing HTTP Messages            December 2019
       generated.  Sub-second precision is not supported.  A signature's
       Creation Time MAY be undefined, indicating that it is unknown.
 
-
-
-Backman, et al.            Expires 6 June 2020                  [Page 9]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
    Covered Content
-      An ordered list of content identifiers (Section 3) that indicates
+      An ordered list of content identifiers (Section 2) that indicates
       the metadata and message content that is covered by the signature.
       The order of identifiers in this list affects signature generation
       and verification, and therefore MUST be preserved.
@@ -521,25 +547,32 @@ Internet-Draft            Signing HTTP Messages            December 2019
    Verification Key Material
       The key material required to verify the signature.
 
-4.2.  Creating a Signature
+3.2.  Creating a Signature
 
    In order to create a signature, a signer completes the following
    process:
 
    1.  Choose key material and algorithm, and set metadata properties
-       (Section 4.2.1)
+       (Section 3.2.1)
 
-   2.  Create the Signature Input (Section 4.2.2)
 
-   3.  Sign the Signature Input (Section 4.2.3)
+
+Backman, et al.           Expires 10 June 2020                 [Page 10]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
+   2.  Create the Signature Input (Section 3.2.2)
+
+   3.  Sign the Signature Input (Section 3.2.3)
 
    The following sections describe each of these steps in detail.
 
-4.2.1.  Choose and Set Signature Metadata Properties
+3.2.1.  Choose and Set Signature Metadata Properties
 
    1.  The signer chooses an HTTP Signature Algorithm from those
        registered in the IANA HTTP Signature Algorithm Registry
-       (Section 6.1) defined by this document, and sets the signature's
+       (Section 5.1) defined by this document, and sets the signature's
        Algorithm property to that value.  The signer MUST NOT choose an
        algorithm marked "Deprecated".  The mechanism by which the signer
        chooses an algorithm is out of scope for this document.
@@ -553,15 +586,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
        mechanism by which the signer chooses key material is out of
        scope for this document.
 
-
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 10]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
    3.  The signer sets the signature's Creation Time property to the
        current time.
 
@@ -573,7 +597,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
        representing the message content and signature metadata to be
        covered by the signature, and assigns this list as the
        signature's Covered Content.  Each identifier MUST be one of
-       those defined in Section 3.  This list MUST NOT be empty, as this
+       those defined in Section 2.  This list MUST NOT be empty, as this
        would result in creating a signature over the empty string.  If
        the signature's Algorithm name does not start with "rsa", "hmac",
        or "ecdsa", signers SHOULD include "(created)" and "(request-
@@ -585,7 +609,16 @@ Internet-Draft            Signing HTTP Messages            December 2019
        established for a given signature it MUST be preserved for that
        signature.
 
-4.2.2.  Create the Signature Input
+
+
+
+
+Backman, et al.           Expires 10 June 2020                 [Page 11]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
+3.2.2.  Create the Signature Input
 
    The Signature Input is a US-ASCII string containing the content that
    will be signed.  To create it, the signer concatenates together
@@ -610,14 +643,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
    To illustrate the rules specified above, assume the signature's
    Covered Content is a list containing "(request-target)", "(created)",
    "host", "date", "cache-control", "x-emptyheader", and "x-example", in
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 11]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
    order, the signature's Creation Time is equal to the value of the
    message's Date header, and the following HTTP message:
 
@@ -640,7 +665,16 @@ Internet-Draft            Signing HTTP Messages            December 2019
    x-emptyheader:
    x-example: Example header with some whitespace.
 
-4.2.3.  Sign the Signature Input
+
+
+
+
+Backman, et al.           Expires 10 June 2020                 [Page 12]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
+3.2.3.  Sign the Signature Input
 
    The signer signs the Signature Input using the signing algorithm
    described by the signature's Algorithm property, and the key material
@@ -654,25 +688,16 @@ Internet-Draft            Signing HTTP Messages            December 2019
    Section 5.1.  The result of the signing algorithm should be a binary
    string, which once base 64 encoded becomes the signature value.
 
-4.3.  Verifying a Signature
+3.3.  Verifying a Signature
 
    In order to verify a signature, a verifier MUST:
 
    1.  Use the received HTTP message and the signature's metadata to
        recreate the Signature Input, using the process described in
-       Section 4.2.2.
+       Section 3.2.2.
 
    2.  Use the signature's Algorithm and Verification Key Material with
        the recreated Signing Input to verify the signature value.
-
-
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 12]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
 
    A signature with a Creation Time that is in the future or an
    Expiration Time that is in the past MUST NOT be processed. // This
@@ -693,7 +718,19 @@ Internet-Draft            Signing HTTP Messages            December 2019
    unless the message content or signature metadata protected by the
    signature were tampered with in transit.
 
-5.  The 'Signature' HTTP Header
+
+
+
+
+
+
+
+Backman, et al.           Expires 10 June 2020                 [Page 13]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
+4.  The 'Signature' HTTP Header
 
    The "Signature" HTTP Header provides a mechanism to link the headers
    of a message (client request or server response) to a digital
@@ -708,28 +745,20 @@ Internet-Draft            Signing HTTP Messages            December 2019
    repudiatable statement is beyond the scope of this specification and
    highly dependent on implementation.
 
-5.1.  Signature Parameters
+4.1.  Signature Parameters
 
    The following section details the Signature Parameters.
 
    "algorithm"
       RECOMMENDED.  The "algorithm" parameter contains the name of the
       signature's Algorithm, as registered in the IANA HTTP Signature
-      Algorithms Registry (Section 6.1) defined by this document.
+      Algorithms Registry (Section 5.1) defined by this document.
       Verifiers MUST determine the signature's Algorithm from the
       "keyId" parameter rather than from "algorithm".  If "algorithm" is
       provided and differs from or is incompatible with the algorithm or
       key material identified by "keyId" (for example, "algorithm" has a
       value of "rsa-sha256" but "keyId" identifies an EdDSA key), then
       implementations MUST produce an error.  Implementers should note
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 13]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
       that previous versions of this specification determined the
       signature's Algorithm using the "algorithm" parameter only, and
       thus could be utilized by attackers to expose security
@@ -746,16 +775,24 @@ Internet-Draft            Signing HTTP Messages            December 2019
    "created"
       RECOMMENDED.  The "created" parameter contains the signature's
       Creation Time, expressed as the canonicalized value of the
-      "(created)" content identifier, as defined in Section 3.  If not
+      "(created)" content identifier, as defined in Section 2.  If not
       specified, the signature's Creation Time is undefined.  This
       parameter is useful when signers are not capable of controlling
+
+
+
+Backman, et al.           Expires 10 June 2020                 [Page 14]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
       the "Date" HTTP Header such as when operating in certain web
       browser environments.
 
    "expires"
       OPTIONAL.  The "expires" parameter contains the signature's
       Expiration Time, expressed as the canonicalized value of the
-      "(expires)" content identifier, as defined in Section 3.  If the
+      "(expires)" content identifier, as defined in Section 2.  If the
       signature does not have an Expiration Time, this parameter "MUST"
       be omitted.
 
@@ -779,13 +816,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
       signature's "Verification Key Material".  The format and semantics
       of this value are out of scope for this document.
 
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 14]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
       // This value needs to be constrained to ensure that it does not
       // break parsing of the header field's value as auth-params. // //
       -- AB
@@ -797,15 +827,28 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    "signature"
       REQUIRED.  The "signature" parameter contains the signature value,
-      as described in Section 4.2.3.
+      as described in Section 3.2.3.
 
-5.2.  Signature Header
+
+
+
+
+
+
+
+
+Backman, et al.           Expires 10 June 2020                 [Page 15]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
+4.2.  Signature Header
 
    The sender is expected to transmit a header (as defined in RFC 7230
    [RFC7230], Section 3.2) where the "field-name" is "Signature", and
    the "field-value" contains one or more "auth-param"s (as defined in
    RFC 7235 [RFC7235], Section 4.1) where the "auth-param" parameters
-   are parameters defined in Section 5.1.
+   are parameters defined in Section 4.1.
 
    If any of parameters are erroneously duplicated in the Signature
    header field value, then the the signature MUST NOT be processed.
@@ -827,20 +870,9 @@ Internet-Draft            Signing HTTP Messages            December 2019
    The following sections assume that the "rsa-key-1" keyId provided by
    the signer is an identifier meaningful to the verifier.
 
-5.2.1.  RSA Example
+4.2.1.  RSA Example
 
    The signature header and signature would be generated as:
-
-
-
-
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 15]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
 
    Signature: keyId="rsa-key-1",algorithm="hs2019",
        created=1402170695, expires=1402170995,
@@ -857,6 +889,15 @@ Internet-Draft            Signing HTTP Messages            December 2019
    digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
    content-length: 18
 
+
+
+
+
+Backman, et al.           Expires 10 June 2020                 [Page 16]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
    Note that the '\n' symbols above are included to demonstrate where
    the new line character should be inserted.  There is no new line on
    the final line of the signing string.  Each HTTP header above is
@@ -869,7 +910,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
        headers="(request-target) (created) host digest content-length",
        signature="Base64(RSA-SHA512(signing string))"
 
-5.2.2.  HMAC Example
+4.2.2.  HMAC Example
 
    For an HMAC-based signature without a list of headers specified, the
    authorization header and signature would be generated as:
@@ -888,17 +929,9 @@ Internet-Draft            Signing HTTP Messages            December 2019
    digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
    content-length: 18
 
-6.  IANA Considerations
+5.  IANA Considerations
 
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 16]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
-6.1.  HTTP Signature Algorithms Registry
+5.1.  HTTP Signature Algorithms Registry
 
    // JSON Web Algorithms (JWA) [RFC7518] already defines an IANA //
    registry for cryptographic algorithms.  What is the justification //
@@ -907,12 +940,21 @@ Internet-Draft            Signing HTTP Messages            December 2019
    This document defines HTTP Signature Algorithms, for which IANA is
    asked to create and maintain a new registry titled "HTTP Signature
    Algorithms".  Initial values for this registry are given in
-   Section 6.1.2.  Future assignments and modifications to existing
+   Section 5.1.2.  Future assignments and modifications to existing
    assignment are to be made through the Expert Review registration
    policy [BCP 26] and shall follow the template presented in
-   Section 6.1.1.
+   Section 5.1.1.
 
-6.1.1.  Registration Template
+
+
+
+
+Backman, et al.           Expires 10 June 2020                 [Page 17]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
+5.1.1.  Registration Template
 
    Algorithm Name
       An identifier for the HTTP Signature Algorithm.  The name MUST be
@@ -934,7 +976,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
       algorithm, it MUST include a reference to the document or
       documents that define the algorithm.
 
-6.1.2.  Initial Contents
+5.1.2.  Initial Contents
 
    // The references in this section are problematic as many of the //
    specifications that they refer to are too implementation specific, //
@@ -946,13 +988,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    // Initial registry contents should not contain deprecated //
    algorithms. // // -- AB
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 17]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
 
 "hs2019"
 
@@ -967,6 +1002,13 @@ Internet-Draft            Signing HTTP Messages            December 2019
       for:
 
       *  RSASSA-PSS [RFC8017] using SHA-512 [RFC6234]
+
+
+
+Backman, et al.           Expires 10 June 2020                 [Page 18]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
 
       *  HMAC [RFC2104] using SHA-512 [RFC6234]
 
@@ -1003,13 +1045,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
    Status
       Deprecated; specifying signature algorithm enables attack vector.
 
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 18]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
       // What attack vector?  Can we mitigate it by including
       "algorithm" // in the signing string? // // -- AB
 
@@ -1023,6 +1058,13 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    Status
       Deprecated; specifying signature algorithm enables attack vector.
+
+
+
+Backman, et al.           Expires 10 June 2020                 [Page 19]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
 
       // What attack vector?  Can we mitigate it by including
       "algorithm" // in the signing string? // // -- AB
@@ -1044,7 +1086,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
    Description
       ECDSA using curve P-256 [DSS] and SHA-256 [RFC6234]
 
-7.  Security Considerations
+6.  Security Considerations
 
    // TODO: need to dive deeper on this section; not sure how much of //
    what's referenced below is actually applicable, or if it covers //
@@ -1056,17 +1098,9 @@ Internet-Draft            Signing HTTP Messages            December 2019
    weaknesses, can be found in Security Considerations for HTTP
    Signatures [WP-HTTP-Sig-Audit].
 
-8.  References
+7.  References
 
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 19]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
-8.1.  Normative References
+7.1.  Normative References
 
    [BCP 26]   Cotton, M., Leiba, B., and T. Narten, "Guidelines for
               Writing an IANA Considerations Section in RFCs", BCP 26,
@@ -1080,6 +1114,14 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
    [POSIX.1]  IEEE and The Open Group, "The Open Group Base
               Specifications Issue 7, 2018 edition", IEEE
+
+
+
+Backman, et al.           Expires 10 June 2020                 [Page 20]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
               Std 1003.1-2017, 2018,
               <https://pubs.opengroup.org/onlinepubs/9699919799/>.
 
@@ -1113,19 +1155,10 @@ Internet-Draft            Signing HTTP Messages            December 2019
               <https://www.rfc-editor.org/info/rfc7540>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
-
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 20]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
-8.2.  Informative References
+7.2.  Informative References
 
    [RFC3339]  Klyne, G. and C. Newman, "Date and Time on the Internet:
               Timestamps", RFC 3339, DOI 10.17487/RFC3339, July 2002,
@@ -1136,13 +1169,18 @@ Internet-Draft            Signing HTTP Messages            December 2019
               DOI 10.17487/RFC6234, May 2011,
               <https://www.rfc-editor.org/info/rfc6234>.
 
+
+
+
+
+Backman, et al.           Expires 10 June 2020                 [Page 21]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
    [RFC7239]  Petersson, A. and M. Nilsson, "Forwarded HTTP Extension",
               RFC 7239, DOI 10.17487/RFC7239, June 2014,
               <https://www.rfc-editor.org/info/rfc7239>.
-
-   [RFC7515]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web
-              Signature (JWS)", RFC 7515, DOI 10.17487/RFC7515, May
-              2015, <https://www.rfc-editor.org/info/rfc7515>.
 
    [RFC7518]  Jones, M., "JSON Web Algorithms (JWA)", RFC 7518,
               DOI 10.17487/RFC7518, May 2015,
@@ -1157,6 +1195,10 @@ Internet-Draft            Signing HTTP Messages            December 2019
               Signature Algorithm (EdDSA)", RFC 8032,
               DOI 10.17487/RFC8032, January 2017,
               <https://www.rfc-editor.org/info/rfc8032>.
+
+   [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
+              Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
+              <https://www.rfc-editor.org/info/rfc8446>.
 
    [WP-HTTP-Sig-Audit]
               Sporny, M., "Security Considerations for HTTP Signatures",
@@ -1173,7 +1215,21 @@ Appendix A.  Examples
 
 
 
-Backman, et al.            Expires 6 June 2020                 [Page 21]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Backman, et al.           Expires 10 June 2020                 [Page 22]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
@@ -1229,7 +1285,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
 
 
-Backman, et al.            Expires 6 June 2020                 [Page 22]
+Backman, et al.           Expires 10 June 2020                 [Page 23]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
@@ -1285,7 +1341,7 @@ A.3.  All Headers Test
 
 
 
-Backman, et al.            Expires 6 June 2020                 [Page 23]
+Backman, et al.           Expires 10 June 2020                 [Page 24]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
@@ -1341,7 +1397,7 @@ Document History
 
 
 
-Backman, et al.            Expires 6 June 2020                 [Page 24]
+Backman, et al.           Expires 10 June 2020                 [Page 25]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
@@ -1397,7 +1453,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
 
 
-Backman, et al.            Expires 6 June 2020                 [Page 25]
+Backman, et al.           Expires 10 June 2020                 [Page 26]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
@@ -1446,18 +1502,22 @@ Internet-Draft            Signing HTTP Messages            December 2019
          o  Removed Extensions appendix and fixed keys and signatures on
             test examples.
 
-Authors' Addresses
-
-   Annabelle Backman (editor)
-   Amazon
+         o  Revised introduction around need for non-TLS integrity/
+            authenticity protection.  Added Requirements Description.
 
 
 
-Backman, et al.            Expires 6 June 2020                 [Page 26]
+
+
+Backman, et al.           Expires 10 June 2020                 [Page 27]
 
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
+Authors' Addresses
+
+   Annabelle Backman (editor)
+   Amazon
    P.O. Box 81226
    Seattle, WA 98108-1226
    United States of America
@@ -1505,8 +1565,4 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
 
 
-
-
-
-
-Backman, et al.            Expires 6 June 2020                 [Page 27]
+Backman, et al.           Expires 10 June 2020                 [Page 28]

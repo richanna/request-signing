@@ -9,131 +9,133 @@
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
 <!--
-    Note for draft editors and processors – you may see the following warning
-    when processing this document through xml2rfc:
+        Note for draft editors and processors – you may see the following warning
+        when processing this document through xml2rfc:
 
-        Warning: Setting consensus="true" for IETF STD document (this is not
-        the schema default, but is the only value permitted for this type of
-        document)
+            Warning: Setting consensus="true" for IETF STD document (this is not
+            the schema default, but is the only value permitted for this type of
+            document)
 
-    This appears to be an issue be an issue with a lack of distinction between
-    drafts and RFCs. The guidance is to ignore the warning for now.
+        This appears to be an issue be an issue with a lack of distinction between
+        drafts and RFCs. The guidance is to ignore the warning for now.
 
-    See: https://www.rfc-editor.org/materials/FAQ-xml2rfcv3.html#name-how-do-i-fix-common-errors-
- -->
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" ipr="trust200902" docName="draft-richanna-http-message-signatures-00" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="3" symRefs="true" sortRefs="true" version="3">
-    <!-- xml2rfc v2v3 conversion 2.35.0 -->
-    <front>
-        <title>Signing HTTP Messages</title>
-        <seriesInfo name="Internet-Draft" value="draft-richanna-http-message-signatures-00"/>
-        <author initials="A." surname="Backman" fullname="Annabelle Backman" role="editor">
-            <organization>Amazon</organization>
-            <address>
-                <postal>
-                    <street>P.O. Box 81226</street>
-                    <city>Seattle</city>
-                    <region>WA</region>
-                    <code>98108-1226</code>
-                    <country>United States of America</country>
-                </postal>
-                <email>richanna@amazon.com</email>
-                <uri>https://www.amazon.com/</uri>
-            </address>
-        </author>
-        <author initials="J." surname="Richer" fullname="Justin Richer">
-            <address>
-                <email>ietf@justin.richer.org</email>
-            </address>
-        </author>
-        <author initials="M." surname="Sporny" fullname="Manu Sporny">
-            <organization>Digital Bazaar</organization>
-            <address>
-                <postal>
-                    <street>203 Roanoke Street W.</street>
-                    <city>Blacksburg</city>
-                    <region>VA</region>
-                    <code>24060</code>
-                    <country>United States of America</country>
-                </postal>
-                <phone>+1 540 961 4469</phone>
-                <email>msporny@digitalbazaar.com</email>
-                <uri>https://manu.sporny.org/</uri>
-            </address>
-        </author>
-        <date day="04" month="12" year="2019"/>
-        <area>Applications</area>
-        <workgroup>HTTPbis Working Group</workgroup>
-        <keyword>HTTP</keyword>
-        <keyword>digital signature</keyword>
-        <keyword>PKI</keyword>
-        <abstract>
-            <t>This document describes a mechanism for creating, encoding, and verifying digital signatures or message authentication codes over subsets of elements within HTTP messages.  This mechanism supports use cases where the full HTTP message may not be known to the signer, and where the message may be transformed (e.g., by intermediaries) before reaching the verifier.</t>
-        </abstract>
-    </front>
-    <middle>
-        <section anchor="intro">
-            <name>Introduction</name>
-            <t>This document describes a mechanism for creating, encoding, and verifying digital signatures or message authentication codes (MACs) over subsets of elements within <xref target="RFC7230">HTTP messages</xref>.  HTTP presents particular challenges for digital signatures and MACs, both due to its design and popular usage patterns.  The generic mechanism presented in this document overcomes these challenges, allowing applications built on HTTP to create signatures over those elements of HTTP messages that are relevant to the application, such that changes to other elements of the message do not prevent verification of the signature.</t>
-            
-            <t>The mechanism described in this document consists of four parts:</t>
-            <ul>
-                <li>Rules for creating canonical representations of message elements for the purpose of signing</li>
-                <li>Rules for signing a set of these canonical representations</li>
-                <li>A mechanism for attaching a signature and related metadata to an HTTP message</li>
-                <li>Instructions on how to verify an HTTP message signature</li>
-            </ul>
+        See: https://www.rfc-editor.org/materials/FAQ-xml2rfcv3.html#name-how-do-i-fix-common-errors-
+     -->
+    <rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" ipr="trust200902" docName="draft-richanna-http-message-signatures-00" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="3" symRefs="true" sortRefs="true" version="3">
+        <!-- xml2rfc v2v3 conversion 2.35.0 -->
+        <front>
+            <title>Signing HTTP Messages</title>
+            <seriesInfo name="Internet-Draft" value="draft-richanna-http-message-signatures-00"/>
+            <author initials="A." surname="Backman" fullname="Annabelle Backman" role="editor">
+                <organization>Amazon</organization>
+                <address>
+                    <postal>
+                        <street>P.O. Box 81226</street>
+                        <city>Seattle</city>
+                        <region>WA</region>
+                        <code>98108-1226</code>
+                        <country>United States of America</country>
+                    </postal>
+                    <email>richanna@amazon.com</email>
+                    <uri>https://www.amazon.com/</uri>
+                </address>
+            </author>
+            <author initials="J." surname="Richer" fullname="Justin Richer">
+                <address>
+                    <email>ietf@justin.richer.org</email>
+                </address>
+            </author>
+            <author initials="M." surname="Sporny" fullname="Manu Sporny">
+                <organization>Digital Bazaar</organization>
+                <address>
+                    <postal>
+                        <street>203 Roanoke Street W.</street>
+                        <city>Blacksburg</city>
+                        <region>VA</region>
+                        <code>24060</code>
+                        <country>United States of America</country>
+                    </postal>
+                    <phone>+1 540 961 4469</phone>
+                    <email>msporny@digitalbazaar.com</email>
+                    <uri>https://manu.sporny.org/</uri>
+                </address>
+            </author>
+            <date day="08" month="12" year="2019"/>
+            <area>Applications</area>
+            <workgroup>HTTPbis Working Group</workgroup>
+            <keyword>HTTP</keyword>
+            <keyword>digital signature</keyword>
+            <keyword>PKI</keyword>
+            <abstract>
+                <t>This document describes a mechanism for creating, encoding, and verifying digital signatures or message authentication codes over content within an HTTP message.  This mechanism supports use cases where the full HTTP message may not be known to the signer, and where the message may be transformed (e.g., by intermediaries) before reaching the verifier.</t>
+            </abstract>
+        </front>
+        <middle>
+            <section anchor="intro">
+                <name>Introduction</name>
+                <t>Message integrity and authenticity are important security properties that are critical to the secure operation of many <xref target="RFC7230">HTTP</xref> applications.  Application developers typically rely on the transport layer to provide these properties, by operating their application over <xref target="RFC8446">TLS</xref>.  However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance).  In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application.  Additionally, some operating environments present obstacles that make it impractical to use TLS, or to use features necessary to provide message authenticity.  Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.</t>
 
-            <section anchor="about_sigs">
-                <name>Signing Challenges for HTTP</name>
-                <t>Digital signatures and MACs are cryptographic tools that can be used to provide various security properties, such as message integrity or sender authentication.  While several digital signature and MAC algorithms exist, they generally share the constraint that any party wishing to verify a signature must be able to reconstruct the exact byte sequence of the message that was signed.  In cases where the signed message and signature are both sent to the verifier (such as with <xref target="RFC7515">JSON Web Signatures (JWS)</xref>), reconstruction is trivial.  Unfortunately, HTTP explicitly permits transformations that mean we cannot assume that a recipient of a message receives the exact byte sequence that was transmitted by the original sender. For example, the following types of transformations are allowed by HTTP:</t>
+                <t>This document defines a mechanism for providing end-to-end integrity and authenticity for content within an HTTP message.  The mechanism allows applications to create digital signatures or message authentication codes (MACs) over only that content within the message that is meaningful and appropriate for the application.  Strict canonicalization rules ensure that the verifier can verify the signature even if the message has been transformed in any of the many ways permitted by HTTP.</t>
+
+                <t>The mechanism described in this document consists of three parts:</t>
                 <ul>
-                    <li>Re-ordering of header fields, provided the order of header fields with the same field name is preserved <relref target="RFC7230" section="3.2.2" displayFormat="parens"/></li>
-                    <li>Combination of header fields with the same field name <relref target="RFC7230" section="3.2.2" displayFormat="parens"/></li>
-                    <li>Removal of header fields listed in the <tt>Connection</tt> header field <relref target="RFC7230" section="6.1" displayFormat="parens"/></li>
-                    <li>Addition of header fields that indicate control options <relref target="RFC7230" section="6.1" displayFormat="parens"/></li>
-                    <li>Addition or removal of a transfer coding <relref target="RFC7230" section="5.7.2" displayFormat="parens"/></li>
-                    <li>Addition of header fields such as <tt>Via</tt> (<relref target="RFC7230" section="5.7.1" displayFormat="comma"/>) and <tt>Forwarded</tt> (<relref target="RFC7239" section="4" displayFormat="comma"/>)</li>
+                    <li>A common nomenclature and canonicalization rule set for the different protocol elements and other content within HTTP messages.</li>
+                    <li>Algorithms for generating and verifying signatures over HTTP message content using this nomenclature and rule set.</li>
+                    <li>A mechanism for attaching a signature and related metadata to an HTTP message.</li>
                 </ul>
-                
-                <t>Additionally, environments or software libraries may abstract away some of the details of HTTP, such that an application using the library may not be able to perfectly reconstruct the message.  For example:</t>
-                <ul>
-                    <li>An application may use an HTTP library that provides abstract object representations of HTTP messages, such as <eref target="https://openjdk.java.net/groups/net/httpclient/intro.html">the Java HTTP Client</eref>.</li>
-                    <li>A JavaScript application making a cross-origin request using the <eref target="https://fetch.spec.whatwg.org/">Fetch API</eref> may not have full control or view of the header fields in the actual HTTP request transmitted by the user agent.</li>
-                </ul>
-            </section>
 
-            <section>
-                <name>Innocuous Transformations</name>
-                <t>The mechanism described in this document is designed to tolerate "innocuous" transformations by allowing the signer to specify precisely which elements in the message are to be protected, and ensuring that transformations that do not alter the value of protected elements do not prevent signature verification. Specifically, the following list describes transformations that are considered innocuous:</t>
-                <ul>
-                    <li>Addition or removal of a non-protected header field.</li>
-                    <li>Consolidation of header fields with the same field name.</li>
-                    <li>Reordering of header fields with different names.</li>
-                    <li>Conversion between HTTP/1.x and HTTP/2, or vice-versa.</li>
-                    <li>Changes in casing (e.g., "Origin" to "origin") of header field names, request URI scheme or host, or any other case-insensitive element.</li>
-                    <li>Changes to the value of a non-protected element.</li>
-                </ul>
-            </section>
+                <section>
+                    <name>Requirements Discussion</name>
+                    <t>HTTP permits and sometimes requires intermediaries to transform messages in a variety of ways.  This may result in a recipient receiving a message that is not bitwise equivalent to the message that was oringally sent.  In such a case, the recipient will be unable to verify a signature over the raw bytes of the sender's HTTP message, as verifying digital signatures or MACs requires both signer and verifier to have the exact same signed content.  Since the raw bytes of the message cannot be relied upon as signed content, the signer and verifier must derive the signed content from their respective versions of the message, via a mechanism that is resilient to safe changes that do not alter the meaning of the message.</t>
+                    <t>For a variety of reasons, it is impractical to strictly define what constitutes a safe change versus an unsafe one.  Applications use HTTP in a wide variety of ways, and may disagree on whether a particular piece of information in a message (e.g., the body, or the Date header field) is relevant.  Thus a general purpose solution must provide signers with some degree of control over which message content is signed.</t>
+                    <t>HTTP applications may be running in environments that do not provide complete access to or control over HTTP messages (such as a web browser's JavaScript environment), or may be using libraries that abstract away the details of the protocol (such as <eref target="https://openjdk.java.net/groups/net/httpclient/intro.html">the Java HTTPClient library</eref>).  These applications need to be able to generate and verify signatures despite incomplete knowledge of the HTTP message.</t>
+                </section>
 
-            <section anchor="bcp14-terms">
+                <section anchor="about_sigs">
+                    <name>HTTP Message Transformations</name>
+                    <t>As mentioned earlier, HTTP explicitly permits and in some cases requires implementations to transform messages in a variety of ways.  Implementations are required to tolerate many of these transformations.  What follows is a non-normative and non-exhaustive list of transformations that may occur under HTTP, provided as context:</t>
+                    <ul>
+                        <li>Re-ordering of header fields with different header field names <relref target="RFC7230" section="3.2.2" displayFormat="parens"/>.</li>
+                        <li>Combination of header fields with the same field name <relref target="RFC7230" section="3.2.2" displayFormat="parens"/>.</li>
+                        <li>Removal of header fields listed in the <tt>Connection</tt> header field <relref target="RFC7230" section="6.1" displayFormat="parens"/>.</li>
+                        <li>Addition of header fields that indicate control options <relref target="RFC7230" section="6.1" displayFormat="parens"/>.</li>
+                        <li>Addition or removal of a transfer coding <relref target="RFC7230" section="5.7.2" displayFormat="parens"/>.</li>
+                        <li>Addition of header fields such as <tt>Via</tt> (<relref target="RFC7230" section="5.7.1" displayFormat="comma"/>) and <tt>Forwarded</tt> (<relref target="RFC7239" section="4" displayFormat="comma"/>).</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <name>Safe Transformations</name>
+                    <t>Based on the definition of HTTP and the requirements described above, we can identify certain types of transformations that should not prevent signature verification, even when performed on content covered by the signature.  The following list describes those transformations:</t>
+                    <ul>
+                        <li>Combination of header fields with the same field name.</li>
+                        <li>Reordering of header fields with different names.</li>
+                        <li>Conversion between HTTP/1.x and HTTP/2, or vice-versa.</li>
+                        <li>Changes in casing (e.g., "Origin" to "origin") of header field names, request URI scheme or host, or any other case-insensitive content.</li>
+                        <li>Addition or removal of leading or trailing whitespace to a header field value.</li>
+                        <li>Addition or removal of <tt>obs-fold</tt>s.</li>
+                        <li>Changes to the request-target and Host header field that when applied together do not result in a change to the message's effective request URI, as defined in <relref target="RFC7230" section="5.5"/>.</li>
+                    </ul>
+
+                    <t>Additionally, all changes to content not covered by the signature are considered safe.</t>
+                </section>
+
+            <section anchor="definitions">
                 <name>Conventions and Terminology</name>
                 <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119">BCP14</xref> <xref target="RFC8174"/> when, and only when, they appear in all capitals, as shown here.</t>
+
+                <t>The terms "HTTP message", "HTTP method", "HTTP request", "HTTP response", <tt>absolute-form</tt>, <tt>absolute-path</tt>, "effective request URI", "gateway", "header field", "intermediary", <tt>request-target</tt>, "sender", and "recipient" are used as defined in <xref target="RFC7230">HTTP</xref>.</t>
+
+                <t>For brevity, the term "signature" on its own is used in this document to refer to both digital signatures and keyed MACs. Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given input string. The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.</t>
+
+                <t keepWithNext="true">In addition to those listed above, this document uses the following terms:</t>
+                <dl newline="true">
+                    <dt>Decimal String</dt><dd>An Integer String optionally concatenated with a period <tt>"."</tt> followed by a second Integer String, representing a positive real number expressed in base 10.  The first Integer String represents the integral portion of the number, while the optional second Integer String represents the fractional portion of the number. <cref source="AB">There's got to be a definition for this that we can reference.  Do we have a max value or a limit on precision?</cref></dd>
+                    <dt>Integer String</dt><dd>A US-ASCII string of one or more digits <tt>"0-9"</tt>, representing a positive integer in base 10.  <cref source="AB">There's got to be a definition for this that we can reference.  Do we have a max value?</cref></dd>
+                    <dt>Signer</dt><dd>The entity that is generating or has generated an HTTP Message Signature.</dd>
+                    <dt>Verifier</dt><dd>An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message.  Note that an HTTP Message Signature may be verified multiple times, potentially by different entities.</dd>
+                </dl>
             </section>
-        </section>
-
-        <section anchor="definitions">
-            <name>Definitions</name>
-            <t>The terms "HTTP message", "HTTP method", "HTTP request", "HTTP response", "effective request URI", "header field", "sender", and "recipient" take their meaning from <xref target="RFC7230">HTTP</xref>.</t>
-
-            <t>For brevity, the term "signature" on its own is used in this document to refer to both digital signatures and keyed MACs. Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given input string. The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.</t>
-
-            <t keepWithNext="true">In addition to those listed above, this document uses the following terms:</t>
-            <dl newline="true">
-                <dt>Decimal String</dt><dd>An Integer String optionally concatenated with a period <tt>"."</tt> followed by a second Integer String, representing a positive real number expressed in base 10.  The first Integer String represents the integral portion of the number, while the optional second Integer String represents the fractional portion of the number. <cref source="AB">There's got to be a definition for this that we can reference.  Do we have a max value or a limit on precision?</cref></dd>
-                <dt>Integer String</dt><dd>A US-ASCII string of one or more digits <tt>"0-9"</tt>, representing a positive integer in base 10.  <cref source="AB">There's got to be a definition for this that we can reference.  Do we have a max value?</cref></dd>
-                <dt>Signer</dt><dd>The entity that is generating or has generated an HTTP Message Signature.</dd>
-                <dt>Verifier</dt><dd>An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message.  Note that an HTTP Message Signature may be verified multiple times, potentially by different entities.</dd>
-            </dl>
         </section>
 
         <section anchor="content-identifiers">
@@ -643,10 +645,10 @@ content-length: 18]]></sourcecode>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3339.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6234.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7239.xml"/>
-                <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7515.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7518.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8017.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8032.xml"/>
+                <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8446.xml"/>
                 <reference anchor="WP-HTTP-Sig-Audit" target="https://web-payments.org/specs/source/http-signatures-audit/">
                     <front>
                         <title>Security Considerations for HTTP Signatures</title>
@@ -848,6 +850,7 @@ Jeffrey Yasskin
                                 <li>Consolidated content identifiers and canonicalization rules into a single section.</li>
                                 <li>Added examples for header field and <tt>(request-target)</tt> canonicalization.</li>
                                 <li>Removed Extensions appendix and fixed keys and signatures on test examples.</li>
+                                <li>Revised introduction around need for non-TLS integrity/authenticity protection. Added Requirements Description.</li>
                             </ul>
                         </li>
                     </ul>
