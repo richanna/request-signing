@@ -1257,10 +1257,13 @@ aside > p {
             <p id="section-toc.1-1.9.1"><a href="#section-appendix.b" class="xref"></a><a href="#name-acknowledgements-2" class="xref">Acknowledgements</a><a href="#section-toc.1-1.9.1" class="pilcrow">¶</a></p>
 </li>
           <li class="toc ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-appendix.c" class="xref"></a><a href="#name-document-history-2" class="xref">Document History</a><a href="#section-toc.1-1.10.1" class="pilcrow">¶</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#section-appendix.c" class="xref"></a><a href="#name-known-issues-2" class="xref">Known Issues</a><a href="#section-toc.1-1.10.1" class="pilcrow">¶</a></p>
 </li>
           <li class="toc ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-appendix.d" class="xref"></a><a href="#name-authors-addresses-2" class="xref">Authors' Addresses</a><a href="#section-toc.1-1.11.1" class="pilcrow">¶</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#section-appendix.d" class="xref"></a><a href="#name-document-history-2" class="xref">Document History</a><a href="#section-toc.1-1.11.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="toc ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#section-appendix.e" class="xref"></a><a href="#name-authors-addresses-2" class="xref">Authors' Addresses</a><a href="#section-toc.1-1.12.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </nav>
@@ -2251,82 +2254,123 @@ Jeffrey Yasskin<a href="#section-appendix.b-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <section id="section-appendix.c">
+      <h2 id="name-known-issues-2">
+<a href="#name-known-issues-2" class="section-name selfRef">Known Issues</a>
+      </h2>
+<p id="section-appendix.c-1">This section is to be removed before publishing as an RFC.<a href="#section-appendix.c-1" class="pilcrow">¶</a></p>
+<p id="section-appendix.c-2">This section describes known issues in the draft.<a href="#section-appendix.c-2" class="pilcrow">¶</a></p>
+<ul>
+<li id="section-appendix.c-3.1">
+          <p id="section-appendix.c-3.1.1">Transformations that should be safe but aren't:<a href="#section-appendix.c-3.1.1" class="pilcrow">¶</a></p>
+<ul>
+<li id="section-appendix.c-3.1.2.1">Removal of comments from Via header.<a href="#section-appendix.c-3.1.2.1" class="pilcrow">¶</a>
+</li>
+            <li id="section-appendix.c-3.1.2.2">Consolidation of Via header entries.<a href="#section-appendix.c-3.1.2.2" class="pilcrow">¶</a>
+</li>
+            <li id="section-appendix.c-3.1.2.3">Case changes to Digest and other header field values? (e.g., Content-Type?)<a href="#section-appendix.c-3.1.2.3" class="pilcrow">¶</a>
+</li>
+            <li id="section-appendix.c-3.1.2.4">Changes to Host header field value like those that might be made by a load-balancing proxy, e.g., from "public-service-name.example.com" to "service-host-1.public-service-name.example.com".<a href="#section-appendix.c-3.1.2.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+</li>
+        <li id="section-appendix.c-3.2">Creation Time should default to value of the Date header field.<a href="#section-appendix.c-3.2" class="pilcrow">¶</a>
+</li>
+        <li id="section-appendix.c-3.3">
+          <code>algorithm</code> and <code>keyId</code> parameter values should be covered by the signature.<a href="#section-appendix.c-3.3" class="pilcrow">¶</a>
+</li>
+        <li id="section-appendix.c-3.4">Algorithm-specific requirements and restrictions on <code>created</code> and <code>expires</code> don't make sense.<a href="#section-appendix.c-3.4" class="pilcrow">¶</a>
+</li>
+        <li id="section-appendix.c-3.5">Need to require header field names to be lowercased when used as content identifiers.<a href="#section-appendix.c-3.5" class="pilcrow">¶</a>
+</li>
+        <li id="section-appendix.c-3.6">Need content identifiers for more parts of the message (e.g., status code, parts of effective request URI).<a href="#section-appendix.c-3.6" class="pilcrow">¶</a>
+</li>
+        <li id="section-appendix.c-3.7">Need to either define <code>(request-target)</code> for responses, or prohibit its use there.<a href="#section-appendix.c-3.7" class="pilcrow">¶</a>
+</li>
+        <li id="section-appendix.c-3.8">Needs more examples for Signature header.<a href="#section-appendix.c-3.8" class="pilcrow">¶</a>
+</li>
+        <li id="section-appendix.c-3.9">Need to account for HTTP/1.1 to HTTP/2 transformations, and vice-versa.<a href="#section-appendix.c-3.9" class="pilcrow">¶</a>
+</li>
+      </ul>
+</section>
+<section id="section-appendix.d">
       <h2 id="name-document-history-2">
 <a href="#name-document-history-2" class="section-name selfRef">Document History</a>
       </h2>
-<p id="section-appendix.c-1">This section is to be removed before publishing as an RFC.<a href="#section-appendix.c-1" class="pilcrow">¶</a></p>
+<p id="section-appendix.d-1">This section is to be removed before publishing as an RFC.<a href="#section-appendix.d-1" class="pilcrow">¶</a></p>
 <ul>
-<li id="section-appendix.c-2.1">
-          <p id="section-appendix.c-2.1.1"><strong>draft-richanna-http-message-signatures</strong><a href="#section-appendix.c-2.1.1" class="pilcrow">¶</a></p>
+<li id="section-appendix.d-2.1">
+          <p id="section-appendix.d-2.1.1"><strong>draft-richanna-http-message-signatures</strong><a href="#section-appendix.d-2.1.1" class="pilcrow">¶</a></p>
 <ul>
-<li id="section-appendix.c-2.1.2.1">
-              <p id="section-appendix.c-2.1.2.1.1"><strong>-00</strong><a href="#section-appendix.c-2.1.2.1.1" class="pilcrow">¶</a></p>
+<li id="section-appendix.d-2.1.2.1">
+              <p id="section-appendix.d-2.1.2.1.1"><strong>-00</strong><a href="#section-appendix.d-2.1.2.1.1" class="pilcrow">¶</a></p>
 <ul>
-<li id="section-appendix.c-2.1.2.1.2.1">Converted to xml2rfc v3 and reformatted to comply with RFC style guides.<a href="#section-appendix.c-2.1.2.1.2.1" class="pilcrow">¶</a>
+<li id="section-appendix.d-2.1.2.1.2.1">Converted to xml2rfc v3 and reformatted to comply with RFC style guides.<a href="#section-appendix.d-2.1.2.1.2.1" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.2">Rewrote abstract and introduction to focus on general purpose signing and avoid specific use cases.<a href="#section-appendix.c-2.1.2.1.2.2" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.2">Rewrote abstract and introduction to focus on general purpose signing and avoid specific use cases.<a href="#section-appendix.d-2.1.2.1.2.2" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.3">Added intro sections on challenges with HTTP message signing, and listing innocuous transformations that the signing mechanism must tolerate.<a href="#section-appendix.c-2.1.2.1.2.3" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.3">Added intro sections on challenges with HTTP message signing, and listing innocuous transformations that the signing mechanism must tolerate.<a href="#section-appendix.d-2.1.2.1.2.3" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.4">Added Document History section.<a href="#section-appendix.c-2.1.2.1.2.4" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.4">Added Document History section.<a href="#section-appendix.d-2.1.2.1.2.4" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.5">Removed informative intro sections on Signatures in HTTP Requests/Responses, as they imply specific use cases.<a href="#section-appendix.c-2.1.2.1.2.5" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.5">Removed informative intro sections on Signatures in HTTP Requests/Responses, as they imply specific use cases.<a href="#section-appendix.d-2.1.2.1.2.5" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.6">Moved BCP 14 message under intro section.<a href="#section-appendix.c-2.1.2.1.2.6" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.6">Moved BCP 14 message under intro section.<a href="#section-appendix.d-2.1.2.1.2.6" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.7">Removed <code>Signature</code> auth-scheme definition and non-normative description of using the <code>Signature</code> header field for authentication.<a href="#section-appendix.c-2.1.2.1.2.7" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.7">Removed <code>Signature</code> auth-scheme definition and non-normative description of using the <code>Signature</code> header field for authentication.<a href="#section-appendix.d-2.1.2.1.2.7" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.8">Removed "Canonicalization Algorithm" from HTTP Signature Algorithms registry entries.<a href="#section-appendix.c-2.1.2.1.2.8" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.8">Removed "Canonicalization Algorithm" from HTTP Signature Algorithms registry entries.<a href="#section-appendix.d-2.1.2.1.2.8" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.9">Replaced mentions of ANSI X9.64 with normative references to FIPS 186-4.<a href="#section-appendix.c-2.1.2.1.2.9" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.9">Replaced mentions of ANSI X9.64 with normative references to FIPS 186-4.<a href="#section-appendix.d-2.1.2.1.2.9" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.10">Combined HTTP Signature Algorithms registry entry algorithm fields into a "Description" field.<a href="#section-appendix.c-2.1.2.1.2.10" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.10">Combined HTTP Signature Algorithms registry entry algorithm fields into a "Description" field.<a href="#section-appendix.d-2.1.2.1.2.10" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.11">Revised HTTP Signature Algorithms registry definition.  Added change control policy and registry template.  Removed suggested URI.<a href="#section-appendix.c-2.1.2.1.2.11" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.11">Revised HTTP Signature Algorithms registry definition.  Added change control policy and registry template.  Removed suggested URI.<a href="#section-appendix.d-2.1.2.1.2.11" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.12">Moved normative text related to ambiguous signature parameters to Signature header definition.<a href="#section-appendix.c-2.1.2.1.2.12" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.12">Moved normative text related to ambiguous signature parameters to Signature header definition.<a href="#section-appendix.d-2.1.2.1.2.12" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.13">Added normative reference to RFC 2104 for HMAC.<a href="#section-appendix.c-2.1.2.1.2.13" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.13">Added normative reference to RFC 2104 for HMAC.<a href="#section-appendix.d-2.1.2.1.2.13" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.14">Added informative reference to RFC 3339.<a href="#section-appendix.c-2.1.2.1.2.14" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.14">Added informative reference to RFC 3339.<a href="#section-appendix.d-2.1.2.1.2.14" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.15">Added normative reference to POSIX.1 in `created` and `expires` parameter definitions.<a href="#section-appendix.c-2.1.2.1.2.15" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.15">Added normative reference to POSIX.1 in `created` and `expires` parameter definitions.<a href="#section-appendix.d-2.1.2.1.2.15" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.16">Added definitions for HTTP-related terms by referencing RFC 7230.<a href="#section-appendix.c-2.1.2.1.2.16" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.16">Added definitions for HTTP-related terms by referencing RFC 7230.<a href="#section-appendix.d-2.1.2.1.2.16" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.17">Added definitions for Signer and Verifier, and placeholder entries for Signing Algorithm and Signing String.<a href="#section-appendix.c-2.1.2.1.2.17" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.17">Added definitions for Signer and Verifier, and placeholder entries for Signing Algorithm and Signing String.<a href="#section-appendix.d-2.1.2.1.2.17" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.18">Added definition of signature as applying to both digital signatures and MACs.<a href="#section-appendix.c-2.1.2.1.2.18" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.18">Added definition of signature as applying to both digital signatures and MACs.<a href="#section-appendix.d-2.1.2.1.2.18" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.19">Renamed The Components of a Signature to HTTP Message Signatures. Revised to define message signatures without reference to Authorization or Signature headers.<a href="#section-appendix.c-2.1.2.1.2.19" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.19">Renamed The Components of a Signature to HTTP Message Signatures. Revised to define message signatures without reference to Authorization or Signature headers.<a href="#section-appendix.d-2.1.2.1.2.19" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.20">Added Signature Metadata section.  Moved normative requirements in Signature Parameters out to appropriate places (e.g., signature creation), redefined parameters in terms of metadata properties, and moved them to Signature header section.<a href="#section-appendix.c-2.1.2.1.2.20" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.20">Added Signature Metadata section.  Moved normative requirements in Signature Parameters out to appropriate places (e.g., signature creation), redefined parameters in terms of metadata properties, and moved them to Signature header section.<a href="#section-appendix.d-2.1.2.1.2.20" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.21">Dropped definitions for unused terms Signing Algorithm and Signing String<a href="#section-appendix.c-2.1.2.1.2.21" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.21">Dropped definitions for unused terms Signing Algorithm and Signing String<a href="#section-appendix.d-2.1.2.1.2.21" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.22">Moved metadata expressions to canonicalization section.<a href="#section-appendix.c-2.1.2.1.2.22" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.22">Moved metadata expressions to canonicalization section.<a href="#section-appendix.d-2.1.2.1.2.22" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.23">Added detailed description of signature generation and verification process.<a href="#section-appendix.c-2.1.2.1.2.23" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.23">Added detailed description of signature generation and verification process.<a href="#section-appendix.d-2.1.2.1.2.23" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.24">Removed duplication of normative requirements, consolidated requirements for generation and verification to their respective sections.<a href="#section-appendix.c-2.1.2.1.2.24" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.24">Removed duplication of normative requirements, consolidated requirements for generation and verification to their respective sections.<a href="#section-appendix.d-2.1.2.1.2.24" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.25">Replaced Key Reference metadata property with Verification Key Material.<a href="#section-appendix.c-2.1.2.1.2.25" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.25">Replaced Key Reference metadata property with Verification Key Material.<a href="#section-appendix.d-2.1.2.1.2.25" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.26">Removed conflicting normative requirements for use of <code>algorithm</code> parameter. Now <span class="bcp14">MUST NOT</span> be relied upon.<a href="#section-appendix.c-2.1.2.1.2.26" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.26">Removed conflicting normative requirements for use of <code>algorithm</code> parameter. Now <span class="bcp14">MUST NOT</span> be relied upon.<a href="#section-appendix.d-2.1.2.1.2.26" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.27">Moved Content Identifiers up to its own top-level section.<a href="#section-appendix.c-2.1.2.1.2.27" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.27">Moved Content Identifiers up to its own top-level section.<a href="#section-appendix.d-2.1.2.1.2.27" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.28">Explicitly defined Integer String and Decimal String.<a href="#section-appendix.c-2.1.2.1.2.28" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.28">Explicitly defined Integer String and Decimal String.<a href="#section-appendix.d-2.1.2.1.2.28" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.29">Consolidated content identifiers and canonicalization rules into a single section.<a href="#section-appendix.c-2.1.2.1.2.29" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.29">Consolidated content identifiers and canonicalization rules into a single section.<a href="#section-appendix.d-2.1.2.1.2.29" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.30">Added examples for header field and <code>(request-target)</code> canonicalization.<a href="#section-appendix.c-2.1.2.1.2.30" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.30">Added examples for header field and <code>(request-target)</code> canonicalization.<a href="#section-appendix.d-2.1.2.1.2.30" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.31">Removed Extensions appendix and fixed keys and signatures on test examples.<a href="#section-appendix.c-2.1.2.1.2.31" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.31">Removed Extensions appendix and fixed keys and signatures on test examples.<a href="#section-appendix.d-2.1.2.1.2.31" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.32">Revised introduction around need for non-TLS integrity/authenticity protection. Added Requirements Description.<a href="#section-appendix.c-2.1.2.1.2.32" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.32">Revised introduction around need for non-TLS integrity/authenticity protection. Added Requirements Description.<a href="#section-appendix.d-2.1.2.1.2.32" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.c-2.1.2.1.2.33">Revised Signature header definition.<a href="#section-appendix.c-2.1.2.1.2.33" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.33">Revised Signature header definition.<a href="#section-appendix.d-2.1.2.1.2.33" class="pilcrow">¶</a>
+</li>
+                <li id="section-appendix.d-2.1.2.1.2.34">Added Known Issues section, to be removed prior to publication as an RFC.<a href="#section-appendix.d-2.1.2.1.2.34" class="pilcrow">¶</a>
 </li>
               </ul>
 </li>
@@ -2335,7 +2379,7 @@ Jeffrey Yasskin<a href="#section-appendix.b-2" class="pilcrow">¶</a></p>
       </ul>
 </section>
 <div id="authors-addresses">
-<section id="section-appendix.d">
+<section id="section-appendix.e">
       <h2 id="name-authors-addresses-2">
 <a href="#name-authors-addresses-2" class="section-name selfRef">Authors' Addresses</a>
       </h2>

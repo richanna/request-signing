@@ -99,9 +99,9 @@ Table of Contents
      A.2.  Basic Test  . . . . . . . . . . . . . . . . . . . . . . .  23
      A.3.  All Headers Test  . . . . . . . . . . . . . . . . . . . .  24
    Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  24
-   Document History  . . . . . . . . . . . . . . . . . . . . . . . .  24
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  27
-
+   Known Issues  . . . . . . . . . . . . . . . . . . . . . . . . . .  24
+   Document History  . . . . . . . . . . . . . . . . . . . . . . . .  25
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  28
 
 
 
@@ -1334,7 +1334,7 @@ Acknowledgements
    Wojciech Rygielski, Adam Scarr, Cory J.  Slep, Dirk Stein, Henry
    Story, Lukasz Szewc, Chris Webber, and Jeffrey Yasskin
 
-Document History
+Known Issues
 
    This section is to be removed before publishing as an RFC.
 
@@ -1346,12 +1346,61 @@ Backman, et al.           Expires 10 June 2020                 [Page 24]
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
+   This section describes known issues in the draft.
+
+   *  Transformations that should be safe but aren't:
+
+      -  Removal of comments from Via header.
+
+      -  Consolidation of Via header entries.
+
+      -  Case changes to Digest and other header field values? (e.g.,
+         Content-Type?)
+
+      -  Changes to Host header field value like those that might be
+         made by a load-balancing proxy, e.g., from "public-service-
+         name.example.com" to "service-host-1.public-service-
+         name.example.com".
+
+   *  Creation Time should default to value of the Date header field.
+
+   *  "algorithm" and "keyId" parameter values should be covered by the
+      signature.
+
+   *  Algorithm-specific requirements and restrictions on "created" and
+      "expires" don't make sense.
+
+   *  Need to require header field names to be lowercased when used as
+      content identifiers.
+
+   *  Need content identifiers for more parts of the message (e.g.,
+      status code, parts of effective request URI).
+
+   *  Need to either define "(request-target)" for responses, or
+      prohibit its use there.
+
+   *  Needs more examples for Signature header.
+
+   *  Need to account for HTTP/1.1 to HTTP/2 transformations, and vice-
+      versa.
+
+Document History
+
+   This section is to be removed before publishing as an RFC.
+
    *  *draft-richanna-http-message-signatures*
 
       -  *-00*
 
          o  Converted to xml2rfc v3 and reformatted to comply with RFC
             style guides.
+
+
+
+Backman, et al.           Expires 10 June 2020                 [Page 25]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
 
          o  Rewrote abstract and introduction to focus on general
             purpose signing and avoid specific use cases.
@@ -1394,19 +1443,20 @@ Internet-Draft            Signing HTTP Messages            December 2019
          o  Added normative reference to POSIX.1 in `created` and
             `expires` parameter definitions.
 
-
-
-
-Backman, et al.           Expires 10 June 2020                 [Page 25]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
          o  Added definitions for HTTP-related terms by referencing RFC
             7230.
 
          o  Added definitions for Signer and Verifier, and placeholder
             entries for Signing Algorithm and Signing String.
+
+
+
+
+
+Backman, et al.           Expires 10 June 2020                 [Page 26]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
 
          o  Added definition of signature as applying to both digital
             signatures and MACs.
@@ -1449,15 +1499,6 @@ Internet-Draft            Signing HTTP Messages            December 2019
          o  Added examples for header field and "(request-target)"
             canonicalization.
 
-
-
-
-
-Backman, et al.           Expires 10 June 2020                 [Page 26]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
          o  Removed Extensions appendix and fixed keys and signatures on
             test examples.
 
@@ -1465,6 +1506,16 @@ Internet-Draft            Signing HTTP Messages            December 2019
             authenticity protection.  Added Requirements Description.
 
          o  Revised Signature header definition.
+
+
+
+Backman, et al.           Expires 10 June 2020                 [Page 27]
+
+Internet-Draft            Signing HTTP Messages            December 2019
+
+
+         o  Added Known Issues section, to be removed prior to
+            publication as an RFC.
 
 Authors' Addresses
 
@@ -1509,4 +1560,9 @@ Authors' Addresses
 
 
 
-Backman, et al.           Expires 10 June 2020                 [Page 27]
+
+
+
+
+
+Backman, et al.           Expires 10 June 2020                 [Page 28]

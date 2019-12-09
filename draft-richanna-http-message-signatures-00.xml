@@ -809,6 +809,30 @@ Jeffrey Yasskin
         </section>
 
         <section numbered="false" removeInRFC="true">
+            <name>Known Issues</name>
+            <t keepWithNext="true">This section describes known issues in the draft.</t>
+            <ul>
+                <li>
+                    <t keepWithNext="true">Transformations that should be safe but aren't:</t>
+                    <ul>
+                        <li>Removal of comments from Via header.</li>
+                        <li>Consolidation of Via header entries.</li>
+                        <li>Case changes to Digest and other header field values? (e.g., Content-Type?)</li>
+                        <li>Changes to Host header field value like those that might be made by a load-balancing proxy, e.g., from "public-service-name.example.com" to "service-host-1.public-service-name.example.com".</li>
+                    </ul>
+                </li>
+                <li>Creation Time should default to value of the Date header field.</li>
+                <li><tt>algorithm</tt> and <tt>keyId</tt> parameter values should be covered by the signature.</li>
+                <li>Algorithm-specific requirements and restrictions on <tt>created</tt> and <tt>expires</tt> don't make sense.</li>
+                <li>Need to require header field names to be lowercased when used as content identifiers.</li>
+                <li>Need content identifiers for more parts of the message (e.g., status code, parts of effective request URI).</li>
+                <li>Need to either define <tt>(request-target)</tt> for responses, or prohibit its use there.</li>
+                <li>Needs more examples for Signature header.</li>
+                <li>Need to account for HTTP/1.1 to HTTP/2 transformations, and vice-versa.</li>
+            </ul>
+        </section>
+
+        <section numbered="false" removeInRFC="true">
             <name>Document History</name>
             <ul>
                 <li>
@@ -850,6 +874,7 @@ Jeffrey Yasskin
                                 <li>Removed Extensions appendix and fixed keys and signatures on test examples.</li>
                                 <li>Revised introduction around need for non-TLS integrity/authenticity protection. Added Requirements Description.</li>
                                 <li>Revised Signature header definition.</li>
+                                <li>Added Known Issues section, to be removed prior to publication as an RFC.</li>
                             </ul>
                         </li>
                     </ul>
