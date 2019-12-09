@@ -394,11 +394,18 @@ x-example: Example header with some whitespace.]]></sourcecode>
 
         <section anchor="sig">
             <name>The 'Signature' HTTP Header</name>
-            <t>The "Signature" HTTP Header provides a mechanism to link the headers of a message (client request or server response) to a digital signature.  By including the "Digest" header with a properly formatted digest, the message body can also be linked to the signature.  The signature is generated and verified either using a shared secret (e.g., HMAC) or public/private keys (e.g., RSA, EC).  This allows the receiver and/or any intermediate system to immediately or later verify the integrity of the message.  When the signature is generated with a private key it can also provide a measure of non-repudiation, though a full implementation of a non-repudiatable statement is beyond the scope of this specification and highly dependent on implementation.</t>
+            <t>The "Signature" HTTP header provides a mechanism to attach a signature to the HTTP message from which it was generated.  The header field name is "Signature" and its value is a list of parameters and values, formatted according to the <tt>signature</tt> syntax defined below, using the extended Augmented Backus-Naur Form (ABNF) notation used in <xref target="RFC7230"/>.</t>
+
+            <sourcecode><![CDATA[
+signature    = #( sig-param )
+
+sig-param    = token BWS "=" BWS ( token / quoted-string )]]></sourcecode>
+
+            <t>Each <tt>sig-param</tt> is a parameter defined in <xref target="params"/>.</t>
 
             <section anchor="params">
-                <name>Signature Parameters</name>
-                <t>The following section details the Signature Parameters.</t>
+                <name>Signature Header Parameters</name>
+                <t>The Signature header's parameters contain the signature value itself and the signature metadata properties required to verify the signature.  Unless otherwise specified, parameters <bcp14>MUST NOT</bcp14> occur multiple times in one header, whether with the same or different values.  The following parameters are defined:</t>
 
                 <dl newline="true">
                     <dt anchor="algorithm"><tt>algorithm</tt></dt>
@@ -431,23 +438,20 @@ x-example: Example header with some whitespace.]]></sourcecode>
                 </dl>
             </section>
 
-            <section anchor="sig-header">
-                <name>Signature Header</name>
-                <t>The sender is expected to transmit a header (as defined in <xref target="RFC7230" section="3.2" sectionFormat="comma">RFC 7230</xref>) where the "field-name" is "Signature", and the "field-value" contains one or more "auth-param"s (as defined in <xref target="RFC7235" section="4.1" sectionFormat="comma">RFC 7235</xref>) where the "auth-param" parameters are parameters defined in <xref target="params"/>.</t>
-
-                <t>If any of parameters are erroneously duplicated in the Signature header field value, then the the signature <bcp14>MUST NOT</bcp14> be processed.  Any parameter that is not recognized by the verifier or that is not well-formed <bcp14>MUST</bcp14> be ignored.</t>
-
-                <t keepWithNext="true">The rest of this section uses the following HTTP request as an example.</t>
+            <section>
+                <name>Examples</name>
+                <t keepWithNext="true">The following non-normative examples are based on the following HTTP message:</t>
                 <sourcecode><![CDATA[
 POST /foo HTTP/1.1
-Host: example.org
+Host: example.com
 Date: Tue, 07 Jun 2014 20:51:35 GMT
 Content-Type: application/json
 Digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 Content-Length: 18
 
 {"hello": "world"}]]></sourcecode>
-                <t>The following sections assume that the "rsa-key-1" keyId provided by the signer is an identifier meaningful to the verifier.</t>
+
+                <t>The following examples assume that the "rsa-key-1" keyId provided by the signer is meaningful to the verifier.  Note that to improve readability, some header values are split into multiple lines, using the <tt>obs-fold</tt> syntax.  This syntax is deprecated in <xref target="RFC7230"/>, and senders <bcp14>MUST NOT</bcp14> generate messages that include it.</t>
 
                 <section anchor="sig-rsa-example">
                     <name>RSA Example</name>
@@ -458,20 +462,15 @@ Signature: keyId="rsa-key-1",algorithm="hs2019",
     headers="(request-target) (created) (expires)
         host date digest content-length",
     signature="Base64(RSA-SHA256(signing string))"]]></sourcecode>
-                    <t keepWithNext="true">The signer would compose the signing string as:</t>
+
+                    <t keepWithNext="true">To verify the signature, a verifier would compose the Signature Input as:</t>
                     <sourcecode><![CDATA[
-(request-target): post /foo\n
+(request-target): post /foo
 (created): 1402170695
 (expires): 1402170995
-host: example.org\n
-digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
+host: example.org
+digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 content-length: 18]]></sourcecode>
-                    <t>Note that the '\n' symbols above are included to demonstrate where the new line character should be inserted.  There is no new line on the final line of the signing string.  Each HTTP header above is displayed on a new line to provide better readability of the example.</t>
-                    <t keepWithNext="true">For an RSA-based signature, the authorization header and signature would then be generated as:</t>
-                    <sourcecode><![CDATA[
-Signature: keyId="rsa-key-1",algorithm="hs2019",created=1402170695,
-    headers="(request-target) (created) host digest content-length",
-    signature="Base64(RSA-SHA512(signing string))"]]></sourcecode>
                 </section>
 
                 <section anchor="sig-hmac-example">
@@ -481,7 +480,7 @@ Signature: keyId="rsa-key-1",algorithm="hs2019",created=1402170695,
 Signature: keyId="hmac-key-1",algorithm="hs2019",created=1402170695,
     headers="(request-target) (created) host digest content-length",
     signature="Base64(HMAC-SHA512(signing string))"]]></sourcecode>
-                    <t keepWithNext="true">The only difference between the RSA Example and the HMAC Example is the signature algorithm that is used.  The signer would compose the signing string in the same way as the RSA Example above:</t>
+                    <t keepWithNext="true">The only difference between the RSA Example and the HMAC Example is the signature algorithm that is used.  The verifier would compose the Signature Input in the same way as the RSA Example above:</t>
                     <sourcecode><![CDATA[
 (request-target): post /foo\n
 (created): 1402170695
@@ -617,7 +616,6 @@ content-length: 18]]></sourcecode>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4648.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7230.xml"/>
-                <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7235.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7540.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8126.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
@@ -851,6 +849,7 @@ Jeffrey Yasskin
                                 <li>Added examples for header field and <tt>(request-target)</tt> canonicalization.</li>
                                 <li>Removed Extensions appendix and fixed keys and signatures on test examples.</li>
                                 <li>Revised introduction around need for non-TLS integrity/authenticity protection. Added Requirements Description.</li>
+                                <li>Revised Signature header definition.</li>
                             </ul>
                         </li>
                     </ul>
