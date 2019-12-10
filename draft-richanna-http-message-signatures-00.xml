@@ -41,8 +41,10 @@
                 </address>
             </author>
             <author initials="J." surname="Richer" fullname="Justin Richer">
+                <organization>Bespoke Engineering</organization>
                 <address>
                     <email>ietf@justin.richer.org</email>
+                    <uri>https://bspk.io/</uri>
                 </address>
             </author>
             <author initials="M." surname="Sporny" fullname="Manu Sporny">

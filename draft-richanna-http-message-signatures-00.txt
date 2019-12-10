@@ -5,7 +5,7 @@
 HTTPbis Working Group                                    A. Backman, Ed.
 Internet-Draft                                                    Amazon
 Intended status: Standards Track                               J. Richer
-Expires: 10 June 2020                                                   
+Expires: 10 June 2020                                Bespoke Engineering
                                                                M. Sporny
                                                           Digital Bazaar
                                                          8 December 2019
@@ -1815,8 +1815,10 @@ Authors' Addresses
 
 
    Justin Richer
+   Bespoke Engineering
 
    Email: ietf@justin.richer.org
+   URI:   https://bspk.io/
 
 
    Manu Sporny
@@ -1828,8 +1830,6 @@ Authors' Addresses
    Phone: +1 540 961 4469
    Email: msporny@digitalbazaar.com
    URI:   https://manu.sporny.org/
-
-
 
 
 
