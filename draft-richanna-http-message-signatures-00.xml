@@ -72,7 +72,7 @@
                 <t>This document describes a mechanism for creating, encoding, and verifying digital signatures or message authentication codes over content within an HTTP message.  This mechanism supports use cases where the full HTTP message may not be known to the signer, and where the message may be transformed (e.g., by intermediaries) before reaching the verifier.</t>
             </abstract>
             <note removeInRFC="true">
-                <t>This draft is based on draft-cavage-http-signatures-12.  <eref target="https://github.com/w3c-dvcg/http-signatures/issues?page=2&amp;q=is%3Aissue+is%3Aopen">The community</eref> and the authors have identified several issues with the current text.  Additionally, the authors have identified a number of features that are required in order to support additional use cases.  In order to preserve continuity wih the effort that has been put into draft-cavage-http-signatures-12, this draft maintains normative compatibility with it, and thus does not address these issues or include these features, as doing so requires making backwards-incompatible changes to normative requirements.  While such changes are inevitable, the editor recommends that they be driven by working group discussion following adoption of the draft (see <xref target="wg-discuss" format="title"/>).  The editor requests that the working group recognize the intent of this initial draft and this recommendation when considering adoption of this draft.</t>
+                <t>This draft is based on draft-cavage-http-signatures-12.  <eref target="https://github.com/w3c-dvcg/http-signatures/issues?page=2&amp;q=is%3Aissue+is%3Aopen">The community</eref> and the authors have identified several issues with the current text.  Additionally, the authors have identified a number of features that are required in order to support additional use cases.  In order to preserve continuity with the effort that has been put into draft-cavage-http-signatures-12, this draft maintains normative compatibility with it, and thus does not address these issues or include these features, as doing so requires making backwards-incompatible changes to normative requirements.  While such changes are inevitable, the editor recommends that they be driven by working group discussion following adoption of the draft (see <xref target="wg-discuss" format="title"/>).  The editor requests that the working group recognize the intent of this initial draft and this recommendation when considering adoption of this draft.</t>
             </note>
         </front>
         <middle>
@@ -157,7 +157,7 @@
 
                 <t keepWithNext="true">An HTTP header field value is canonicalized as follows:</t>
                 <ol>
-                    <li>Create an ordered list of the field values of each instance of the header field in the message, in the order that they occur (or will occur) in the messge.</li>
+                    <li>Create an ordered list of the field values of each instance of the header field in the message, in the order that they occur (or will occur) in the message.</li>
                     <li>Strip leading and trailing whitespace from each item in the list.</li>
                     <li>Concatenate the list items together, with a comma <tt>","</tt> and space <tt>" "</tt> between each item.  The resulting string is the canonicalized value.</li>
                 </ol>
@@ -179,7 +179,7 @@ Cache-Control:    must-revalidate
 
                     <t keepWithNext="true">The following table shows example canonicalized values for header fields, given that message:</t>
                     <table>
-                        <name>Non-normative examples of header field canoncialization.</name>
+                        <name>Non-normative examples of header field canonicalization.</name>
                         <thead>
                             <tr><th>Header Field</th><th>Canonicalized Value</th></tr>
                         </thead>
@@ -217,7 +217,7 @@ Cache-Control:    must-revalidate
                 <name>Signature Creation Time</name>
                 <t>The signature's Creation Time (<xref target="signature-metadata"/>) is identified by the <tt>(created)</tt> identifier.</t>
 
-                <t>Its canoncalized value is an Integer String containing the signature's Creation Time expressed as the number of seconds since the Epoch, as defined in <eref target="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</eref> of <xref target="POSIX.1"/>.</t>
+                <t>Its canonicalized value is an Integer String containing the signature's Creation Time expressed as the number of seconds since the Epoch, as defined in <eref target="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</eref> of <xref target="POSIX.1"/>.</t>
 
                 <aside>
                     <t>The use of seconds since the Epoch to canonicalize a timestamp simplifies processing and avoids timezone management required by specifications such as <xref target="RFC3339"/>.</t>
@@ -418,7 +418,7 @@ signature    = #( sig-param )
 
 sig-param    = token BWS "=" BWS ( token / quoted-string )]]></sourcecode>
 
-            <t>Each <tt>sig-param</tt> is a parameter defined in <xref target="params"/>.</t>
+            <t>Each <tt>sig-param</tt> is the name of a parameter defined in the <xref target="param-registry"/> defined in this document.  The initial contents of this registry are described in <xref target="params"/>.</t>
 
             <section anchor="params">
                 <name>Signature Header Parameters</name>
@@ -589,6 +589,64 @@ content-length: 18]]></sourcecode>
                             <dd>ECDSA using curve P-256 <xref target="FIPS186-4"/> and SHA-256 <xref target="RFC6234"/></dd>
                         </dl>
                     </section>
+                </section>
+            </section>
+
+            <section anchor="param-registry">
+                <name>HTTP Signature Parameters Registry</name>
+                <t>This document defines the Signature header field, whose value contains a list of named parameters.  IANA is asked to create and maintain a new registry titled "HTTP Signature Parameters" to record and maintain the set of named parameters defined for use within the Signature header field.  Initial values for this registry are given in <xref target="iana-param-contents"/>.  Future assignments and modifications to existing assignment are to be made through the Expert Review registration policy <xref target="RFC8126"/> and shall follow the template presented in <xref target="iana-param-template" />.</t>
+
+                <section anchor="iana-param-template">
+                    <name>Registration Template</name>
+                    <dl newline="true">
+                        <dt>Name</dt>
+                        <dd>An identifier for the parameter.  The name <bcp14>MUST</bcp14> be an ASCII string consisting only of lower-case characters (<tt>"a"</tt> - <tt>"z"</tt>), digits (<tt>"0"</tt> - <tt>"9"</tt>), and hyphens (<tt>"-"</tt>), and <bcp14>SHOULD NOT</bcp14> exceed 20 characters in length.  The identifier <bcp14>MUST</bcp14> be unique within the context of the registry.</dd>
+                        <dt>Status</dt>
+                        <dd>A value indicating the status of the parameter definition.  Allowed values are "Active" and "Deprecated".  Active parameter definitions are available for general use.  Deprecated parameter definitions may be in use by existing implementations, but <bcp14>SHOULD NOT</bcp14> be used by new implementations.</dd>
+                        <dt>Reference(s)</dt><dd>A reference or list of references to the documents that define the purpose, content, and usage of the parameter.  The parameter definition <bcp14>MUST</bcp14> define the format of the parameter's value using the extended ABNF notation used in <xref target="RFC7230"/>, or by referencing one or more standard formats such as base 64 or URI.  The parameter definition <bcp14>MUST</bcp14> also specify the normative requirements for when and how the parameter may be used.  Value formats <bcp14>MUST NOT</bcp14> allow values that would break the parameter list syntax used by the Signature header.</dd>
+                    </dl>
+                </section>
+
+                <section anchor="iana-param-contents">
+                    <name>Initial Contents</name>
+                    <t>The table below contains the initial contents of the HTTP Signature Parameters Registry.  Each row in the table represents a distinct entry in the registry.</t>
+
+                    <table>
+                        <name>Initial contents of the HTTP Signature Parameters Registry.</name>
+                        <thead><tr><th>Name</th><th>Status</th><th>Reference(s)</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td><tt>algorithm</tt></td>
+                                <td>Active</td>
+                                <td><xref target="params"/> of this document</td>
+                            </tr>
+                            <tr>
+                                <td><tt>created</tt></td>
+                                <td>Active</td>
+                                <td><t><xref target="params"/> of this document</t></td>
+                            </tr>
+                            <tr>
+                                <td><tt>expires</tt></td>
+                                <td>Active</td>
+                                <td><t><xref target="params"/> of this document</t></td>
+                            </tr>
+                            <tr>
+                                <td><tt>headers</tt></td>
+                                <td>Active</td>
+                                <td><t><xref target="params"/> of this document</t></td>
+                            </tr>
+                            <tr>
+                                <td><tt>keyId</tt></td>
+                                <td>Active</td>
+                                <td><t><xref target="params"/> of this document</t></td>
+                            </tr>
+                            <tr>
+                                <td><tt>signature</tt></td>
+                                <td>Active</td>
+                                <td><t><xref target="params"/> of this document</t></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </section>
             </section>
         </section>
@@ -1019,6 +1077,7 @@ Jeffrey Yasskin
                                 <li>Revised Signature header definition.</li>
                                 <li>Added Topics for Working Group Discussion section, to be removed prior to publication as an RFC.</li>
                                 <li>Added guidance on application-specific requirements.</li>
+                                <li>Added IANA HTTP Signature Parameter registry.</li>
                             </ul>
                         </li>
                     </ul>

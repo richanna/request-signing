@@ -1085,7 +1085,7 @@ aside > p {
 <p id="section-abstract-1">This document describes a mechanism for creating, encoding, and verifying digital signatures or message authentication codes over content within an HTTP message.  This mechanism supports use cases where the full HTTP message may not be known to the signer, and where the message may be transformed (e.g., by intermediaries) before reaching the verifier.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
-      <p id="section-note.1-1">This draft is based on draft-cavage-http-signatures-12.  <a href="https://github.com/w3c-dvcg/http-signatures/issues?page=2&amp;q=is%3Aissue+is%3Aopen">The community</a> and the authors have identified several issues with the current text.  Additionally, the authors have identified a number of features that are required in order to support additional use cases.  In order to preserve continuity wih the effort that has been put into draft-cavage-http-signatures-12, this draft maintains normative compatibility with it, and thus does not address these issues or include these features, as doing so requires making backwards-incompatible changes to normative requirements.  While such changes are inevitable, the editor recommends that they be driven by working group discussion following adoption of the draft (see <a href="#wg-discuss" class="xref">Topics for Working Group Discussion</a>).  The editor requests that the working group recognize the intent of this initial draft and this recommendation when considering adoption of this draft.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+      <p id="section-note.1-1">This draft is based on draft-cavage-http-signatures-12.  <a href="https://github.com/w3c-dvcg/http-signatures/issues?page=2&amp;q=is%3Aissue+is%3Aopen">The community</a> and the authors have identified several issues with the current text.  Additionally, the authors have identified a number of features that are required in order to support additional use cases.  In order to preserve continuity with the effort that has been put into draft-cavage-http-signatures-12, this draft maintains normative compatibility with it, and thus does not address these issues or include these features, as doing so requires making backwards-incompatible changes to normative requirements.  While such changes are inevitable, the editor recommends that they be driven by working group discussion following adoption of the draft (see <a href="#wg-discuss" class="xref">Topics for Working Group Discussion</a>).  The editor requests that the working group recognize the intent of this initial draft and this recommendation when considering adoption of this draft.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
 <p id="section-note.1-2">This note is to be removed before publishing as an RFC.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
@@ -1226,10 +1226,21 @@ aside > p {
                 <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="xref">5.1</a>.  <a href="#name-http-signature-algorithms-re" class="xref">HTTP Signature Algorithms Registry</a><a href="#section-toc.1-1.5.2.1.1" class="pilcrow">¶</a></p>
 <ul class="toc ulEmpty">
 <li class="toc ulEmpty" id="section-toc.1-1.5.2.1.2.1">
-                    <p id="section-toc.1-1.5.2.1.2.1.1"><a href="#section-5.1.1" class="xref">5.1.1</a>.  <a href="#name-registration-template-2" class="xref">Registration Template</a><a href="#section-toc.1-1.5.2.1.2.1.1" class="pilcrow">¶</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.1.1"><a href="#section-5.1.1" class="xref">5.1.1</a>.  <a href="#name-registration-template-3" class="xref">Registration Template</a><a href="#section-toc.1-1.5.2.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
                   <li class="toc ulEmpty" id="section-toc.1-1.5.2.1.2.2">
-                    <p id="section-toc.1-1.5.2.1.2.2.1"><a href="#section-5.1.2" class="xref">5.1.2</a>.  <a href="#name-initial-contents-2" class="xref">Initial Contents</a><a href="#section-toc.1-1.5.2.1.2.2.1" class="pilcrow">¶</a></p>
+                    <p id="section-toc.1-1.5.2.1.2.2.1"><a href="#section-5.1.2" class="xref">5.1.2</a>.  <a href="#name-initial-contents-3" class="xref">Initial Contents</a><a href="#section-toc.1-1.5.2.1.2.2.1" class="pilcrow">¶</a></p>
+</li>
+                </ul>
+</li>
+              <li class="toc ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="xref">5.2</a>.  <a href="#name-http-signature-parameters-re" class="xref">HTTP Signature Parameters Registry</a><a href="#section-toc.1-1.5.2.2.1" class="pilcrow">¶</a></p>
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.5.2.2.2.1">
+                    <p id="section-toc.1-1.5.2.2.2.1.1"><a href="#section-5.2.1" class="xref">5.2.1</a>.  <a href="#name-registration-template-4" class="xref">Registration Template</a><a href="#section-toc.1-1.5.2.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+                  <li class="toc ulEmpty" id="section-toc.1-1.5.2.2.2.2">
+                    <p id="section-toc.1-1.5.2.2.2.2.1"><a href="#section-5.2.2" class="xref">5.2.2</a>.  <a href="#name-initial-contents-4" class="xref">Initial Contents</a><a href="#section-toc.1-1.5.2.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 </ul>
 </li>
@@ -1390,7 +1401,7 @@ aside > p {
 <p id="section-2.1-1">An HTTP header field value is identified by its header field name.  While HTTP header field names are case-insensitive, implementations <span class="bcp14">SHOULD</span> use lowercased field names (e.g., <code>content-type</code>, <code>date</code>, <code>etag</code>) when using them as content identifiers.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
 <p id="section-2.1-2">An HTTP header field value is canonicalized as follows:<a href="#section-2.1-2" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal" id="section-2.1-3">
-          <li id="section-2.1-3.1">Create an ordered list of the field values of each instance of the header field in the message, in the order that they occur (or will occur) in the messge.<a href="#section-2.1-3.1" class="pilcrow">¶</a>
+          <li id="section-2.1-3.1">Create an ordered list of the field values of each instance of the header field in the message, in the order that they occur (or will occur) in the message.<a href="#section-2.1-3.1" class="pilcrow">¶</a>
 </li>
           <li id="section-2.1-3.2">Strip leading and trailing whitespace from each item in the list.<a href="#section-2.1-3.2" class="pilcrow">¶</a>
 </li>
@@ -1419,7 +1430,7 @@ Cache-Control:    must-revalidate
 <span id="name-non-normative-examples-of-he"></span><table class="center" id="table-1">
             <caption>
 <a href="#table-1" class="selfRef">Table 1</a>:
-<a href="#name-non-normative-examples-of-he" class="selfRef">Non-normative examples of header field canoncialization.</a>
+<a href="#name-non-normative-examples-of-he" class="selfRef">Non-normative examples of header field canonicalization.</a>
             </caption>
 <thead>
               <tr>
@@ -1485,7 +1496,7 @@ Cache-Control:    must-revalidate
 <a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-signature-creation-time-2" class="section-name selfRef">Signature Creation Time</a>
         </h3>
 <p id="section-2.2-1">The signature's Creation Time (<a href="#signature-metadata" class="xref">Section 3.1</a>) is identified by the <code>(created)</code> identifier.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
-<p id="section-2.2-2">Its canoncalized value is an Integer String containing the signature's Creation Time expressed as the number of seconds since the Epoch, as defined in <a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</a> of <span>[<a href="#POSIX.1" class="xref">POSIX.1</a>]</span>.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
+<p id="section-2.2-2">Its canonicalized value is an Integer String containing the signature's Creation Time expressed as the number of seconds since the Epoch, as defined in <a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</a> of <span>[<a href="#POSIX.1" class="xref">POSIX.1</a>]</span>.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
 <aside id="section-2.2-3">
           <p id="section-2.2-3.1">The use of seconds since the Epoch to canonicalize a timestamp simplifies processing and avoids timezone management required by specifications such as <span>[<a href="#RFC3339" class="xref">RFC3339</a>]</span>.<a href="#section-2.2-3.1" class="pilcrow">¶</a></p>
 </aside>
@@ -1769,7 +1780,7 @@ signature    = #( sig-param )
 
 sig-param    = token BWS "=" BWS ( token / quoted-string )</pre><a href="#section-4-2" class="pilcrow">¶</a>
 </div>
-<p id="section-4-3">Each <code>sig-param</code> is a parameter defined in <a href="#params" class="xref">Section 4.1</a>.<a href="#section-4-3" class="pilcrow">¶</a></p>
+<p id="section-4-3">Each <code>sig-param</code> is the name of a parameter defined in the <a href="#param-registry" class="xref">Section 5.2</a> defined in this document.  The initial contents of this registry are described in <a href="#params" class="xref">Section 4.1</a>.<a href="#section-4-3" class="pilcrow">¶</a></p>
 <div id="params">
 <section id="section-4.1">
         <h3 id="name-signature-header-parameters-2">
@@ -1886,8 +1897,8 @@ content-length: 18</pre><a href="#section-4.2.2-4" class="pilcrow">¶</a>
 <p id="section-5.1-1">This document defines HTTP Signature Algorithms, for which IANA is asked to create and maintain a new registry titled "HTTP Signature Algorithms".  Initial values for this registry are given in <a href="#iana-hsa-contents" class="xref">Section 5.1.2</a>.  Future assignments and modifications to existing assignment are to be made through the Expert Review registration policy <span>[<a href="#RFC8126" class="xref">BCP 26</a>]</span> and shall follow the template presented in <a href="#iana-hsa-template" class="xref">Section 5.1.1</a>.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <div id="iana-hsa-template">
 <section id="section-5.1.1">
-          <h4 id="name-registration-template-2">
-<a href="#section-5.1.1" class="section-number selfRef">5.1.1. </a><a href="#name-registration-template-2" class="section-name selfRef">Registration Template</a>
+          <h4 id="name-registration-template-3">
+<a href="#section-5.1.1" class="section-number selfRef">5.1.1. </a><a href="#name-registration-template-3" class="section-name selfRef">Registration Template</a>
           </h4>
 <dl class="dlNewline" id="section-5.1.1-1">
             <dt id="section-5.1.1-1.1">Algorithm Name</dt>
@@ -1904,8 +1915,8 @@ content-length: 18</pre><a href="#section-4.2.2-4" class="pilcrow">¶</a>
 </div>
 <div id="iana-hsa-contents">
 <section id="section-5.1.2">
-          <h4 id="name-initial-contents-2">
-<a href="#section-5.1.2" class="section-number selfRef">5.1.2. </a><a href="#name-initial-contents-2" class="section-name selfRef">Initial Contents</a>
+          <h4 id="name-initial-contents-3">
+<a href="#section-5.1.2" class="section-number selfRef">5.1.2. </a><a href="#name-initial-contents-3" class="section-name selfRef">Initial Contents</a>
           </h4>
 <p id="section-5.1.2-1">[[ MS: The references in this section are problematic as many of the specifications that they refer to are too implementation specific, rather than just pointing to the proper signature and hashing specifications.  A better approach might be just specifying the signature and hashing function specifications, leaving implementers to connect the dots (which are not that hard to connect). ]]<a href="#section-5.1.2-1" class="pilcrow">¶</a></p>
 <section id="section-5.1.2.1">
@@ -2004,6 +2015,108 @@ content-length: 18</pre><a href="#section-4.2.2-4" class="pilcrow">¶</a>
 </dd>
 </dl>
 </section>
+</section>
+</div>
+</section>
+</div>
+<div id="param-registry">
+<section id="section-5.2">
+        <h3 id="name-http-signature-parameters-re">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-http-signature-parameters-re" class="section-name selfRef">HTTP Signature Parameters Registry</a>
+        </h3>
+<p id="section-5.2-1">This document defines the Signature header field, whose value contains a list of named parameters.  IANA is asked to create and maintain a new registry titled "HTTP Signature Parameters" to record and maintain the set of named parameters defined for use within the Signature header field.  Initial values for this registry are given in <a href="#iana-param-contents" class="xref">Section 5.2.2</a>.  Future assignments and modifications to existing assignment are to be made through the Expert Review registration policy <span>[<a href="#RFC8126" class="xref">BCP 26</a>]</span> and shall follow the template presented in <a href="#iana-param-template" class="xref">Section 5.2.1</a>.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<div id="iana-param-template">
+<section id="section-5.2.1">
+          <h4 id="name-registration-template-4">
+<a href="#section-5.2.1" class="section-number selfRef">5.2.1. </a><a href="#name-registration-template-4" class="section-name selfRef">Registration Template</a>
+          </h4>
+<dl class="dlNewline" id="section-5.2.1-1">
+            <dt id="section-5.2.1-1.1">Name</dt>
+            <dd id="section-5.2.1-1.2">An identifier for the parameter.  The name <span class="bcp14">MUST</span> be an ASCII string consisting only of lower-case characters (<code>"a"</code> - <code>"z"</code>), digits (<code>"0"</code> - <code>"9"</code>), and hyphens (<code>"-"</code>), and <span class="bcp14">SHOULD NOT</span> exceed 20 characters in length.  The identifier <span class="bcp14">MUST</span> be unique within the context of the registry.<a href="#section-5.2.1-1.2" class="pilcrow">¶</a>
+</dd>
+<dt id="section-5.2.1-1.3">Status</dt>
+            <dd id="section-5.2.1-1.4">A value indicating the status of the parameter definition.  Allowed values are "Active" and "Deprecated".  Active parameter definitions are available for general use.  Deprecated parameter definitions may be in use by existing implementations, but <span class="bcp14">SHOULD NOT</span> be used by new implementations.<a href="#section-5.2.1-1.4" class="pilcrow">¶</a>
+</dd>
+<dt id="section-5.2.1-1.5">Reference(s)</dt>
+            <dd id="section-5.2.1-1.6">A reference or list of references to the documents that define the purpose, content, and usage of the parameter.  The parameter definition <span class="bcp14">MUST</span> define the format of the parameter's value using the extended ABNF notation used in <span>[<a href="#RFC7230" class="xref">HTTP</a>]</span>, or by referencing one or more standard formats such as base 64 or URI.  The parameter definition <span class="bcp14">MUST</span> also specify the normative requirements for when and how the parameter may be used.  Value formats <span class="bcp14">MUST NOT</span> allow values that would break the parameter list syntax used by the Signature header.<a href="#section-5.2.1-1.6" class="pilcrow">¶</a>
+</dd>
+</dl>
+</section>
+</div>
+<div id="iana-param-contents">
+<section id="section-5.2.2">
+          <h4 id="name-initial-contents-4">
+<a href="#section-5.2.2" class="section-number selfRef">5.2.2. </a><a href="#name-initial-contents-4" class="section-name selfRef">Initial Contents</a>
+          </h4>
+<p id="section-5.2.2-1">The table below contains the initial contents of the HTTP Signature Parameters Registry.  Each row in the table represents a distinct entry in the registry.<a href="#section-5.2.2-1" class="pilcrow">¶</a></p>
+<span id="name-initial-contents-of-the-http"></span><table class="center" id="table-3">
+            <caption>
+<a href="#table-3" class="selfRef">Table 3</a>:
+<a href="#name-initial-contents-of-the-http" class="selfRef">Initial contents of the HTTP Signature Parameters Registry.</a>
+            </caption>
+<thead>
+              <tr>
+                <th class="text-left" rowspan="1" colspan="1">Name</th>
+                <th class="text-left" rowspan="1" colspan="1">Status</th>
+                <th class="text-left" rowspan="1" colspan="1">Reference(s)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>algorithm</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">Active</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <a href="#params" class="xref">Section 4.1</a> of this document</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>created</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">Active</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <p id="section-5.2.2-2.2.2.3.1"><a href="#params" class="xref">Section 4.1</a> of this document<a href="#section-5.2.2-2.2.2.3.1" class="pilcrow">¶</a></p>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>expires</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">Active</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <p id="section-5.2.2-2.2.3.3.1"><a href="#params" class="xref">Section 4.1</a> of this document<a href="#section-5.2.2-2.2.3.3.1" class="pilcrow">¶</a></p>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>headers</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">Active</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <p id="section-5.2.2-2.2.4.3.1"><a href="#params" class="xref">Section 4.1</a> of this document<a href="#section-5.2.2-2.2.4.3.1" class="pilcrow">¶</a></p>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>keyId</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">Active</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <p id="section-5.2.2-2.2.5.3.1"><a href="#params" class="xref">Section 4.1</a> of this document<a href="#section-5.2.2-2.2.5.3.1" class="pilcrow">¶</a></p>
+</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <code>signature</code>
+</td>
+                <td class="text-left" rowspan="1" colspan="1">Active</td>
+                <td class="text-left" rowspan="1" colspan="1">
+                  <p id="section-5.2.2-2.2.6.3.1"><a href="#params" class="xref">Section 4.1</a> of this document<a href="#section-5.2.2-2.2.6.3.1" class="pilcrow">¶</a></p>
+</td>
+              </tr>
+            </tbody>
+          </table>
 </section>
 </div>
 </section>
@@ -2560,6 +2673,8 @@ Jeffrey Yasskin<a href="#section-appendix.c-2" class="pilcrow">¶</a></p>
                 <li id="section-appendix.d-2.1.2.1.2.34">Added Topics for Working Group Discussion section, to be removed prior to publication as an RFC.<a href="#section-appendix.d-2.1.2.1.2.34" class="pilcrow">¶</a>
 </li>
                 <li id="section-appendix.d-2.1.2.1.2.35">Added guidance on application-specific requirements.<a href="#section-appendix.d-2.1.2.1.2.35" class="pilcrow">¶</a>
+</li>
+                <li id="section-appendix.d-2.1.2.1.2.36">Added IANA HTTP Signature Parameter registry.<a href="#section-appendix.d-2.1.2.1.2.36" class="pilcrow">¶</a>
 </li>
               </ul>
 </li>
