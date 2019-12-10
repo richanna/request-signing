@@ -1192,6 +1192,11 @@ aside > p {
 </li>
               <li class="toc ulEmpty" id="section-toc.1-1.3.2.3">
                 <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="xref">3.3</a>.  <a href="#name-verifying-a-signature-2" class="xref">Verifying a Signature</a><a href="#section-toc.1-1.3.2.3.1" class="pilcrow">¶</a></p>
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.3.2.3.2.1">
+                    <p id="section-toc.1-1.3.2.3.2.1.1"><a href="#section-3.3.1" class="xref">3.3.1</a>.  <a href="#name-enforcing-application-requir" class="xref">Enforcing Application Requirements</a><a href="#section-toc.1-1.3.2.3.2.1.1" class="pilcrow">¶</a></p>
+</li>
+                </ul>
 </li>
             </ul>
 </li>
@@ -1719,17 +1724,35 @@ x-example: Example header with some whitespace.</pre><a href="#section-3.2.2-8" 
         </h3>
 <p id="section-3.3-1">In order to verify a signature, a verifier <span class="bcp14">MUST</span>:<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal" id="section-3.3-2">
-          <li id="section-3.3-2.1">Use the received HTTP message and the signature's metadata to recreate the Signature Input, using the process described in <a href="#canonicalization" class="xref">Section 3.2.2</a>.<a href="#section-3.3-2.1" class="pilcrow">¶</a>
+          <li id="section-3.3-2.1">Examine the signature's metadata to confirm that the signature meets the requirements described in this document, as well as any additional requirements defined by the application.<a href="#section-3.3-2.1" class="pilcrow">¶</a>
 </li>
-          <li id="section-3.3-2.2">Use the signature's Algorithm and Verification Key Material with the recreated Signing Input to verify the signature value.<a href="#section-3.3-2.2" class="pilcrow">¶</a>
+          <li id="section-3.3-2.2">Use the received HTTP message and the signature's metadata to recreate the Signature Input, using the process described in <a href="#canonicalization" class="xref">Section 3.2.2</a>.<a href="#section-3.3-2.2" class="pilcrow">¶</a>
 </li>
-          <li id="section-3.3-2.3">Confirm that the signature's Covered Content contains the content and metadata that is required to be signed for your use case.<a href="#section-3.3-2.3" class="pilcrow">¶</a>
+          <li id="section-3.3-2.3">Use the signature's Algorithm and Verification Key Material with the recreated Signing Input to verify the signature value.<a href="#section-3.3-2.3" class="pilcrow">¶</a>
 </li>
         </ol>
 <p id="section-3.3-3">A signature with a Creation Time that is in the future or an Expiration Time that is in the past <span class="bcp14">MUST NOT</span> be processed.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
 <p id="section-3.3-4">The verifier <span class="bcp14">MUST</span> ensure that a signature's Algorithm is appropriate for the key material the verifier will use to verify the signature.  If the Algorithm is not appropriate for the key material (for example, if it is the wrong size, or in the wrong format), the signature <span class="bcp14">MUST NOT</span> be processed.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
-<p id="section-3.3-5">[[ TODO: Expound on "confirm required content is signed" step. ]]<a href="#section-3.3-5" class="pilcrow">¶</a></p>
-<p id="section-3.3-6">For example, assume that the Algorithm was "hs2019" and the Verification Key Material is an EdDSA public key.  This would signal to the application that the signing algorithm is Ed25519 as defined in <span>RFC 8032 [<a href="#RFC8032" class="xref">RFC8032</a>], <a href="https://rfc-editor.org/rfc/rfc8032#section-5.1" class="relref">Section 5.1</a></span>.  The result of the signature verification algorithm should result in a successful verification unless the message content or signature metadata protected by the signature were tampered with in transit.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
+<p id="section-3.3-5">For example, assume that the Algorithm was "hs2019" and the Verification Key Material is an EdDSA public key.  This would signal to the application that the signing algorithm is Ed25519 as defined in <span>RFC 8032 [<a href="#RFC8032" class="xref">RFC8032</a>], <a href="https://rfc-editor.org/rfc/rfc8032#section-5.1" class="relref">Section 5.1</a></span>.  The result of the signature verification algorithm should result in a successful verification unless the message content or signature metadata protected by the signature were tampered with in transit.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
+<section id="section-3.3.1">
+          <h4 id="name-enforcing-application-requir">
+<a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-enforcing-application-requir" class="section-name selfRef">Enforcing Application Requirements</a>
+          </h4>
+<p id="section-3.3.1-1">The verification requirements specified in this document are intended as a baseline set of restrictions that are generally applicable to all use cases.  Applications using HTTP Message Signatures <span class="bcp14">MAY</span> impose requirements above and beyond those specified by this document, as appropriate for their use case.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-2">Some non-normative examples of additional requirements an application might define are:<a href="#section-3.3.1-2" class="pilcrow">¶</a></p>
+<ul>
+<li id="section-3.3.1-3.1">Requiring a specific set of header fields to be signed (e.g., Authorization, Digest).<a href="#section-3.3.1-3.1" class="pilcrow">¶</a>
+</li>
+            <li id="section-3.3.1-3.2">Enforcing a maximum signature age.<a href="#section-3.3.1-3.2" class="pilcrow">¶</a>
+</li>
+            <li id="section-3.3.1-3.3">Prohibiting the use of certain algorithms, or mandating the use of an algorithm.<a href="#section-3.3.1-3.3" class="pilcrow">¶</a>
+</li>
+            <li id="section-3.3.1-3.4">Requiring keys to be of a certain size (e.g., 2048 bits vs. 1024 bits).<a href="#section-3.3.1-3.4" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-3.3.1-4">Application-specific requirements are expected and encouraged.  When an application defines additional requirements, it <span class="bcp14">MUST</span> enforce them during the signature verification process, and signature verification <span class="bcp14">MUST</span> fail if the signature does not conform to the application's requirements.<a href="#section-3.3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-5">Applications <span class="bcp14">MUST</span> enforce the requirements defined in this document.  Regardless of use case, applications <span class="bcp14">MUST NOT</span> accept signatures that do not conform to these requirements.<a href="#section-3.3.1-5" class="pilcrow">¶</a></p>
+</section>
 </section>
 </div>
 </section>
@@ -2536,7 +2559,7 @@ Jeffrey Yasskin<a href="#section-appendix.c-2" class="pilcrow">¶</a></p>
 </li>
                 <li id="section-appendix.d-2.1.2.1.2.34">Added Topics for Working Group Discussion section, to be removed prior to publication as an RFC.<a href="#section-appendix.d-2.1.2.1.2.34" class="pilcrow">¶</a>
 </li>
-                <li id="section-appendix.d-2.1.2.1.2.35">Added initial requirement to confirm that content required to be signed is actually signed, plus TODOs to flesh it out more.<a href="#section-appendix.d-2.1.2.1.2.35" class="pilcrow">¶</a>
+                <li id="section-appendix.d-2.1.2.1.2.35">Added guidance on application-specific requirements.<a href="#section-appendix.d-2.1.2.1.2.35" class="pilcrow">¶</a>
 </li>
               </ul>
 </li>
