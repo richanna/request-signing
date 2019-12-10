@@ -69,6 +69,9 @@
             <abstract>
                 <t>This document describes a mechanism for creating, encoding, and verifying digital signatures or message authentication codes over content within an HTTP message.  This mechanism supports use cases where the full HTTP message may not be known to the signer, and where the message may be transformed (e.g., by intermediaries) before reaching the verifier.</t>
             </abstract>
+            <note removeInRFC="true">
+                <t>This draft is based on draft-cavage-http-signatures-12.  <eref target="https://github.com/w3c-dvcg/http-signatures/issues?page=2&amp;q=is%3Aissue+is%3Aopen">The community</eref> and the authors have identified several issues with the current text.  Additionally, the authors have identified a number of features that are required in order to support additional use cases.  In order to preserve continuity wih the effort that has been put into draft-cavage-http-signatures-12, this draft maintains normative compatibility with it, and thus does not address these issues or include these features, as doing so requires making backwards-incompatible changes to normative requirements.  While such changes are inevitable, the editor recommends that they be driven by working group discussion following adoption of the draft (see <xref target="wg-discuss" format="title"/>).  The editor requests that the working group recognize the intent of this initial draft and this recommendation when considering adoption of this draft.</t>
+            </note>
         </front>
         <middle>
             <section anchor="intro">
@@ -130,8 +133,8 @@
 
                 <t keepWithNext="true">In addition to those listed above, this document uses the following terms:</t>
                 <dl newline="true">
-                    <dt>Decimal String</dt><dd>An Integer String optionally concatenated with a period <tt>"."</tt> followed by a second Integer String, representing a positive real number expressed in base 10.  The first Integer String represents the integral portion of the number, while the optional second Integer String represents the fractional portion of the number. <cref source="AB">There's got to be a definition for this that we can reference.  Do we have a max value or a limit on precision?</cref></dd>
-                    <dt>Integer String</dt><dd>A US-ASCII string of one or more digits <tt>"0-9"</tt>, representing a positive integer in base 10.  <cref source="AB">There's got to be a definition for this that we can reference.  Do we have a max value?</cref></dd>
+                    <dt>Decimal String</dt><dd>An Integer String optionally concatenated with a period <tt>"."</tt> followed by a second Integer String, representing a positive real number expressed in base 10.  The first Integer String represents the integral portion of the number, while the optional second Integer String represents the fractional portion of the number. [[ Editor's note: There's got to be a definition for this that we can reference. ]]</dd>
+                    <dt>Integer String</dt><dd>A US-ASCII string of one or more digits <tt>"0-9"</tt>, representing a positive integer in base 10. [[ Editor's note: There's got to be a definition for this that we can reference. ]]</dd>
                     <dt>Signer</dt><dd>The entity that is generating or has generated an HTTP Message Signature.</dd>
                     <dt>Verifier</dt><dd>An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message.  Note that an HTTP Message Signature may be verified multiple times, potentially by different entities.</dd>
                 </dl>
@@ -145,8 +148,6 @@
             <t>Some content within HTTP messages may undergo transformations that change the bitwise value without altering meaning of the content (for example, the merging together of header fields with the same name).  Message content must therefore be canonicalized before it is signed, to ensure that a signature can be verified despite such innocuous transformations.  This document defines rules for each content identifier that transform the identifier's associated content into such a canonical form.</t>
 
             <t>The following sections define content identifiers, their associated content, and their canonicalization rules.</t>
-
-            <t><cref source="AB">This needs to be expanded to allow for more fine-grained inclusion of message elements (e.g., method, scheme, authority, path, query string parameters).</cref></t>
 
             <section>
                 <name>HTTP Header Fields</name>
@@ -226,13 +227,11 @@ Cache-Control:    must-revalidate
                 <t>The signature's Expiration Time (<xref target="signature-metadata"/>) is identified by the <tt>(expired)</tt> identifier.</t>
 
                 <t>Its canonicalized value is a Decimal String containing the signature's Expiration Time expressed as the number of seconds since the Epoch, as defined in <eref target="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16">Section 4.16</eref> of <xref target="POSIX.1"/>.</t>
-
-                <t><cref source="AB">Needs more clarity on "decimal" format, cue arguments over precision.  Do we need sub-second precision?  If we do, can we make this an integer representing milliseconds since the Epoch?  Or replace with a maximum age expressed in milliseconds?</cref></t>
             </section>
 
             <section>
                 <name>Target Endpoint</name>
-                <t>The request target endpoint, consisting of the HTTP method and the path and query of the effective request URI, is identified by the <tt>(request-target)</tt> identifier.</t>
+                <t>The request target endpoint, consisting of the request method and the path and query of the effective request URI, is identified by the <tt>(request-target)</tt> identifier.</t>
 
                 <t keepWithNext="true">Its value is canonicalized as follows:</t>
                 <ol>
@@ -384,7 +383,7 @@ x-example: Example header with some whitespace.]]></sourcecode>
                     <li>Use the signature's Algorithm and Verification Key Material with the recreated Signing Input to verify the signature value.</li>
                 </ol>
 
-                <t>A signature with a Creation Time that is in the future or an Expiration Time that is in the past <bcp14>MUST NOT</bcp14> be processed. <cref source="AB">This wording implies that verifiers are not permitted to account for clock skew during signature verification.</cref></t>
+                <t>A signature with a Creation Time that is in the future or an Expiration Time that is in the past <bcp14>MUST NOT</bcp14> be processed.</t>
 
                 <t>The verifier <bcp14>MUST</bcp14> ensure that a signature's Algorithm is appropriate for the key material the verifier will use to verify the signature.  If the Algorithm is not appropriate for the key material (for example, if it is the wrong size, or in the wrong format), the signature <bcp14>MUST NOT</bcp14> be processed.</t>
 
@@ -411,7 +410,6 @@ sig-param    = token BWS "=" BWS ( token / quoted-string )]]></sourcecode>
                     <dt anchor="algorithm"><tt>algorithm</tt></dt>
                     <dd>
                         <t><bcp14>RECOMMENDED</bcp14>.  The <tt>algorithm</tt> parameter contains the name of the signature's Algorithm, as registered in the <xref target="hsa-registry" format="title"/> defined by this document.  Verifiers <bcp14>MUST</bcp14> determine the signature's Algorithm from the <tt>keyId</tt> parameter rather than from <tt>algorithm</tt>.  If <tt>algorithm</tt> is provided and differs from or is incompatible with the algorithm or key material identified by <tt>keyId</tt> (for example, <tt>algorithm</tt> has a value of <tt>rsa-sha256</tt> but <tt>keyId</tt> identifies an EdDSA key), then implementations <bcp14>MUST</bcp14> produce an error.  Implementers should note that previous versions of this specification determined the signature's Algorithm using the <tt>algorithm</tt> parameter only, and thus could be utilized by attackers to expose security vulnerabilities.</t>
-                        <t><cref source="AB">These instructions are confusing.  Punting algorithm identification into <tt>keyId</tt> hurts interoperability, since we aren't defining the syntax or semantics of <tt>keyId</tt>.  It also goes against the statement that we <em>aren't</em> defining <tt>keyId</tt>'s semantics, as we are dictating that the signing algorithm must be specified by <tt>keyId</tt> or derivable from it.  If we stick with this, can we just drop <tt>algorithm</tt> altogether?</cref></t>
                     </dd>
 
                     <dt anchor="created"><tt>created</tt></dt>
@@ -421,17 +419,10 @@ sig-param    = token BWS "=" BWS ( token / quoted-string )]]></sourcecode>
                     <dd><bcp14>OPTIONAL</bcp14>.  The <tt>expires</tt> parameter contains the signature's Expiration Time, expressed as the canonicalized value of the <tt>(expires)</tt> content identifier, as defined in <xref target="content-identifiers"/>.  If the signature does not have an Expiration Time, this parameter <tt>MUST</tt> be omitted.</dd>
 
                     <dt anchor="headers"><tt>headers</tt></dt>
-                    <dd>
-                        <t><bcp14>OPTIONAL</bcp14>.  The <tt>headers</tt> parameter contains the signature's Covered Content, expressed as a string containing a quoted list of the identifiers in the list, in the order they occur in the list, with a space <tt>" "</tt> between each identifier.  If specified, identifiers for header fields <bcp14>SHOULD</bcp14> be lowercased and all others <bcp14>MUST</bcp14> be lowercased.  If not specified, verifiers <bcp14>MUST</bcp14> assume the signature's Covered Content is a list containing only a single <tt>(created)</tt> identifier.</t>
-                        <t><cref source="AB">The name <tt>headers</tt> is misleading, as this parameter will contain entries that are not HTTP header field names (e.g., <tt>(created)</tt>).</cref></t>
-                    </dd>
+                    <dd><bcp14>OPTIONAL</bcp14>.  The <tt>headers</tt> parameter contains the signature's Covered Content, expressed as a string containing a quoted list of the identifiers in the list, in the order they occur in the list, with a space <tt>" "</tt> between each identifier.  If specified, identifiers for header fields <bcp14>SHOULD</bcp14> be lowercased and all others <bcp14>MUST</bcp14> be lowercased.  If not specified, verifiers <bcp14>MUST</bcp14> assume the signature's Covered Content is a list containing only a single <tt>(created)</tt> identifier.</dd>
 
                     <dt anchor="keyId"><tt>keyId</tt></dt>
-                    <dd>
-                        <t><bcp14>REQUIRED</bcp14>.  The <tt>keyId</tt> parameter is a US-ASCII string whose value can be used by a verifier to identify and/or obtain the signature's <tt>Verification Key Material</tt>.  The format and semantics of this value are out of scope for this document.</t>
-                        <t><cref source="AB">This value needs to be constrained to ensure that it does not break parsing of the header field's value as auth-params.</cref></t>
-                        <t><cref source="AB">While we need to allow for flexibility in key specification, leaving it completely undefined hurts interoperability.  We could borrow from JOSE and define <tt>jwk</tt> and <tt>jku</tt> parameters as extensible ways to specify common types of keys.</cref></t>
-                    </dd>
+                    <dd><bcp14>REQUIRED</bcp14>.  The <tt>keyId</tt> parameter is a US-ASCII string whose value can be used by a verifier to identify and/or obtain the signature's <tt>Verification Key Material</tt>.  The format and semantics of this value are out of scope for this document.</dd>
 
                     <dt anchor="signature"><tt>signature</tt></dt>
                     <dd><bcp14>REQUIRED</bcp14>.  The <tt>signature</tt> parameter contains the signature value, as described in <xref target="sign-sig-input"/>.</dd>
@@ -495,7 +486,6 @@ content-length: 18]]></sourcecode>
             <name>IANA Considerations</name>
             <section anchor="hsa-registry">
                 <name>HTTP Signature Algorithms Registry</name>
-                <t><cref source="AB"><xref target="RFC7518">JSON Web Algorithms (JWA)</xref> already defines an IANA registry for cryptographic algorithms.  What is the justification for defining a new one?</cref></t>
                 <t>This document defines HTTP Signature Algorithms, for which IANA is asked to create and maintain a new registry titled "HTTP Signature Algorithms".  Initial values for this registry are given in <xref target="iana-hsa-contents"/>.  Future assignments and modifications to existing assignment are to be made through the Expert Review registration policy <xref target="RFC8126"/> and shall follow the template presented in <xref target="iana-hsa-template" />.</t>
 
                 <section anchor="iana-hsa-template">
@@ -512,8 +502,7 @@ content-length: 18]]></sourcecode>
 
                 <section anchor="iana-hsa-contents">
                     <name>Initial Contents</name>
-                    <t><cref source="MS">The references in this section are problematic as many of the specifications that they refer to are too implementation specific, rather than just pointing to the proper signature and hashing specifications.  A better approach might be just specifying the signature and hashing function specifications, leaving implementers to connect the dots (which are not that hard to connect).</cref></t>
-                    <t><cref source="AB">Initial registry contents should not contain deprecated algorithms.</cref></t>
+                    <t>[[ MS: The references in this section are problematic as many of the specifications that they refer to are too implementation specific, rather than just pointing to the proper signature and hashing specifications.  A better approach might be just specifying the signature and hashing function specifications, leaving implementers to connect the dots (which are not that hard to connect). ]]</t>
 
                     <section numbered="false">
                         <name><tt>hs2019</tt></name>
@@ -531,7 +520,6 @@ content-length: 18]]></sourcecode>
                                     <li>ECDSA using curve P-256 <xref target="FIPS186-4"/> and SHA-512 <xref target="RFC6234"/></li>
                                     <li>Ed25519ph, Ed25519ctx, and Ed25519 <xref target="RFC8032"/></li>
                                 </ul>
-                                <t><cref source="AB">Pushing this into <tt>keyId</tt> without guidance on <tt>keyId</tt>'s format hurts interoperability and contradicts the earlier statement that the structure and semantics of <tt>keyId</tt> are out of scope.  These should each be defined as separate algorithms, and the verification steps should require the verifier to confirm that the specified key fits the specified algorithm.</cref></t>
                             </dd>
                         </dl>
                     </section>
@@ -542,10 +530,7 @@ content-length: 18]]></sourcecode>
                             <dt>Algorithm Name</dt>
                             <dd><tt>rsa-sha1</tt></dd>
                             <dt>Status</dt>
-                            <dd>
-                                <t>Deprecated; SHA-1 not secure.</t>
-                                <t><cref source="AB">What does "not secure" mean in this context?  Should this even be defined if there are security concerns?</cref></t>
-                            </dd>
+                            <dd>Deprecated; SHA-1 not secure.</dd>
                             <dt>Description</dt>
                             <dd>RSASSA-PKCS1-v1_5 <xref target="RFC8017"/> using SHA-1 <xref target="RFC6234"/></dd>
                         </dl>
@@ -557,10 +542,7 @@ content-length: 18]]></sourcecode>
                             <dt>Algorithm Name</dt>
                             <dd><tt>rsa-sha256</tt></dd>
                             <dt>Status</dt>
-                            <dd>
-                                <t>Deprecated; specifying signature algorithm enables attack vector.</t>
-                                <t><cref source="AB">What attack vector?  Can we mitigate it by including <tt>algorithm</tt> in the signing string?</cref></t>
-                            </dd>
+                            <dd>Deprecated; specifying signature algorithm enables attack vector.</dd>
                             <dt>Description</dt>
                             <dd>RSASSA-PKCS1-v1_5 <xref target="RFC8017"/> using SHA-256 <xref target="RFC6234"/></dd>
                         </dl>
@@ -572,10 +554,7 @@ content-length: 18]]></sourcecode>
                             <dt>Algorithm Name</dt>
                             <dd><tt>hmac-sha256</tt></dd>
                             <dt>Status</dt>
-                            <dd>
-                                <t>Deprecated; specifying signature algorithm enables attack vector.</t>
-                                <t><cref source="AB">What attack vector?  Can we mitigate it by including <tt>algorithm</tt> in the signing string?</cref></t>
-                            </dd>
+                            <dd>Deprecated; specifying signature algorithm enables attack vector.</dd>
                             <dt>Description</dt>
                             <dd>HMAC <xref target="RFC2104"/> using SHA-256 <xref target="RFC6234"/></dd>
                         </dl>
@@ -587,10 +566,7 @@ content-length: 18]]></sourcecode>
                             <dt>Algorithm Name</dt>
                             <dd><tt>ecdsa-sha256</tt></dd>
                             <dt>Status</dt>
-                            <dd>
-                                <t>Deprecated; specifying signature algorithm enables attack vector.</t>
-                                <t><cref source="AB">What attack vector?  Can we mitigate it by including <tt>algorithm</tt> in the signing string?</cref></t>
-                            </dd>
+                            <dd>Deprecated; specifying signature algorithm enables attack vector.</dd>
                             <dt>Description</dt>
                             <dd>ECDSA using curve P-256 <xref target="FIPS186-4"/> and SHA-256 <xref target="RFC6234"/></dd>
                         </dl>
@@ -601,7 +577,7 @@ content-length: 18]]></sourcecode>
 
         <section anchor="security">
             <name>Security Considerations</name>
-            <t><cref source="AB">TODO: need to dive deeper on this section; not sure how much of what's referenced below is actually applicable, or if it covers everything we need to worry about.</cref></t>
+            <t>[[ Editor's note: TODO: need to dive deeper on this section; not sure how much of what's referenced below is actually applicable, or if it covers everything we need to worry about. ]]</t>
             <t>There are a number of security considerations to take into account when implementing or utilizing this specification.  A thorough security analysis of this protocol, including its strengths and weaknesses, can be found in <xref target="WP-HTTP-Sig-Audit">Security Considerations for HTTP Signatures</xref>.</t>
         </section>
     </middle>
@@ -616,9 +592,11 @@ content-length: 18]]></sourcecode>
                 <name>Normative References</name>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2104.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+                <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3986.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4648.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7230.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7540.xml"/>
+                <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7541.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8126.xml"/>
                 <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
                 <reference anchor="FIPS186-4" target="https://csrc.nist.gov/publications/detail/fips/186/4/final">
@@ -713,7 +691,7 @@ Content-Length: 18
 
             <section anchor="default-test">
                 <name>Default Test</name>
-                <t keepWithNext="true"><cref source="AB">This statement about default Covered Content is inaccurate.</cref>  If a list of headers is not included, the Date header is the only header that is signed by default for <tt>rsa-sha256</tt>.  The string to sign would be:</t>
+                <t keepWithNext="true">[[ Editor's note: This statement about default Covered Content is inaccurate. ]]  If a list of headers is not included, the Date header is the only header that is signed by default for <tt>rsa-sha256</tt>.  The string to sign would be:</t>
                 <sourcecode><![CDATA[
 date: Sun, 05 Jan 2014 21:31:40 GMT]]></sourcecode>
                 <t keepWithNext="true">The Signature header would be:</t>
@@ -729,7 +707,7 @@ Signature: keyId="Test",algorithm="rsa-sha256",
 
             <section anchor="basic-test">
                 <name>Basic Test</name>
-                <t keepWithNext="true"><cref source="AB">This statement about minimum recommended Covered Content is inaccurate.</cref>  The minimum recommended data to sign is the <tt>(request-target)</tt>, <tt>host</tt>, and <tt>date</tt>.  In this case, the string to sign would be:</t>
+                <t keepWithNext="true">[[ Editor's note: This statement about minimum recommended Covered Content is inaccurate. ]]  The minimum recommended data to sign is the <tt>(request-target)</tt>, <tt>host</tt>, and <tt>date</tt>.  In this case, the string to sign would be:</t>
                 <sourcecode><![CDATA[
 (request-target): post /foo?param=value&pet=dog
 host: example.com
@@ -771,6 +749,174 @@ Signature: keyId="Test",algorithm="rsa-sha256",
             </section>
         </section>
 
+        <section anchor="wg-discuss" removeInRFC="true">
+            <name>Topics for Working Group Discussion</name>
+            <t>The editor recommends the working group discuss the issues and features described in this section, after adoption of the document by the working group.  Topics are not listed in any particular order.</t>
+
+            <section>
+                <name>Issues</name>
+                <section anchor="issue-alg-keyid">
+                    <name>Confusing guidance on algorithm and key identification</name>
+                    <t>The current draft encourages determining the Algorithm metadata property from the <tt>keyId</tt> field, both in the guidance for the use of <tt>algorithm</tt> and <tt>keyId</tt>, and the definition for the <tt>hs2019</tt> algorithm and deprecation of the other algorithms in the registry.  The current state arose from concern that a malicious party could change the value of the <tt>algorithm</tt> parameter, potentially tricking the verifier into accepting a signature that would not have been verified under the actual parameter.</t>
+                    <t>Punting algorithm identification into <tt>keyId</tt> hurts interoperability, since we aren't defining the syntax or semantics of <tt>keyId</tt>.  It actually goes against that claim, as we are dictating that the signing algorithm must be specified by <tt>keyId</tt> or derivable from it.  It also renders the algorithm registry essentially useless.  Instead of this approach, we can protect against manipulation of the Signature header field by adding support for (and possibly mandating) including Signature metadata within the Signature Input.</t>
+                </section>
+
+                <section>
+                    <name>Lack of definition of <tt>keyId</tt> hurts interoperability</name>
+                    <t>The current text leaves the format and semantics of <tt>keyId</tt> completely up to the implementation.  This is primarily due to the fact that most implementers of Cavage have extensive investment in key distribution and management, and just need to plug an identifier into the header.  We should support those cases, but we also need to provide guidance for the developer that doesn't have that and just wants to know how to identify a key.  It may be enough to punt this to profiling specs, but this needs to be explored more.</t>
+                </section>
+
+                <section>
+                    <name>Algorithm Registry duplicates work of JWA</name>
+                    <t><xref target="RFC7518">JSON Web Algorithms (JWA)</xref> already defines an IANA registry for cryptographic algorithms.  This wasn't used by Cavage out of concerns about complexity of JOSE, and issues with JWE and JWS being too flexible, leading to insecure combinations of options.  Using JWA's definitions does not need to mean we're using JOSE, however.  We should look at if/how we can leverage JWA's work without introducing too many sharp edges for implementers.</t>
+                </section>
+
+                <section>
+                    <name>Algorithm Registry should not be initialized with deprecated entries</name>
+                    <t>The initial entries in this document reflect those in Cavage.  The ones that are marked deprecated were done so because of the issue explained in <xref target="issue-alg-keyid"/>, with the possible exception of <tt>rsa-sha1</tt>.  We should probably just remove that one.</t>
+                </section>
+
+                <section>
+                    <name>No percent-encoding normalization of path/query</name>
+                    <t>See: <eref target="https://github.com/w3c-dvcg/http-signatures/issues/26">issue #26</eref></t>
+
+                    <t>The canonicalization rules for <tt>(request-target)</tt> do not perform handle minor, semantically meaningless differences in percent-encoding, such that verification could fail if an intermediary normalizes the effective request URI prior to forwarding the message.</t>
+
+                    <t>At a minimum, they should be case and percent-encoding normalized as described in sections <relref target="RFC3986" section="6.2.2.1" displayFormat="bare"/> and <relref target="RFC3986" section="6.2.2.2" displayFormat="bare"/> of <xref target="RFC3986"/>.</t>
+                </section>
+
+                <section>
+                    <name>Misleading name for <tt>headers</tt> parameter</name>
+                    <t>The Covered Content list contains identifiers for more than just headers, so the <tt>header</tt> parameter name is no longer appropriate.  Some alternatives: "content", "signed-content", "covered-content".</t>
+                </section>
+
+                <section>
+                    <name>Changes to whitespace in header field values break verification</name>
+                    <t>Some header field values contain RWS, OWS, and/or BWS.  Since the header field value canonicalization rules do not address whitespace, changes to it (e.g., removing OWS or BWS or replacing strings of RWS with a single space) can cause verification to fail.</t>
+                </section>
+
+                <section>
+                    <name>Multiple Set-Cookie headers are not well supported</name>
+                    <t>The Set-Cookie header can occur multiple times but does not adhere to the list syntax, and thus is not well supported by the header field value concatenation rules.</t>
+                </section>
+
+                <section>
+                    <name>Covered Content list is not signed</name>
+                    <t>The Covered Content list should be part of the Signature Input, to protect against malicious changes.</t>
+                </section>
+
+                <section>
+                    <name>Algorithm is not signed</name>
+                    <t>The Algorithm should be part of the Signature Input, to protect against malicious changes.</t>
+                </section>
+
+                <section>
+                    <name>Verification key identifier is not signed</name>
+                    <t>The Verification key identifier (e.g., the value used for the <tt>keyId</tt> parameter) should be part of the Signature Input, to protect against malicious changes.</t>
+                </section>
+
+                <section>
+                    <name>Max values, precision for Integer String and Decimal String not defined</name>
+                    <t>The definitions for Integer String and Decimal String do not specify a maximum value.  The definition for Decimal String (used to provide sub-second precision for Expiration Time) does not define minimum or maximum precision requirements.  It should set a sane requirement here (e.g., MUST support up to 3 decimal places and no more).</t>
+                </section>
+
+                <section>
+                    <name><tt>keyId</tt> parameter value could break list syntax</name>
+                    <t>The <tt>keyId</tt> parameter value needs to be constrained so as to not break list syntax (e.g., by containing a comma).</t>
+                </section>
+
+                <section>
+                    <name>Creation Time and Expiration Time do not allow for clock skew</name>
+                    <t>The processing instructions for Creation Time and Expiration Time imply that verifiers are not permitted to account for clock skew during signature verification.</t>
+                </section>
+
+                <section>
+                    <name>Should require lowercased header field names as identifiers</name>
+                    <t>The current text allows mixed-case header field names when they are being used as content identifiers.  This is unnecessary, as header field names are case-insensitive, and creates opportunity for incompatibility.  Instead, content identifiers should always be lowercase.</t>
+                </section>
+
+                <section>
+                    <name>Reconcile Date header and Creation Time</name>
+                    <t>The draft is missing guidance on if/how the Date header relates to signature Creation Time.  There are cases where they may be different, such as if a signature was pre-created.  Should Creation Time default to the value in the Date header if the <tt>created</tt> parameter is not specified?  </t>
+                </section>
+
+                <section>
+                    <name>Remove algorithm-specific rules for content identifiers</name>
+                    <t>The rules that restrict when the signer can or must include certain identifiers appear to be related to the pseudo-revving of the Cavage draft that happened when the <tt>hs2019</tt> algorithm was introduced.  We should drop these rules, as it can be expected that anyone implementing this draft will support all content identifiers.</t>
+                </section>
+
+                <section>
+                    <name>Add guidance for signing compressed headers</name>
+                    <t>The draft should provide guidance on how to sign headers when <xref target="RFC7541">HTTP/2 header compression</xref> is used.  This guidance might be as simple as "sign the uncompressed header field value."</t>
+                </section>
+
+
+                <section>
+                    <name>Transformations to Via header field value break verification</name>
+                    <t>Intermediaries are permitted to strip comments from the Via header field value, and consolidate related sequences of entries.  The canonicalization rules do not account for these changes, and thus they cause signature verification to fail if the Via header is signed.</t>
+                </section>
+
+                <section>
+                    <name>Case changes to case-insensitive header field values break verification</name>
+                    <t>Some header field values are case-insensitive, in whole or in part. The canonicalization rules do not account for this, thus a case change to a covered header field value causes verification to fail.</t>
+                </section>
+
+                <section>
+                    <name>Need more examples for Signature header</name>
+                    <t>Add more examples showing different cases e.g, where <tt>created</tt> or <tt>expires</tt> are not present.</t>
+                </section>
+            </section>
+
+            <section>
+                <name>Features</name>
+                <section>
+                    <name>Define more content identifiers</name>
+                    <t keepWithNext="true">It should be possible to independently include the following content and metadata properties in Covered Content:</t>
+                    <ul>
+                        <li>The signature's Algorithm</li>
+                        <li>The signature's Covered Content</li>
+                        <li>The value used for the <tt>keyId</tt> parameter</li>
+                        <li>Request method</li>
+                        <li>Individual components of the effective request URI: scheme, authority, path, query</li>
+                        <li>Status code</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <name>Multiple signature support</name>
+                    <t>[[ Editor's note: I believe this use case is theoretical.  Please let me know if this is a use case you have. ]]</t>
+
+                    <t keepWithNext="true">There may be scenarios where attaching multiple signatures to a single message is useful:</t>
+                    <ul>
+                        <li>A gateway attaches a signature over headers it adds (e.g., Forwarded) to messages already signed by the user agent.</li>
+                        <li>A signer attaches two signatures signed by different keys, to be verified by different entities.</li>
+                    </ul>
+
+                    <t>This could be addressed by changing the Signature header syntax to accept a list of parameter sets for a single signature, e.g., by separating parameters with <tt>";"</tt> instead of <tt>","</tt>.  It may also be necessary to include a signature identifier parameter.</t>
+                </section>
+
+                <section>
+                    <name>Support for incremental signing of header field value list items</name>
+                    <t>[[ Editor's note: I believe this use case is theoretical.  Please let me know if this is a use case you have. ]]</t>
+
+                    <t>Currently, signing a header field value is all-or-nothing: either the entire value is signed, or none of it is.  For header fields that use list syntax, it would be useful to be able to specify which items in the list are signed.</t>
+                    
+                    <t>A simple approach that allowed the signer to indicate the list size at signing time would allow a signer to sign header fields that are may be appended to by intermediaries as the message makes its way to the recipient.  Specifying list size in terms of number of items could introduce risks of list syntax is not strictly adhered to (e.g., a malicious party crafts a value that gets parsed by the application as 5 items, but by the verifier as 4).  Specifying list size in number of octets might address this, but more exploration is required.</t>
+                </section>
+
+                <section>
+                    <name>Support expected authority changes</name>
+                    <t>In some cases, the authority of the effective request URI may be expected to change, for example from "public-service-name.example.com" to "service-host-1.public-service-name.example.com".  This is commonly the case for services that are hosted behind a load-balancing gateway, where the client sends requests to a publicly known domain name for the service, and these requests are transformed by the gateway into requests to specific hosts in the service fleet.</t>
+                    <t>One possible way to handle this would be to special-case the Host header field to allow verifier to substitute a known expected value, or a value provided in another header field (e.g., Via) when generating the Signature Input, provided that the verifier also recognizes the real value in the Host header.  Alternatively, this logic could apply to an <tt>(audience)</tt> content identifier.</t>
+                </section>
+
+                <section>
+                    <name>Support for signing specific cookies</name>
+                    <t>A signer may only wish to sign one or a few cookies, for example if the website requires its authentication state cookie to be signed, but also sets other cookies (e.g., for analytics, ad tracking, etc.)</t>
+                </section>
+            </section>
+        </section>
+
         <section anchor="acknowledgements" numbered="false">
             <name>Acknowledgements</name>
             <t>This specification is based on the draft-cavage-http-signatures draft.  The editor would like to thank the authors of that draft, Mark Cavage and Manu Sporny, for their work on that draft and their continuing contributions.</t>
@@ -808,30 +954,6 @@ Lukasz Szewc,
 Chris Webber, and
 Jeffrey Yasskin
             </t>
-        </section>
-
-        <section numbered="false" removeInRFC="true">
-            <name>Known Issues</name>
-            <t keepWithNext="true">This section describes known issues in the draft.</t>
-            <ul>
-                <li>
-                    <t keepWithNext="true">Transformations that should be safe but aren't:</t>
-                    <ul>
-                        <li>Removal of comments from Via header.</li>
-                        <li>Consolidation of Via header entries.</li>
-                        <li>Case changes to Digest and other header field values? (e.g., Content-Type?)</li>
-                        <li>Changes to Host header field value like those that might be made by a load-balancing proxy, e.g., from "public-service-name.example.com" to "service-host-1.public-service-name.example.com".</li>
-                    </ul>
-                </li>
-                <li>Creation Time should default to value of the Date header field.</li>
-                <li><tt>algorithm</tt> and <tt>keyId</tt> parameter values should be covered by the signature.</li>
-                <li>Algorithm-specific requirements and restrictions on <tt>created</tt> and <tt>expires</tt> don't make sense.</li>
-                <li>Need to require header field names to be lowercased when used as content identifiers.</li>
-                <li>Need content identifiers for more parts of the message (e.g., status code, parts of effective request URI).</li>
-                <li>Need to either define <tt>(request-target)</tt> for responses, or prohibit its use there.</li>
-                <li>Needs more examples for Signature header.</li>
-                <li>Need to account for HTTP/1.1 to HTTP/2 transformations, and vice-versa.</li>
-            </ul>
         </section>
 
         <section numbered="false" removeInRFC="true">
@@ -876,7 +998,7 @@ Jeffrey Yasskin
                                 <li>Removed Extensions appendix and fixed keys and signatures on test examples.</li>
                                 <li>Revised introduction around need for non-TLS integrity/authenticity protection. Added Requirements Description.</li>
                                 <li>Revised Signature header definition.</li>
-                                <li>Added Known Issues section, to be removed prior to publication as an RFC.</li>
+                                <li>Added Topics for Working Group Discussion section, to be removed prior to publication as an RFC.</li>
                             </ul>
                         </li>
                     </ul>
