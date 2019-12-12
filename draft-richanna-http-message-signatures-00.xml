@@ -78,7 +78,7 @@
         <middle>
             <section anchor="intro">
                 <name>Introduction</name>
-                <t>Message integrity and authenticity are important security properties that are critical to the secure operation of many <xref target="RFC7230"/> applications.  Application developers typically rely on the transport layer to provide these properties, by operating their application over <xref target="RFC8446">TLS</xref>.  However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance).  In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application.  Additionally, some operating environments present obstacles that make it impractical to use TLS, or to use features necessary to provide message authenticity.  Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.</t>
+                <t>Message integrity and authenticity are important security properties that are critical to the secure operation of many <xref target="RFC7230"/> applications.  Application developers typically rely on the transport layer to provide these properties, by operating their application over <xref target="RFC8446">TLS</xref>.  However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance).  In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application.  Additionally, some operating environments present obstacles that make it impractical to use TLS, or to use features necessary to provide message authenticity.  Furthermore, some applications require the binding of an application-level key to the HTTP message, separate from any TLS certificates in use. Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.</t>
 
                 <t>This document defines a mechanism for providing end-to-end integrity and authenticity for content within an HTTP message.  The mechanism allows applications to create digital signatures or message authentication codes (MACs) over only that content within the message that is meaningful and appropriate for the application.  Strict canonicalization rules ensure that the verifier can verify the signature even if the message has been transformed in any of the many ways permitted by HTTP.</t>
 
@@ -116,7 +116,7 @@
                         <li>Combination of header fields with the same field name.</li>
                         <li>Reordering of header fields with different names.</li>
                         <li>Conversion between HTTP/1.x and HTTP/2, or vice-versa.</li>
-                        <li>Changes in casing (e.g., "Origin" to "origin") of header field names, request URI scheme or host, or any other case-insensitive content.</li>
+                        <li>Changes in casing (e.g., "Origin" to "origin") any other case-insensitive content such as header field names, request URI scheme, or host.</li>
                         <li>Addition or removal of leading or trailing whitespace to a header field value.</li>
                         <li>Addition or removal of <tt>obs-fold</tt>s.</li>
                         <li>Changes to the request-target and Host header field that when applied together do not result in a change to the message's effective request URI, as defined in <relref target="RFC7230" section="5.5"/>.</li>
@@ -381,7 +381,7 @@ x-example: Example header with some whitespace.]]></sourcecode>
                 <name>Verifying a Signature</name>
                 <t>In order to verify a signature, a verifier <bcp14>MUST</bcp14>:</t>
                 <ol>
-                    <li>Examine the signature's metadata to confirm that the signature meets the requirements described in this document, as well as any additional requirements defined by the application.</li>
+                    <li>Examine the signature's metadata to confirm that the signature meets the requirements described in this document, as well as any additional requirements defined by the application such as which headers or elements are required to be covered by the signature.</li>
                     <li>Use the received HTTP message and the signature's metadata to recreate the Signature Input, using the process described in <xref target="canonicalization"/>.</li>
                     <li>Use the signature's Algorithm and Verification Key Material with the recreated Signing Input to verify the signature value.</li>
                 </ol>
@@ -828,7 +828,7 @@ Signature: keyId="Test",algorithm="rsa-sha256",
 
         <section anchor="wg-discuss" removeInRFC="true">
             <name>Topics for Working Group Discussion</name>
-            <t>The editor recommends the working group discuss the issues and features described in this section, after adoption of the document by the working group.  Topics are not listed in any particular order.</t>
+            <t>The goal of this draft document is to provide a starting point at feature parity and compatible with the cavage-12 draft. The draft has known issues that will need to be addressed during development, and in the spirit of keeping compatibility, these issues have been enumerated but not addressed in this version. The editor recommends the working group discuss the issues and features described in this section after adoption of the document by the working group.  Topics are not listed in any particular order.</t>
 
             <section toc="exclude">
                 <name>Issues</name>
@@ -846,6 +846,8 @@ Signature: keyId="Test",algorithm="rsa-sha256",
                 <section>
                     <name>Algorithm Registry duplicates work of JWA</name>
                     <t><xref target="RFC7518">JSON Web Algorithms (JWA)</xref> already defines an IANA registry for cryptographic algorithms.  This wasn't used by Cavage out of concerns about complexity of JOSE, and issues with JWE and JWS being too flexible, leading to insecure combinations of options.  Using JWA's definitions does not need to mean we're using JOSE, however.  We should look at if/how we can leverage JWA's work without introducing too many sharp edges for implementers.</t>
+					<t>In any use of JWS algorithms, this spec would define a way to create the JWS Signing Input string to be applied to the algorithm. It should be noted that this is incompatible with JWS itself, which requires the inclusion of a structured header in the signature input.</t>
+					<t>A possible approach is to incorporate all elements of the JWA signature algorithm registry into this spec using a prefix or other marker, such as <tt>jws-RS256</tt> for the RSA 256 JSON Web Signature algorithm.</t>
                 </section>
 
                 <section>
@@ -930,7 +932,7 @@ Signature: keyId="Test",algorithm="rsa-sha256",
 
                 <section>
                     <name>Transformations to Via header field value break verification</name>
-                    <t>Intermediaries are permitted to strip comments from the Via header field value, and consolidate related sequences of entries.  The canonicalization rules do not account for these changes, and thus they cause signature verification to fail if the Via header is signed.</t>
+                    <t>Intermediaries are permitted to strip comments from the Via header field value, and consolidate related sequences of entries.  The canonicalization rules do not account for these changes, and thus they cause signature verification to fail if the Via header is signed. At the very least, guidance on signing or not signing Via headers needs to be included.</t>
                 </section>
 
                 <section>
@@ -941,6 +943,11 @@ Signature: keyId="Test",algorithm="rsa-sha256",
                 <section>
                     <name>Need more examples for Signature header</name>
                     <t>Add more examples showing different cases e.g, where <tt>created</tt> or <tt>expires</tt> are not present.</t>
+                </section>
+
+                <section>
+                    <name>Expiration Not Needed</name>
+                    <t>In many cases, putting the expiration of the signature into the hands of the signer opens up more options for failures than necessary. Instead of the <tt>expires</tt>, any verifier can use the <tt>created</tt> field and an internal lifetime or offset to calculate expiration. We should consider dropping the <tt>expires</tt> field.</t>
                 </section>
             </section>
 
@@ -956,6 +963,7 @@ Signature: keyId="Test",algorithm="rsa-sha256",
                         <li>Request method</li>
                         <li>Individual components of the effective request URI: scheme, authority, path, query</li>
                         <li>Status code</li>
+						<li>Request body (currently supported via Digest header)</li>
                     </ul>
                 </section>
 
