@@ -338,6 +338,30 @@ Host: server.example.com]]></sourcecode></td>
 
                         <li>The signer creates an ordered list of content identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.  Each identifier <bcp14>MUST</bcp14> be one of those defined in <xref target="content-identifiers"/>.  This list <bcp14>MUST NOT</bcp14> be empty, as this would result in creating a signature over the empty string.  If the signature's Algorithm name does not start with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt>, signers <bcp14>SHOULD</bcp14> include <tt>(created)</tt> and <tt>(request-target)</tt> in the list.  If the signature's Algorithm starts with <tt>rsa</tt>, <tt>hmac</tt>, or <tt>ecdsa</tt>, signers <bcp14>SHOULD</bcp14> include <tt>date</tt> and <tt>(request-target)</tt> in the list.  Further guidance on what to include in this list and in what order is out of scope for this document.  However, the list order is significant and once established for a given signature it <bcp14>MUST</bcp14> be preserved for that signature.</li>
                     </ol>
+
+                    <t keepWithNext="true">For example, given the following HTTP message:</t>
+                    <sourcecode><![CDATA[
+GET /foo HTTP/1.1
+Host: example.org
+Date: Tue, 07 Jun 2014 20:51:35 GMT
+X-Example: Example header
+        with some whitespace.
+X-EmptyHeader:
+Cache-Control: max-age=60
+Cache-Control: must-revalidate]]></sourcecode>
+
+                    <t keepWithNext="true">The following table presents a non-normative example of metadata values that a signer may choose:</t>
+                    <table anchor="example-metadata">
+                        <name>Non-normative example metadata values</name>
+                        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+                        <tbody>
+                            <tr><td>Algorithm</td><td><tt>rsa-256</tt></td></tr>
+                            <tr><td>Covered Content</td><td><tt>(request-target)</tt>, <tt>(created)</tt>, <tt>host</tt>, <tt>date</tt>, <tt>cache-contol</tt>, <tt>x-emptyheader</tt>, <tt>x-example</tt></td></tr>
+                            <tr><td>Creation Time</td><td>Equal to the value specified in the Date header field.</td></tr>
+                            <tr><td>Expiration Time</td><td>Equal to the Creation Time plus five minutes.</td></tr>
+                            <tr><td>Verification Key Material</td><td>The public key provided in <xref target="example-key-rsa-test"/> and identified by the <tt>keyId</tt> value "test-key-b".</td></tr>
+                        </tbody>
+                    </table>
                 </section>
 
                 <section anchor="canonicalization">
@@ -350,18 +374,11 @@ Host: server.example.com]]></sourcecode></td>
 
                     <t>If Covered Content contains an identifier for a header field that is not present or malformed in the message, the implementation <bcp14>MUST</bcp14> produce an error.</t>
 
-                    <t keepWithNext="true">To illustrate the rules specified above, assume the signature's Covered Content is a list containing <tt>(request-target)</tt>, <tt>(created)</tt>, <tt>host</tt>, <tt>date</tt>, <tt>cache-control</tt>, <tt>x-emptyheader</tt>, and <tt>x-example</tt>, in order, the signature's Creation Time is equal to the value of the message's Date header, and the following HTTP message:</t>
-                    <sourcecode><![CDATA[
-GET /foo HTTP/1.1
-Host: example.org
-Date: Tue, 07 Jun 2014 20:51:35 GMT
-X-Example: Example header
-        with some whitespace.
-X-EmptyHeader:
-Cache-Control: max-age=60
-Cache-Control: must-revalidate]]></sourcecode>
-                    <t keepWithNext="true">For the HTTP message above, the corresponding Signature Input is:</t>
-                    <sourcecode><![CDATA[
+
+                    <t keepWithNext="true">For the non-normative example Signature metadata in <xref target="example-metadata"/>,  the corresponding Signature Input is:</t>
+                    <figure anchor="example-sig-input">
+                        <name>Non-normative example Signature Input</name>
+                        <sourcecode><![CDATA[
 (request-target): get /foo
 (created): 1402170695
 host: example.org
@@ -369,13 +386,23 @@ date: Tue, 07 Jun 2014 20:51:35 GMT
 cache-control: max-age=60, must-revalidate
 x-emptyheader:
 x-example: Example header with some whitespace.]]></sourcecode>
+                    </figure>
                 </section>
 
                 <section anchor="sign-sig-input">
                     <name>Sign the Signature Input</name>
                     <t>The signer signs the Signature Input using the signing algorithm described by the signature's Algorithm property, and the key material chosen by the signer.  The signer then encodes the result of that operation as a base 64-encoded string <xref target="RFC4648"/>.  This string is the signature value.</t>
 
-                    <t>For example, assume that the Algorithm is "hs2019" and the key is an EdDSA private key.  This would signal to the application that the the signing algorithm is Ed25519 as defined in <xref target="RFC8032" section="5.1" sectionFormat="comma">RFC 8032</xref>.  The result of the signing algorithm should be a binary string, which once base 64 encoded becomes the signature value.</t>
+                    <t keepWithNext="true">For the non-normative example Signature metadata in <xref target="choose-metadata"/> and Signature Input in <xref target="example-sig-input"/>, the corresponding signature value is:</t>
+                    <figure anchor="example-sig-value">
+                        <name>Non-normative example signature value</name>
+                        <sourcecode><![CDATA[
+T1l3tWH2cSP31nfuvc3nVaHQ6IAu9YLEXg2pCeEOJETXnlWbgKtBTaXV6LNQWtf4O42V2
+DZwDZbmVZ8xW3TFW80RrfrY0+fyjD4OLN7/zV6L6d2v7uBpuWZ8QzKuHYFaRNVXgFBXN3
+VJnsIOUjv20pqZMKO3phLCKX2/zQzJLCBQvF/5UKtnJiMp1ACNhG8LF0Q0FPWfe86YZBB
+xqrQr5WfjMu0LOO52ZAxi9KTWSlceJ2U361gDb7S5Deub8MaDrjUEpluphQeo8xyvHBoN
+Xsqeax/WaHyRYOgaW6krxEGVaBQAfA2czYZhEA05Tb38ahq/gwDQ1bagd9rGnCHtAg==]]></sourcecode>
+                    </figure>
                 </section>
             </section>
 
@@ -391,8 +418,6 @@ x-example: Example header with some whitespace.]]></sourcecode>
                 <t>A signature with a Creation Time that is in the future or an Expiration Time that is in the past <bcp14>MUST NOT</bcp14> be processed.</t>
 
                 <t>The verifier <bcp14>MUST</bcp14> ensure that a signature's Algorithm is appropriate for the key material the verifier will use to verify the signature.  If the Algorithm is not appropriate for the key material (for example, if it is the wrong size, or in the wrong format), the signature <bcp14>MUST NOT</bcp14> be processed.</t>
-
-                <t>For example, assume that the Algorithm was "hs2019" and the Verification Key Material is an EdDSA public key.  This would signal to the application that the signing algorithm is Ed25519 as defined in <xref target="RFC8032" section="5.1" sectionFormat="comma">RFC 8032</xref>.  The result of the signature verification algorithm should result in a successful verification unless the message content or signature metadata protected by the signature were tampered with in transit.</t>
 
                 <section>
                     <name>Enforcing Application Requirements</name>
@@ -429,17 +454,17 @@ sig-param    = token BWS "=" BWS ( token / quoted-string )]]></sourcecode>
                 <dl newline="true">
                     <dt anchor="algorithm"><tt>algorithm</tt></dt>
                     <dd>
-                        <t><bcp14>RECOMMENDED</bcp14>.  The <tt>algorithm</tt> parameter contains the name of the signature's Algorithm, as registered in the <xref target="hsa-registry" format="title"/> defined by this document.  Verifiers <bcp14>MUST</bcp14> determine the signature's Algorithm from the <tt>keyId</tt> parameter rather than from <tt>algorithm</tt>.  If <tt>algorithm</tt> is provided and differs from or is incompatible with the algorithm or key material identified by <tt>keyId</tt> (for example, <tt>algorithm</tt> has a value of <tt>rsa-sha256</tt> but <tt>keyId</tt> identifies an EdDSA key), then implementations <bcp14>MUST</bcp14> produce an error.  Implementers should note that previous versions of this specification determined the signature's Algorithm using the <tt>algorithm</tt> parameter only, and thus could be utilized by attackers to expose security vulnerabilities.</t>
+                        <t><bcp14>RECOMMENDED</bcp14>.  The <tt>algorithm</tt> parameter contains the name of the signature's Algorithm, as registered in the <xref target="hsa-registry" format="title"/> defined by this document.  Verifiers <bcp14>MUST</bcp14> determine the signature's Algorithm from the <tt>keyId</tt> parameter rather than from <tt>algorithm</tt>.  If <tt>algorithm</tt> is provided and differs from or is incompatible with the algorithm or key material identified by <tt>keyId</tt> (for example, <tt>algorithm</tt> has a value of <tt>rsa-sha256</tt> but <tt>keyId</tt> identifies an EdDSA key), then implementations <bcp14>MUST</bcp14> produce an error.  Implementers should note that previous versions of this specification determined the signature's Algorithm using the <tt>algorithm</tt> parameter only, and thus could be utilized by attackers to expose security vulnerabilities.  The default value for this parameter is "hs2019".</t>
                     </dd>
 
                     <dt anchor="created"><tt>created</tt></dt>
                     <dd><bcp14>RECOMMENDED</bcp14>.  The <tt>created</tt> parameter contains the signature's Creation Time, expressed as the canonicalized value of the <tt>(created)</tt> content identifier, as defined in <xref target="content-identifiers"/>.  If not specified, the signature's Creation Time is undefined.  This parameter is useful when signers are not capable of controlling the <tt>Date</tt> HTTP Header such as when operating in certain web browser environments.</dd>
 
                     <dt anchor="expires"><tt>expires</tt></dt>
-                    <dd><bcp14>OPTIONAL</bcp14>.  The <tt>expires</tt> parameter contains the signature's Expiration Time, expressed as the canonicalized value of the <tt>(expires)</tt> content identifier, as defined in <xref target="content-identifiers"/>.  If the signature does not have an Expiration Time, this parameter <tt>MUST</tt> be omitted.</dd>
+                    <dd><bcp14>OPTIONAL</bcp14>.  The <tt>expires</tt> parameter contains the signature's Expiration Time, expressed as the canonicalized value of the <tt>(expires)</tt> content identifier, as defined in <xref target="content-identifiers"/>.  If the signature does not have an Expiration Time, this parameter <tt>MUST</tt> be omitted.  If not specified, the signature's Expiration Time is undefined.</dd>
 
                     <dt anchor="headers"><tt>headers</tt></dt>
-                    <dd><bcp14>OPTIONAL</bcp14>.  The <tt>headers</tt> parameter contains the signature's Covered Content, expressed as a string containing a quoted list of the identifiers in the list, in the order they occur in the list, with a space <tt>" "</tt> between each identifier.  If specified, identifiers for header fields <bcp14>SHOULD</bcp14> be lowercased and all others <bcp14>MUST</bcp14> be lowercased.  If not specified, verifiers <bcp14>MUST</bcp14> assume the signature's Covered Content is a list containing only a single <tt>(created)</tt> identifier.</dd>
+                    <dd><bcp14>OPTIONAL</bcp14>.  The <tt>headers</tt> parameter contains the signature's Covered Content, expressed as a string containing a quoted list of the identifiers in the list, in the order they occur in the list, with a space <tt>" "</tt> between each identifier.  If specified, identifiers for header fields <bcp14>SHOULD</bcp14> be lowercased and all others <bcp14>MUST</bcp14> be lowercased.  The default value for this parameter is "(created)".</dd>
 
                     <dt anchor="keyId"><tt>keyId</tt></dt>
                     <dd><bcp14>REQUIRED</bcp14>.  The <tt>keyId</tt> parameter is a US-ASCII string whose value can be used by a verifier to identify and/or obtain the signature's <tt>Verification Key Material</tt>.  The format and semantics of this value are out of scope for this document.</dd>
@@ -450,57 +475,19 @@ sig-param    = token BWS "=" BWS ( token / quoted-string )]]></sourcecode>
             </section>
 
             <section>
-                <name>Examples</name>
-                <t keepWithNext="true">The following non-normative examples are based on the following HTTP message:</t>
+                <name>Example</name>
+                <t keepWithNext="true">The following is a non-normative example Signature header field representing the signature in <xref target="example-sig-value"/>:</t>
                 <sourcecode><![CDATA[
-POST /foo HTTP/1.1
-Host: example.com
-Date: Tue, 07 Jun 2014 20:51:35 GMT
-Content-Type: application/json
-Digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
-Content-Length: 18
-
-{"hello": "world"}]]></sourcecode>
-
-                <t>The following examples assume that the "rsa-key-1" keyId provided by the signer is meaningful to the verifier.</t>
-
-                <section anchor="sig-rsa-example">
-                    <name>RSA Example</name>
-                    <t keepWithNext="true">The signature header and signature would be generated as:</t>
-                    <sourcecode><![CDATA[
-Signature: keyId="rsa-key-1",algorithm="hs2019",
+Signature: keyId="test-key-b", algorithm="rsa-sha256",
     created=1402170695, expires=1402170995,
-    headers="(request-target) (created) (expires)
-        host date digest content-length",
-    signature="Base64(RSA-SHA256(signing string))"]]></sourcecode>
-
-                    <t keepWithNext="true">To verify the signature, a verifier would compose the Signature Input as:</t>
-                    <sourcecode><![CDATA[
-(request-target): post /foo
-(created): 1402170695
-(expires): 1402170995
-host: example.org
-digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
-content-length: 18]]></sourcecode>
-                </section>
-
-                <section anchor="sig-hmac-example">
-                    <name>HMAC Example</name>
-                    <t keepWithNext="true">For an HMAC-based signature, the Signature header would be generated as:</t>
-                    <sourcecode><![CDATA[
-Signature: keyId="hmac-key-1",algorithm="hs2019",created=1402170695,
-    headers="(request-target) (created) (expires)
-        host digest content-length",
-    signature="Base64(HMAC-SHA512(signing string))"]]></sourcecode>
-                    <t keepWithNext="true">The only difference between the RSA Example and the HMAC Example is the signature algorithm that is used.  The verifier would compose the Signature Input in the same way as the RSA Example above:</t>
-                    <sourcecode><![CDATA[
-(request-target): post /foo
-(created): 1402170695
-(expires): 1402170995
-host: example.org
-digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
-content-length: 18]]></sourcecode>
-                </section>
+    headers="(request-target) (created) host date cache-control
+        x-emptyheader x-example",
+    signature="T1l3tWH2cSP31nfuvc3nVaHQ6IAu9YLEXg2pCeEOJETXnlWbgKtBTa
+        XV6LNQWtf4O42V2DZwDZbmVZ8xW3TFW80RrfrY0+fyjD4OLN7/zV6L6d2v7uB
+        puWZ8QzKuHYFaRNVXgFBXN3VJnsIOUjv20pqZMKO3phLCKX2/zQzJLCBQvF/5
+        UKtnJiMp1ACNhG8LF0Q0FPWfe86YZBBxqrQr5WfjMu0LOO52ZAxi9KTWSlceJ
+        2U361gDb7S5Deub8MaDrjUEpluphQeo8xyvHBoNXsqeax/WaHyRYOgaW6krxE
+        GVaBQAfA2czYZhEA05Tb38ahq/gwDQ1bagd9rGnCHtAg=="]]></sourcecode>
             </section>
         </section>
 
@@ -720,8 +707,14 @@ content-length: 18]]></sourcecode>
 
         <section>
             <name>Examples</name>
-            <t keepWithNext="true">The examples in this section use the following RSA 2048-bit keys, which we will refer to as <tt>keyId=Test</tt>:</t>
-            <sourcecode><![CDATA[
+            <section anchor="example-keys">
+                <name>Example Keys</name>
+                <t keepWithNext="true">This section provides cryptographic keys that are referenced in example signatures throughout this document.  These keys <bcp14>MUST NOT</bcp14> be used for any purpose other than testing.</t>
+                
+                <section anchor="example-key-rsa-test">
+                    <name><tt>rsa-test</tt></name>
+                    <t>The following key is a 2048-bit RSA public and private key pair:</t>
+                    <sourcecode><![CDATA[
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEAhAKYdtoeoy8zcAcR874L8cnZxKzAGwd7v36APp7Pv6Q2jdsPBRrw
 WEBnez6d0UDKDwGbc6nxfEXAy5mbhgajzrw3MOEt8uA5txSKobBpKDeBLOsdJKFq
@@ -758,75 +751,224 @@ qQKBiD5GwESzsFPy3Ga0MvZpn3D6EJQLgsnrtUPZx+z2Ep2x0xc5orneB5fGyF1P
 WtP+fG5Q6Dpdz3LRfm+KwBCWFKQjg7uTxcjerhBWEYPmEMKYwTJF5PBG9/ddvHLQ
 EQeNC8fHGg4UXU8mhHnSBt3EA10qQJfRDs15M38eG2cYwB1PZpDHScDnDA0=
 -----END RSA PRIVATE KEY-----]]></sourcecode>
+                </section>
+            </section>
 
-            <t keepWithNext="true">All examples use this HTTP message:</t>
-            <sourcecode><![CDATA[
+            <section>
+                <name>Example <tt>keyId</tt> Values</name>
+                <t keepWithNext="true">The table below maps example <tt>keyId</tt> values to associated algorithms and/or keys.  These are example mappings that are valid only within the context of examples in examples within this and future documents that reference this section.  Unless otherwise specified, within the context of examples it should be assumed that the signer and verifier understand these <tt>keyId</tt> mappings.  These <tt>keyId</tt> values are not reserved, and deployments are free to use them, with these associations or others.</t>
+
+                <table>
+                    <thead><tr><th><tt>keyId</tt></th><th>Algorithm</th><th>Verification Key</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><tt>test-key-a</tt></td>
+                            <td><tt>hs2019</tt>, using RSASSA-PSS <xref target="RFC8017"/> and SHA-512 <xref target="RFC6234"/></td>
+                            <td>The public key specified in <xref target="example-key-rsa-test"/>.</td>
+                        </tr>
+                        <tr>
+                            <td><tt>test-key-b</tt></td>
+                            <td><tt>rsa-256</tt></td>
+                            <td>The public key specified in <xref target="example-key-rsa-test"/>.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section>
+                <name>Test Cases</name>
+                <t keepWithNext="true">This section provides non-normative examples that may be used as test cases to validate implementation correctness.  These examples are based on the following HTTP message:</t>
+                <sourcecode><![CDATA[
 POST /foo?param=value&pet=dog HTTP/1.1
 Host: example.com
-Date: Sun, 05 Jan 2014 21:31:40 GMT
+Date: Tue, 07 Jun 2014 20:51:35 GMT
 Content-Type: application/json
 Digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 Content-Length: 18
 
 {"hello": "world"}]]></sourcecode>
 
-            <section anchor="default-test">
-                <name>Default Test</name>
-                <t keepWithNext="true">[[ Editor's note: This statement about default Covered Content is inaccurate. ]]  If a list of headers is not included, the Date header is the only header that is signed by default for <tt>rsa-sha256</tt>.  The string to sign would be:</t>
-                <sourcecode><![CDATA[
-date: Sun, 05 Jan 2014 21:31:40 GMT]]></sourcecode>
-                <t keepWithNext="true">The Signature header would be:</t>
-                <sourcecode><![CDATA[
-Signature: keyId="Test",algorithm="rsa-sha256",
-    signature="R1ngRJLqHG6A7w0XR2JFCgLrQbIK7gVp/IkzS1zYbDA4mJbkR06Od
-    GCS/rLNNcqNOW02Ca2fjeKz9qGfVYzqBUeJJJhvqitB7d0GHxNf1ZvlfWoQlWx0Q
-    o3c1e7jhn7hlGe28d3qdfmMO4lxcv8acbB5Xo9MDu/gLgLuPPG2iCViS9SnZjwgQ
-    ZdeWc6H7hSw8y8myA8yvc9P7LtEBJzHLxvFCW739nxTLNDxuIHcECtreP9Z+gAcW
-    ZnJ59yXmF6kjTQnWUmCSzP1zqraF0eODgfXvejjzILxjZ1nI3RrioOwRtbT2DH5j
-    BLi6MlAQh/dkG14/ucZyb0yrEBrqRd6ig=="]]></sourcecode>
-            </section>
+                <section>
+                    <name>Signature Generation</name>
+                    <section>
+                        <name><tt>hs2019</tt> signature over minimal recommended content</name>
+                        <t keepWithNext="true">This presents metadata for a Signature using <tt>hs2019</tt>, over minimum recommended data to sign:</t>
+                        <table>
+                            <thead><tr><th>Property</th><th>Value</th></tr></thead>
+                            <tbody>
+                                <tr><td>Algorithm</td><td><tt>hs2019</tt>, using RSASSA-PSS <xref target="RFC8017"/> using SHA-512 <xref target="RFC6234"/></td></tr>
+                                <tr><td>Covered Content</td><td><tt>(created) (request-target)</tt></td></tr>
+                                <tr><td>Creation Time</td><td>8:51:35 PM GMT, June 7th, 2014</td></tr>
+                                <tr><td>Expiration Time</td><td>Undefined</td></tr>
+                                <tr><td>Verification Key Material</td><td>The public key specified in <xref target="example-key-rsa-test"/>.</td></tr>
+                            </tbody>
+                        </table>
 
-            <section anchor="basic-test">
-                <name>Basic Test</name>
-                <t keepWithNext="true">[[ Editor's note: This statement about minimum recommended Covered Content is inaccurate. ]]  The minimum recommended data to sign is the <tt>(request-target)</tt>, <tt>host</tt>, and <tt>date</tt>.  In this case, the string to sign would be:</t>
-                <sourcecode><![CDATA[
+                        <t keepWithNext="true">The Signature Input is:</t>
+                        <sourcecode><![CDATA[
+(created): 1402170695
+(request-target): post /foo?param=value&pet=dog]]></sourcecode>
+
+                        <t keepWithNext="true">The signature value is:</t>
+                        <sourcecode><![CDATA[
+e3y37nxAoeuXw2KbaIxE2d9jpE7Z9okgizg6QbD2Z7fUVUvog+ZTKKLRBnhNglVIY6fAa
+YlHwx7ZAXXdBVF8gjWBPL6U9zRrB4PFzjoLSxHaqsvS0ZK9FRxpenptgukaVQ1aeva3PE
+1aD6zZ93df2lFIFXGDefYCQ+M/SrDGQOFvaVykEkte5mO6zQZ/HpokjMKvilfSMJS+vbv
+C1GJItQpjs636Db+7zB2W1BurkGxtQdCLDXuIDg4S8pPSDihkch/dUzL2BpML3PXGKVXw
+HOUkVG6Q2ge07IYdzya6N1fIVA9eKI1Y47HT35QliVAxZgE0EZLo8mxq19ReIVvuFg==]]></sourcecode>
+
+                        <t keepWithNext="true">A possible Signature header for this signature is:</t>
+                        <sourcecode><![CDATA[
+Signature: keyId="test-key-a", created=1402170695,
+    headers="(created) (request-target)",
+    signature="e3y37nxAoeuXw2KbaIxE2d9jpE7Z9okgizg6QbD2Z7fUVUvog+ZTKK
+        LRBnhNglVIY6fAaYlHwx7ZAXXdBVF8gjWBPL6U9zRrB4PFzjoLSxHaqsvS0ZK
+        9FRxpenptgukaVQ1aeva3PE1aD6zZ93df2lFIFXGDefYCQ+M/SrDGQOFvaVyk
+        Ekte5mO6zQZ/HpokjMKvilfSMJS+vbvC1GJItQpjs636Db+7zB2W1BurkGxtQ
+        dCLDXuIDg4S8pPSDihkch/dUzL2BpML3PXGKVXwHOUkVG6Q2ge07IYdzya6N1
+        fIVA9eKI1Y47HT35QliVAxZgE0EZLo8mxq19ReIVvuFg=="]]></sourcecode>
+                    </section>
+
+                    <section>
+                        <name><tt>hs2019</tt> signature covering all header fields</name>
+                        <t keepWithNext="true">This presents metadata for a Signature using <tt>hs2019</tt> that covers all header fields in the request:</t>
+                        <table>
+                            <thead><tr><th>Property</th><th>Value</th></tr></thead>
+                            <tbody>
+                                <tr><td>Algorithm</td><td><tt>hs2019</tt>, using RSASSA-PSS <xref target="RFC8017"/> using SHA-512 <xref target="RFC6234"/></td></tr>
+                                <tr><td>Covered Content</td><td><tt>(created)</tt>, <tt>(request-target)</tt>, <tt>host</tt>, <tt>date</tt>, <tt>content-type</tt>, <tt>digest</tt>, <tt>content-length</tt></td></tr>
+                                <tr><td>Creation Time</td><td>8:51:35 PM GMT, June 7th, 2014</td></tr>
+                                <tr><td>Expiration Time</td><td>Undefined</td></tr>
+                                <tr><td>Verification Key Material</td><td>The public key specified in <xref target="example-key-rsa-test"/>.</td></tr>
+                            </tbody>
+                        </table>
+
+                        <t keepWithNext="true">The Signature Input is:</t>
+                        <sourcecode><![CDATA[
+(created): 1402170695
 (request-target): post /foo?param=value&pet=dog
 host: example.com
-date: Sun, 05 Jan 2014 21:31:40 GMT]]></sourcecode>
-                <t keepWithNext="true">The Signature header would be:</t>
-                <sourcecode><![CDATA[
-Signature: keyId="Test",algorithm="rsa-sha256",
-    headers="(request-target) host date",
-    signature="TSkjEULCH2HKgS23CF9E6pFfoFnCOOmPqYqlytuTgh/4agD2x2pbJ
-    SaAiOaj1ct0zxY1nmBWEs3RNzEURNFPHcwTyK2e9HqpMeHtzz9U8us9UWmE/SJiE
-    fsp4C3dORtjuN1cGHQ9mEfiDStb/ucSGrBIrmSP4hIFGlJjzOIiFFDqxppHmpWag
-    9zELYUMq0nXryKYProoyssryOvzuwTM0mNWU/KEsxCpYqDsFXxY9A/ayHSrQlqMh
-    xhGLtcSz2kLSoKj0+hM/gJLC6UFC1Okd1ljhsWIax/N3octJC5A53saETcsLtzrz
-    ecei1JNdJctO7VVRIbglHNuNqRs7XwOBg=="]]></sourcecode>
-            </section>
-
-            <section anchor="all-headers-test">
-                <name>All Headers Test</name>
-                <t keepWithNext="true">A strong signature including all of the headers and a digest of the body of the HTTP request would result in the following signing string:</t>
-                <sourcecode><![CDATA[
-(request-target): post /foo?param=value&pet=dog
-host: example.com
-date: Sun, 05 Jan 2014 21:31:40 GMT
+date: Tue, 07 Jun 2014 20:51:35 GMT
 content-type: application/json
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 content-length: 18]]></sourcecode>
-                <t keepWithNext="true">The Signature header would be:</t>
-                <sourcecode><![CDATA[
-Signature: keyId="Test",algorithm="rsa-sha256",
-    created=1402170695, expires=1402170699,
-    headers="(request-target) (created) (expires)
-    host date content-type digest content-length",
-    signature="DCx3tr/0pZU+ecTOrnXzWMtv/OYDl5PMJUIdd4ApuZCk8vb0QlFga
-    FFPreMUG33g7IO/4zH56Ld67vTLyjIQcDxYK/ad42EqkSrzainPYt0lpOPLUwxj6
-    ZCM9NWAqrBvkQGRo4y+OcAFPfGDSNJw95CwHICL50rm7VCLP5rVhSt7TM1Qd2STY
-    HoNb2BnwVEAkWemI68aZQaUD3uwH01I71EPrMAo8YHULeKPyOwpJowMBCDWl9061
-    2qy7UCUlz86bBRqqVIyPI9/5NV50UGP1QBtD61iXKUh0n3KcAHbODyO8+AVtnWAB
-    rlhceJEwvmhBak8LAdGTlY4EGOrHeeLLQ=="]]></sourcecode>
+
+                        <t keepWithNext="true">The signature value is:</t>
+                        <sourcecode><![CDATA[
+KXUj1H3ZOhv3Nk4xlRLTn4bOMlMOmFiud3VXrMa9MaLCxnVmrqOX5BulRvB65YW/wQp0o
+T/nNQpXgOYeY8ovmHlpkRyz5buNDqoOpRsCpLGxsIJ9cX8XVsM9jy+Q1+RIlD9wfWoPHh
+qhoXt35ZkasuIDPF/AETuObs9QydlsqONwbK+TdQguDK/8Va1Pocl6wK1uLwqcXlxhPEb
+55EmdYB9pddDyHTADING7K4qMwof2mC3t8Pb0yoLZoZX5a4Or4FrCCKK/9BHAhq/RsVk0
+dTENMbTB4i7cHvKQu+o9xuYWuxyvBa0Z6NdOb0di70cdrSDEsL5Gz7LBY5J2N9KdGg==]]></sourcecode>
+
+                        <t keepWithNext="true">A possible Signature header for this signature is:</t>
+                        <sourcecode><![CDATA[
+Signature: keyId="test-key-a", algorithm="hs2019",
+    created=1402170695,
+    headers="(request-target) (created) host date content-type digest
+        content-length",
+    signature="KXUj1H3ZOhv3Nk4xlRLTn4bOMlMOmFiud3VXrMa9MaLCxnVmrqOX5B
+        ulRvB65YW/wQp0oT/nNQpXgOYeY8ovmHlpkRyz5buNDqoOpRsCpLGxsIJ9cX8
+        XVsM9jy+Q1+RIlD9wfWoPHhqhoXt35ZkasuIDPF/AETuObs9QydlsqONwbK+T
+        dQguDK/8Va1Pocl6wK1uLwqcXlxhPEb55EmdYB9pddDyHTADING7K4qMwof2m
+        C3t8Pb0yoLZoZX5a4Or4FrCCKK/9BHAhq/RsVk0dTENMbTB4i7cHvKQu+o9xu
+        YWuxyvBa0Z6NdOb0di70cdrSDEsL5Gz7LBY5J2N9KdGg=="]]></sourcecode>
+                    </section>
+                </section>
+
+                <section>
+                    <name>Signature Verification</name>
+                    <section>
+                        <name>Minimal Required Signature Header</name>
+                        <t keepWithNext="true">This presents a Signature header containing only the minimal required parameters:</t>
+                        <sourcecode><![CDATA[
+Signature: keyId="test-key-a", (created): 1402170695,
+    signature="V3SijFpJOvDUT8t1/EnYli/4TbF2AGqwBGiGUGrgClCkiOAIlOxxY7
+        2Mr13DccFkYzg3gX1jIOpKXzH70C5bru4b71SBG+ShiJLu34gHCG33iw44NLG
+        UvT5+F+LCKbbHberyk8eyYsZ+TLwtZAYKafxfNOWQXF4o3QaWslDMm8Tcgrd8
+        onM45ayFyR4nXRlcGad4PISYGz8PmO4Y+K8RYOyDkgsmRxKtftFQUYG41anyE
+        lccNLfEfLBKsyV6kxr36U1Q7FdUopLv8kqluQySrWD6kesvFxNvbEOi+1uZqT
+        uFlK8ZldITQiqtNYaabRjQFZio63gma2y+UAaTGLdM9A=="]]></sourcecode>
+
+                        <t keepWithNext="true">The corresponding signature metadata derived from this header field is:</t>
+                        <table>
+                            <thead><tr><th>Property</th><th>Value</th></tr></thead>
+                            <tbody>
+                                <tr><td>Algorithm</td><td><tt>hs2019</tt>, using RSASSA-PSS <xref target="RFC8017"/> using SHA-256 <xref target="RFC6234"/></td></tr>
+                                <tr><td>Covered Content</td><td><tt>(created)</tt></td></tr>
+                                <tr><td>Creation Time</td><td>8:51:35 PM GMT, June 7th, 2014</td></tr>
+                                <tr><td>Expiration Time</td><td>Undefined</td></tr>
+                                <tr><td>Verification Key Material</td><td>The public key specified in <xref target="example-key-rsa-test"/>.</td></tr>
+                            </tbody>
+                        </table>
+
+                        <t keepWithNext="true">The corresponding Signature Input is:</t>
+                        <sourcecode><![CDATA[
+(created): 1402170695
+    ]]></sourcecode>
+                    </section>
+
+                    <section>
+                        <name>Minimal Recommended Signature Header</name>
+                        <t keepWithNext="true">This presents a Signature header containing only the minimal required and recommended parameters:</t>
+                        <sourcecode><![CDATA[
+Signature: algorithm="hs2019", keyId="test-key-a",
+    (created): 1402170695,
+    signature="V3SijFpJOvDUT8t1/EnYli/4TbF2AGqwBGiGUGrgClCkiOAIlOxxY7
+        2Mr13DccFkYzg3gX1jIOpKXzH70C5bru4b71SBG+ShiJLu34gHCG33iw44NLG
+        UvT5+F+LCKbbHberyk8eyYsZ+TLwtZAYKafxfNOWQXF4o3QaWslDMm8Tcgrd8
+        onM45ayFyR4nXRlcGad4PISYGz8PmO4Y+K8RYOyDkgsmRxKtftFQUYG41anyE
+        lccNLfEfLBKsyV6kxr36U1Q7FdUopLv8kqluQySrWD6kesvFxNvbEOi+1uZqT
+        uFlK8ZldITQiqtNYaabRjQFZio63gma2y+UAaTGLdM9A=="]]></sourcecode>
+
+                        <t keepWithNext="true">The corresponding signature metadata derived from this header field is:</t>
+                        <table>
+                            <thead><tr><th>Property</th><th>Value</th></tr></thead>
+                            <tbody>
+                                <tr><td>Algorithm</td><td><tt>hs2019</tt>, using RSASSA-PSS <xref target="RFC8017"/> using SHA-512 <xref target="RFC6234"/></td></tr>
+                                <tr><td>Covered Content</td><td><tt>(created)</tt></td></tr>
+                                <tr><td>Creation Time</td><td>8:51:35 PM GMT, June 7th, 2014</td></tr>
+                                <tr><td>Expiration Time</td><td>Undefined</td></tr>
+                                <tr><td>Verification Key Material</td><td>The public key specified in <xref target="example-key-rsa-test"/>.</td></tr>
+                            </tbody>
+                        </table>
+
+                        <t keepWithNext="true">The corresponding Signature Input is:</t>
+                        <sourcecode><![CDATA[
+(created): 1402170695
+    ]]></sourcecode>
+                    </section>
+
+                    <section>
+                        <name>Minimal Signature Header using <tt>rsa-256</tt></name>
+                        <t keepWithNext="true">This presents a minimal Signature header for a signature using the <tt>rsa-256</tt> algorithm:</t>
+                        <sourcecode><![CDATA[
+Signature: algorithm="rsa-256", keyId="test-key-b",
+    headers="date",
+    signature="HtXycCl97RBVkZi66ADKnC9c5eSSlb57GnQ4KFqNZplOpNfxqk62Jz
+        Z484jXgLvoOTRaKfR4hwyxlcyb+BWkVasApQovBSdit9Ml/YmN2IvJDPncrlh
+        PDVDv36Z9/DiSO+RNHD7iLXugdXo1+MGRimW1RmYdenl/ITeb7rjfLZ4b9VNn
+        LFtVWwrjhAiwIqeLjodVImzVc5srrk19HMZNuUejK6I3/MyN3+3U8tIRW4LWz
+        x6ZgGZUaEEP0aBlBkt7Fj0Tt5/P5HNW/Sa/m8smxbOHnwzAJDa10PyjzdIbyw
+        lnWIIWtZKPPsoVoKVopUWEU3TNhpWmaVhFrUL/O6SN3w=="]]></sourcecode>
+
+                        <t keepWithNext="true">The corresponding signature metadata derived from this header field is:</t>
+                        <table>
+                            <thead><tr><th>Property</th><th>Value</th></tr></thead>
+                            <tbody>
+                                <tr><td>Algorithm</td><td><tt>rsa-256</tt></td></tr>
+                                <tr><td>Covered Content</td><td><tt>date</tt></td></tr>
+                                <tr><td>Creation Time</td><td>Undefined</td></tr>
+                                <tr><td>Expiration Time</td><td>Undefined</td></tr>
+                                <tr><td>Verification Key Material</td><td>The public key specified in <xref target="example-key-rsa-test"/>.</td></tr>
+                            </tbody>
+                        </table>
+
+                        <t keepWithNext="true">The corresponding Signature Input is:</t>
+                        <sourcecode><![CDATA[
+date: Tue, 07 Jun 2014 20:51:35 GMT]]></sourcecode>
+                    </section>
+                </section>
             </section>
         </section>
 
@@ -1068,7 +1210,7 @@ Jeffrey Yasskin
                                 <li>Moved normative text related to ambiguous signature parameters to Signature header definition.</li>
                                 <li>Added normative reference to RFC 2104 for HMAC.</li>
                                 <li>Added informative reference to RFC 3339.</li>
-                                <li>Added normative reference to POSIX.1 in `created` and `expires` parameter definitions.</li>
+                                <li>Added normative reference to POSIX.1 in <tt>created</tt> and <tt>expires</tt> parameter definitions.</li>
                                 <li>Added definitions for HTTP-related terms by referencing RFC 7230.</li>
                                 <li>Added definitions for Signer and Verifier, and placeholder entries for Signing Algorithm and Signing String.</li>
                                 <li>Added definition of signature as applying to both digital signatures and MACs.</li>
@@ -1090,6 +1232,7 @@ Jeffrey Yasskin
                                 <li>Added Topics for Working Group Discussion section, to be removed prior to publication as an RFC.</li>
                                 <li>Added guidance on application-specific requirements.</li>
                                 <li>Added IANA HTTP Signature Parameter registry.</li>
+                                <li>Specified default values for <tt>algorithm</tt> and <tt>expires</tt> parameters.</li>
                             </ul>
                         </li>
                     </ul>
