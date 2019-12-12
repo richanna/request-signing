@@ -62,7 +62,7 @@
                     <uri>https://manu.sporny.org/</uri>
                 </address>
             </author>
-            <date day="08" month="12" year="2019"/>
+            <date day="12" month="12" year="2019"/>
             <area>Applications</area>
             <workgroup>HTTPbis Working Group</workgroup>
             <keyword>HTTP</keyword>
@@ -116,7 +116,7 @@
                         <li>Combination of header fields with the same field name.</li>
                         <li>Reordering of header fields with different names.</li>
                         <li>Conversion between HTTP/1.x and HTTP/2, or vice-versa.</li>
-                        <li>Changes in casing (e.g., "Origin" to "origin") any other case-insensitive content such as header field names, request URI scheme, or host.</li>
+                        <li>Changes in casing (e.g., "Origin" to "origin") of any case-insensitive content such as header field names, request URI scheme, or host.</li>
                         <li>Addition or removal of leading or trailing whitespace to a header field value.</li>
                         <li>Addition or removal of <tt>obs-fold</tt>s.</li>
                         <li>Changes to the request-target and Host header field that when applied together do not result in a change to the message's effective request URI, as defined in <relref target="RFC7230" section="5.5"/>.</li>
@@ -140,6 +140,8 @@
                     <dt>Signer</dt><dd>The entity that is generating or has generated an HTTP Message Signature.</dd>
                     <dt>Verifier</dt><dd>An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message.  Note that an HTTP Message Signature may be verified multiple times, potentially by different entities.</dd>
                 </dl>
+
+                <t>This document contains non-normative examples of partial and complete HTTP messages.  To improve readability, header fields may be split into multiple lines, using the <tt>obs-fold</tt> syntax.  This syntax is deprecated in <xref target="RFC7230"/>, and senders <bcp14>MUST NOT</bcp14> generate messages that include it.</t>
             </section>
         </section>
 
@@ -381,7 +383,7 @@ x-example: Example header with some whitespace.]]></sourcecode>
                 <name>Verifying a Signature</name>
                 <t>In order to verify a signature, a verifier <bcp14>MUST</bcp14>:</t>
                 <ol>
-                    <li>Examine the signature's metadata to confirm that the signature meets the requirements described in this document, as well as any additional requirements defined by the application such as which headers or elements are required to be covered by the signature.</li>
+                    <li>Examine the signature's metadata to confirm that the signature meets the requirements described in this document, as well as any additional requirements defined by the application such as which header fields or other content are required to be covered by the signature.</li>
                     <li>Use the received HTTP message and the signature's metadata to recreate the Signature Input, using the process described in <xref target="canonicalization"/>.</li>
                     <li>Use the signature's Algorithm and Verification Key Material with the recreated Signing Input to verify the signature value.</li>
                 </ol>
@@ -460,7 +462,7 @@ Content-Length: 18
 
 {"hello": "world"}]]></sourcecode>
 
-                <t>The following examples assume that the "rsa-key-1" keyId provided by the signer is meaningful to the verifier.  Note that to improve readability, some header values are split into multiple lines, using the <tt>obs-fold</tt> syntax.  This syntax is deprecated in <xref target="RFC7230"/>, and senders <bcp14>MUST NOT</bcp14> generate messages that include it.</t>
+                <t>The following examples assume that the "rsa-key-1" keyId provided by the signer is meaningful to the verifier.</t>
 
                 <section anchor="sig-rsa-example">
                     <name>RSA Example</name>
@@ -484,17 +486,19 @@ content-length: 18]]></sourcecode>
 
                 <section anchor="sig-hmac-example">
                     <name>HMAC Example</name>
-                    <t keepWithNext="true">For an HMAC-based signature without a list of headers specified, the authorization header and signature would be generated as:</t>
+                    <t keepWithNext="true">For an HMAC-based signature, the Signature header would be generated as:</t>
                     <sourcecode><![CDATA[
 Signature: keyId="hmac-key-1",algorithm="hs2019",created=1402170695,
-    headers="(request-target) (created) host digest content-length",
+    headers="(request-target) (created) (expires)
+        host digest content-length",
     signature="Base64(HMAC-SHA512(signing string))"]]></sourcecode>
                     <t keepWithNext="true">The only difference between the RSA Example and the HMAC Example is the signature algorithm that is used.  The verifier would compose the Signature Input in the same way as the RSA Example above:</t>
                     <sourcecode><![CDATA[
-(request-target): post /foo\n
+(request-target): post /foo
 (created): 1402170695
-host: example.org\n
-digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=\n
+(expires): 1402170995
+host: example.org
+digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 content-length: 18]]></sourcecode>
                 </section>
             </section>
@@ -846,8 +850,8 @@ Signature: keyId="Test",algorithm="rsa-sha256",
                 <section>
                     <name>Algorithm Registry duplicates work of JWA</name>
                     <t><xref target="RFC7518">JSON Web Algorithms (JWA)</xref> already defines an IANA registry for cryptographic algorithms.  This wasn't used by Cavage out of concerns about complexity of JOSE, and issues with JWE and JWS being too flexible, leading to insecure combinations of options.  Using JWA's definitions does not need to mean we're using JOSE, however.  We should look at if/how we can leverage JWA's work without introducing too many sharp edges for implementers.</t>
-					<t>In any use of JWS algorithms, this spec would define a way to create the JWS Signing Input string to be applied to the algorithm. It should be noted that this is incompatible with JWS itself, which requires the inclusion of a structured header in the signature input.</t>
-					<t>A possible approach is to incorporate all elements of the JWA signature algorithm registry into this spec using a prefix or other marker, such as <tt>jws-RS256</tt> for the RSA 256 JSON Web Signature algorithm.</t>
+                    <t>In any use of JWS algorithms, this spec would define a way to create the JWS Signing Input string to be applied to the algorithm. It should be noted that this is incompatible with JWS itself, which requires the inclusion of a structured header in the signature input.</t>
+                    <t>A possible approach is to incorporate all elements of the JWA signature algorithm registry into this spec using a prefix or other marker, such as <tt>jws-RS256</tt> for the RSA 256 JSON Web Signature algorithm.</t>
                 </section>
 
                 <section>
@@ -946,7 +950,7 @@ Signature: keyId="Test",algorithm="rsa-sha256",
                 </section>
 
                 <section>
-                    <name>Expiration Not Needed</name>
+                    <name>Expiration not needed</name>
                     <t>In many cases, putting the expiration of the signature into the hands of the signer opens up more options for failures than necessary. Instead of the <tt>expires</tt>, any verifier can use the <tt>created</tt> field and an internal lifetime or offset to calculate expiration. We should consider dropping the <tt>expires</tt> field.</t>
                 </section>
             </section>
@@ -963,7 +967,7 @@ Signature: keyId="Test",algorithm="rsa-sha256",
                         <li>Request method</li>
                         <li>Individual components of the effective request URI: scheme, authority, path, query</li>
                         <li>Status code</li>
-						<li>Request body (currently supported via Digest header)</li>
+                        <li>Request body (currently supported via Digest header)</li>
                     </ul>
                 </section>
 
