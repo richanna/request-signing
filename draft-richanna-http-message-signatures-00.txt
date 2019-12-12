@@ -134,7 +134,7 @@ Internet-Draft            Signing HTTP Messages            December 2019
    Appendix B.  Topics for Working Group Discussion  . . . . . . . .  30
    Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  36
    Document History  . . . . . . . . . . . . . . . . . . . . . . . .  37
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  39
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  38
 
 1.  Introduction
 
@@ -2033,39 +2033,39 @@ Document History
          o  Converted to xml2rfc v3 and reformatted to comply with RFC
             style guides.
 
-         o  Rewrote abstract and introduction to focus on general
-            purpose signing and avoid specific use cases.
+         o  Removed "Signature" auth-scheme definition and related
+            content.
 
-         o  Added intro sections on challenges with HTTP message
-            signing, and listing innocuous transformations that the
-            signing mechanism must tolerate.
+         o  Removed conflicting normative requirements for use of
+            "algorithm" parameter.  Now MUST NOT be relied upon.
 
-         o  Added Document History section.
+         o  Removed Extensions appendix.
 
-         o  Removed informative intro sections on Signatures in HTTP
-            Requests/Responses, as they imply specific use cases.
+         o  Rewrote abstract and introduction to explain context and
+            need, and challenges inherent in signing HTTP messages.
 
-         o  Moved BCP 14 message under intro section.
+         o  Rewrote and heavily expanded algorithm definition, retaining
+            normative requirements.
 
-         o  Removed "Signature" auth-scheme definition and non-normative
-            description of using the "Signature" header field for
-            authentication.
+         o  Added definitions for key terms, referenced RFC 7230 for
+            HTTP terms.
 
-         o  Removed "Canonicalization Algorithm" from HTTP Signature
-            Algorithms registry entries.
+         o  Added examples for canonicalization and signature generation
+            steps.
 
-         o  Replaced mentions of ANSI X9.64 with normative references to
-            FIPS 186-4.
+         o  Rewrote Signature header definition, retaining normative
+            requirements.
 
-         o  Combined HTTP Signature Algorithms registry entry algorithm
-            fields into a "Description" field.
+         o  Added default values for "algorithm" and "expires"
+            parameters.
 
-         o  Revised HTTP Signature Algorithms registry definition.
+         o  Rewrote HTTP Signature Algorithms registry definition.
             Added change control policy and registry template.  Removed
             suggested URI.
 
-         o  Moved normative text related to ambiguous signature
-            parameters to Signature header definition.
+         o  Added IANA HTTP Signature Parameter registry.
+
+         o  Added additional normative and informative references.
 
 
 
@@ -2074,85 +2074,8 @@ Backman, et al.           Expires 14 June 2020                 [Page 37]
 Internet-Draft            Signing HTTP Messages            December 2019
 
 
-         o  Added normative reference to RFC 2104 for HMAC.
-
-         o  Added informative reference to RFC 3339.
-
-         o  Added normative reference to POSIX.1 in "created" and
-            "expires" parameter definitions.
-
-         o  Added definitions for HTTP-related terms by referencing RFC
-            7230.
-
-         o  Added definitions for Signer and Verifier, and placeholder
-            entries for Signing Algorithm and Signing String.
-
-         o  Added definition of signature as applying to both digital
-            signatures and MACs.
-
-         o  Renamed The Components of a Signature to HTTP Message
-            Signatures.  Revised to define message signatures without
-            reference to Authorization or Signature headers.
-
-         o  Added Signature Metadata section.  Moved normative
-            requirements in Signature Parameters out to appropriate
-            places (e.g., signature creation), redefined parameters in
-            terms of metadata properties, and moved them to Signature
-            header section.
-
-         o  Dropped definitions for unused terms Signing Algorithm and
-            Signing String
-
-         o  Moved metadata expressions to canonicalization section.
-
-         o  Added detailed description of signature generation and
-            verification process.
-
-         o  Removed duplication of normative requirements, consolidated
-            requirements for generation and verification to their
-            respective sections.
-
-         o  Replaced Key Reference metadata property with Verification
-            Key Material.
-
-         o  Removed conflicting normative requirements for use of
-            "algorithm" parameter.  Now MUST NOT be relied upon.
-
-         o  Moved Content Identifiers up to its own top-level section.
-
-         o  Explicitly defined Integer String and Decimal String.
-
-
-
-
-Backman, et al.           Expires 14 June 2020                 [Page 38]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
-         o  Consolidated content identifiers and canonicalization rules
-            into a single section.
-
-         o  Added examples for header field and "(request-target)"
-            canonicalization.
-
-         o  Removed Extensions appendix and fixed keys and signatures on
-            test examples.
-
-         o  Revised introduction around need for non-TLS integrity/
-            authenticity protection.  Added Requirements Description.
-
-         o  Revised Signature header definition.
-
          o  Added Topics for Working Group Discussion section, to be
             removed prior to publication as an RFC.
-
-         o  Added guidance on application-specific requirements.
-
-         o  Added IANA HTTP Signature Parameter registry.
-
-         o  Specified default values for "algorithm" and "expires"
-            parameters.
 
 Authors' Addresses
 
@@ -2177,15 +2100,6 @@ Authors' Addresses
    Digital Bazaar
    203 Roanoke Street W.
    Blacksburg, VA 24060
-
-
-
-
-Backman, et al.           Expires 14 June 2020                 [Page 39]
-
-Internet-Draft            Signing HTTP Messages            December 2019
-
-
    United States of America
 
    Phone: +1 540 961 4469
@@ -2211,30 +2125,4 @@ Internet-Draft            Signing HTTP Messages            December 2019
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Backman, et al.           Expires 14 June 2020                 [Page 40]
+Backman, et al.           Expires 14 June 2020                 [Page 38]

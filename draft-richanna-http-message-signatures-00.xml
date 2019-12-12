@@ -1197,42 +1197,19 @@ Jeffrey Yasskin
                             <t><strong>-00</strong></t>
                             <ul>
                                 <li>Converted to xml2rfc v3 and reformatted to comply with RFC style guides.</li>
-                                <li>Rewrote abstract and introduction to focus on general purpose signing and avoid specific use cases.</li>
-                                <li>Added intro sections on challenges with HTTP message signing, and listing innocuous transformations that the signing mechanism must tolerate.</li>
-                                <li>Added Document History section.</li>
-                                <li>Removed informative intro sections on Signatures in HTTP Requests/Responses, as they imply specific use cases.</li>
-                                <li>Moved BCP 14 message under intro section.</li>
-                                <li>Removed <tt>Signature</tt> auth-scheme definition and non-normative description of using the <tt>Signature</tt> header field for authentication.</li>
-                                <li>Removed "Canonicalization Algorithm" from HTTP Signature Algorithms registry entries.</li>
-                                <li>Replaced mentions of ANSI X9.64 with normative references to FIPS 186-4.</li>
-                                <li>Combined HTTP Signature Algorithms registry entry algorithm fields into a "Description" field.</li>
-                                <li>Revised HTTP Signature Algorithms registry definition.  Added change control policy and registry template.  Removed suggested URI.</li>
-                                <li>Moved normative text related to ambiguous signature parameters to Signature header definition.</li>
-                                <li>Added normative reference to RFC 2104 for HMAC.</li>
-                                <li>Added informative reference to RFC 3339.</li>
-                                <li>Added normative reference to POSIX.1 in <tt>created</tt> and <tt>expires</tt> parameter definitions.</li>
-                                <li>Added definitions for HTTP-related terms by referencing RFC 7230.</li>
-                                <li>Added definitions for Signer and Verifier, and placeholder entries for Signing Algorithm and Signing String.</li>
-                                <li>Added definition of signature as applying to both digital signatures and MACs.</li>
-                                <li>Renamed The Components of a Signature to HTTP Message Signatures. Revised to define message signatures without reference to Authorization or Signature headers.</li>
-                                <li>Added Signature Metadata section.  Moved normative requirements in Signature Parameters out to appropriate places (e.g., signature creation), redefined parameters in terms of metadata properties, and moved them to Signature header section.</li>
-                                <li>Dropped definitions for unused terms Signing Algorithm and Signing String</li>
-                                <li>Moved metadata expressions to canonicalization section.</li>
-                                <li>Added detailed description of signature generation and verification process.</li>
-                                <li>Removed duplication of normative requirements, consolidated requirements for generation and verification to their respective sections.</li>
-                                <li>Replaced Key Reference metadata property with Verification Key Material.</li>
+                                <li>Removed <tt>Signature</tt> auth-scheme definition and related content.</li>
                                 <li>Removed conflicting normative requirements for use of <tt>algorithm</tt> parameter. Now <bcp14>MUST NOT</bcp14> be relied upon.</li>
-                                <li>Moved Content Identifiers up to its own top-level section.</li>
-                                <li>Explicitly defined Integer String and Decimal String.</li>
-                                <li>Consolidated content identifiers and canonicalization rules into a single section.</li>
-                                <li>Added examples for header field and <tt>(request-target)</tt> canonicalization.</li>
-                                <li>Removed Extensions appendix and fixed keys and signatures on test examples.</li>
-                                <li>Revised introduction around need for non-TLS integrity/authenticity protection. Added Requirements Description.</li>
-                                <li>Revised Signature header definition.</li>
-                                <li>Added Topics for Working Group Discussion section, to be removed prior to publication as an RFC.</li>
-                                <li>Added guidance on application-specific requirements.</li>
+                                <li>Removed Extensions appendix.</li>
+                                <li>Rewrote abstract and introduction to explain context and need, and challenges inherent in signing HTTP messages.</li>
+                                <li>Rewrote and heavily expanded algorithm definition, retaining normative requirements.</li>
+                                <li>Added definitions for key terms, referenced RFC 7230 for HTTP terms.</li>
+                                <li>Added examples for canonicalization and signature generation steps.</li>
+                                <li>Rewrote Signature header definition, retaining normative requirements.</li>
+                                <li>Added default values for <tt>algorithm</tt> and <tt>expires</tt> parameters.</li>
+                                <li>Rewrote HTTP Signature Algorithms registry definition.  Added change control policy and registry template.  Removed suggested URI.</li>
                                 <li>Added IANA HTTP Signature Parameter registry.</li>
-                                <li>Specified default values for <tt>algorithm</tt> and <tt>expires</tt> parameters.</li>
+                                <li>Added additional normative and informative references.</li>
+                                <li>Added Topics for Working Group Discussion section, to be removed prior to publication as an RFC.</li>
                             </ul>
                         </li>
                     </ul>
