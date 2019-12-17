@@ -5,22 +5,20 @@
 OAuth Working Group                                       J. Richer, Ed.
 Internet-Draft
 Intended status: Standards Track                              J. Bradley
-Expires: February 9, 2017                                  Ping Identity
+Expires: June 18, 2020                                     Ping Identity
                                                            H. Tschofenig
                                                              ARM Limited
-                                                         August 08, 2016
+                                                       December 16, 2019
 
 
-              A Method for Signing HTTP Requests for OAuth
+    Proof-of-Possession for OAuth 2.0 Using HTTP Message Signatures
                 draft-ietf-oauth-signed-http-request-03
 
 Abstract
 
-   This document a method for offering data origin authentication and
-   integrity protection of HTTP requests.  To convey the relevant data
-   items in the request a JSON-based encapsulation is used and the JSON
-   Web Signature (JWS) technique is re-used.  JWS offers integrity
-   protection using symmetric as well as asymmetric cryptography.
+   This document defines a method for using HTTP Message Signatures as
+   proof-of-possession for OAuth 2.0 access tokens that are bound to a
+   cryptographic key.
 
 Status of This Memo
 
@@ -30,35 +28,36 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at http://datatracker.ietf.org/drafts/current/.
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
 
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on February 9, 2017.
+   This Internet-Draft will expire on June 18, 2020.
 
 Copyright Notice
 
-   Copyright (c) 2016 IETF Trust and the persons identified as the
+   Copyright (c) 2019 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (http://trustee.ietf.org/license-info) in effect on the date of
+   (https://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
-
-
-
-Richer, et al.          Expires February 9, 2017                [Page 1]
-
-Internet-Draft            HTTP Signed Messages               August 2016
-
-
    include Simplified BSD License text as described in Section 4.e of
+
+
+
+
+Richer, et al.            Expires June 18, 2020                 [Page 1]
+
+Internet-Draft     OAuth PoP Using Message Signatures      December 2019
+
+
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
 
@@ -66,31 +65,22 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   3.  Generating a JSON Object from an HTTP Request . . . . . . . .   3
-     3.1.  Calculating the query parameter list and hash . . . . . .   4
-     3.2.  Calculating the header list and hash  . . . . . . . . . .   5
-   4.  Sending the signed object . . . . . . . . . . . . . . . . . .   6
-     4.1.  HTTP Authorization header . . . . . . . . . . . . . . . .   6
-     4.2.  HTTP Form body  . . . . . . . . . . . . . . . . . . . . .   6
-     4.3.  HTTP Query parameter  . . . . . . . . . . . . . . . . . .   7
-   5.  Validating the request  . . . . . . . . . . . . . . . . . . .   7
-     5.1.  Validating the query parameter list and hash  . . . . . .   7
-     5.2.  Validating the header list and hash . . . . . . . . . . .   8
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
-     6.1.  The 'pop' OAuth Access Token Type . . . . . . . . . . . .   9
-     6.2.  JSON Web Signature and Encryption Type Values
-           Registration  . . . . . . . . . . . . . . . . . . . . . .   9
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
-     7.1.  Offering Confidentiality Protection for Access to
-           Protected       Resources . . . . . . . . . . . . . . . .   9
-     7.2.  Plaintext Storage of Credentials  . . . . . . . . . . . .  10
-     7.3.  Entropy of Keys . . . . . . . . . . . . . . . . . . . . .  10
-     7.4.  Denial of Service . . . . . . . . . . . . . . . . . . . .  10
-     7.5.  Validating the integrity of HTTP message  . . . . . . . .  11
-   8.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .  12
-   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  12
-   10. Normative References  . . . . . . . . . . . . . . . . . . . .  12
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
+   3.  Creating a PoP Message Signature for an HTTP Request  . . . .   3
+   4.  Sending the signed object . . . . . . . . . . . . . . . . . .   4
+     4.1.  HTTP Signature header field . . . . . . . . . . . . . . .   4
+     4.2.  HTTP Form body  . . . . . . . . . . . . . . . . . . . . .   4
+     4.3.  HTTP Query parameter  . . . . . . . . . . . . . . . . . .   5
+   5.  Validating the request  . . . . . . . . . . . . . . . . . . .   5
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
+     6.1.  The 'pop' OAuth Access Token Type . . . . . . . . . . . .   5
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
+     7.1.  Plaintext Storage of Credentials  . . . . . . . . . . . .   6
+     7.2.  Entropy of Keys . . . . . . . . . . . . . . . . . . . . .   6
+     7.3.  Denial of Service . . . . . . . . . . . . . . . . . . . .   6
+   8.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .   7
+   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   7
+   10. Normative References  . . . . . . . . . . . . . . . . . . . .   7
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
 
@@ -106,35 +96,33 @@ Table of Contents
    request.  Ideally, this should be done without replicating the
    information already present in the HTTP request more than required.
    However, many HTTP application frameworks insert extra headers, query
-
-
-
-Richer, et al.          Expires February 9, 2017                [Page 2]
-
-Internet-Draft            HTTP Signed Messages               August 2016
-
-
    parameters, and otherwise manipulate the HTTP request on its way from
-   the web server into the application code itself.  It is the goal of
-   this draft to have a signature protection mechanism that is
-   sufficiently robust against such deployment constraints while still
-   providing sufficient security benefits.
+   the web server into the application code itself.  The proof-of-
+   poession mechanism defined within this document uses the signing
+   mechanism defined in [I-D.richanna-http-message-signatures] for this
+   purpose.
 
    The key required for this signature calculation is distributed via
    mechanisms described in companion documents (see
    [I-D.ietf-oauth-pop-key-distribution] and
-   [I-D.ietf-oauth-pop-architecture]).  The JSON Web Signature (JWS)
-   specification [RFC7515] is used for computing a digital signature
-   (which uses asymmetric cryptography) or a keyed message digest (in
-   case of symmetric cryptography).
+   [I-D.ietf-oauth-pop-architecture]).
+
+
+
+Richer, et al.            Expires June 18, 2020                 [Page 2]
+
+Internet-Draft     OAuth PoP Using Message Signatures      December 2019
+
 
    The mechanism described in this document assumes that a client is in
-   possession of an access token and asociated key.  That client then
-   creates a JSON object including the access token, signs the JSON
-   object using JWS, and issues an request to a resource server for
-   access to a protected resource using the signed object as its
-   authorization.  The protected resource validates the JWS signature
-   and parses the JSON object to obtain token information.
+   possession of an access token and asociated key.  When using the
+   access token to authorize requests for protected resources, the
+   client additionally creates an HTTP Message Signature over the
+   Authorization header field and other elements of the HTTP request,
+   using the key to which the access token is bound.  The client then
+   attaches it to the request using the Signature header field.  The
+   protected resource verifies the HTTP Message Signature to confirm
+   prossession of the key.
 
 2.  Terminology
 
@@ -146,213 +134,115 @@ Internet-Draft            HTTP Signed Messages               August 2016
    Other terms such as "client", "authorization server", "access token",
    and "protected resource" are inherited from OAuth 2.0 [RFC6749].
 
+   The terms "HTTP Message Signature" and "Covered Content" are
+   inherited from HTTP Message Signatures
+   [I-D.richanna-http-message-signatures].
+
    We use the term 'sign' (or 'signature') to denote both a keyed
    message digest and a digital signature operation.
 
-3.  Generating a JSON Object from an HTTP Request
+3.  Creating a PoP Message Signature for an HTTP Request
 
-   This specification uses JSON Web Signatures [RFC7515] to protect the
-   access token and, optionally, parts of the request.
+   A PoP Message Signature is an HTTP Message Signature
+   [I-D.richanna-http-message-signatures] that provides proof of
+   possession of the key to which an access token is bound, and
+   optionally protects the access token and/or other parts of a request
+   to a protected resource.
 
-   This section describes how to generate a JSON [RFC7159] object from
-   the HTTP request.  Each value below is included as a member of the
-   JSON object at the top level.
+   PoP Message Signatures are created according to the process defined
+   in [I-D.richanna-http-message-signatures], and MUST comply with the
+   additional requirements defined within this section.
 
-   at REQUIRED.  The access token value.  This string is assumed to have
-      no particular format or structure and remains opaque to the
-      client.
+   The following content identifiers MUST be included within the
+   signature's Covered Content, in any order:
+
+      "(created)"
+
+      "(expires)", if the signature has an Expiration Time.
+
+      "authorization"
 
 
 
 
-Richer, et al.          Expires February 9, 2017                [Page 3]
+Richer, et al.            Expires June 18, 2020                 [Page 3]
 
-Internet-Draft            HTTP Signed Messages               August 2016
+Internet-Draft     OAuth PoP Using Message Signatures      December 2019
 
 
-   ts RECOMMENDED.  The timestamp.  This integer provides replay
-      protection of the signed JSON object.  Its value MUST be a number
-      containing an integer value representing number of whole integer
-      seconds from midnight, January 1, 1970 GMT.
+   The following content identifiers SHOULD be included within the
+   signature's Covered Content, in any order:
 
-   m  OPTIONAL.  The HTTP Method used to make this request.  This MUST
-      be the uppercase HTTP verb as a JSON string.
+      "(method)"
 
-   u  OPTIONAL.  The HTTP URL host component as a JSON string.  This MAY
-      include the port separated from the host by a colon in host:port
-      format.
+      "(scheme)"
 
-   p  OPTIONAL.  The HTTP URL path component of the request as an HTTP
-      string.
+      "(authority)"
 
-   q  OPTIONAL.  The hashed HTTP URL query parameter map of the request
-      as a two-part JSON array.  The first part of this array is a JSON
-      array listing all query parameters that were used in the
-      calculation of the hash in the order that they were added to the
-      hashed value as described below.  The second part of this array is
-      a JSON string containing the Base64URL encoded hash itself,
-      calculated as described below.
-
-   h  OPTIONAL.  The hashed HTTP request headers as a two-part JSON
-      array.  The first part of this array is a JSON array listing all
-      headers that were used in the calculation of the hash in the order
-      that they were added to the hashed value as described below.  The
-      second part of this array is a JSON string containing the
-      Base64URL encoded hash itself, calculated as described below.
-
-   b  OPTIONAL.  The base64URL encoded hash of the HTTP Request body,
-      calculated as the SHA256 of the byte array of the body
-
-   All hashes SHALL be calculated using the SHA256 algorithm. [[ Note to
-   WG: do we want crypto agility here?  If so how do we signal this ]]
-
-   The JSON object is signed using the algorithm appropriate to the
-   associated access token key, usually communicated as part of key
-   distribution [I-D.ietf-oauth-pop-key-distribution].
-
-3.1.  Calculating the query parameter list and hash
-
-   To generate the query parameter list and hash, the client creates two
-   data objects: an ordered list of strings to hold the query parameter
-   names and a string buffer to hold the data to be hashed.
-
-   The client iterates through all query parameters in whatever order it
-   chooses and for each query parameter it does the following:
-
-
-
-Richer, et al.          Expires February 9, 2017                [Page 4]
-
-Internet-Draft            HTTP Signed Messages               August 2016
-
-
-   1.  Adds the name of the query parameter to the end of the list.
-
-   2.  Percent-encodes the name and value of the parameter as specified
-       in [RFC3986].  Note that if the name and value have already been
-       percent-encoded for transit, they are not re-encoded for this
-       step.
-
-   3.  Encodes the name and value of the query parameter as "name=value"
-       and appends it to the string buffer separated by the ampersand
-       "&" character.
-
-   Repeated parameter names are processed separately with no special
-   handling.  Parameters MAY be skipped by the client if they are not
-   required (or desired) to be covered by the signature.
-
-   The client then calculates the hash over the resulting string buffer.
-   The list and the hash result are added to a list as the value of the
-   "q" member.
-
-   For example, the query parameter set of "b=bar", "a=foo", "c=duck" is
-   concatenated into the string:
-
-   b=bar&a=foo&c=duck
-
-   When added to the JSON structure using this process, the results are:
-
-   "q": [["b", "a", "c"], "u4LgkGUWhP9MsKrEjA4dizIllDXluDku6ZqCeyuR-JY"]
-
-3.2.  Calculating the header list and hash
-
-   To generate the header list and hash, the client creates two data
-   objects: an ordered list of strings to hold the header names and a
-   string buffer to hold the data to be hashed.
-
-   The client iterates through all query parameters in whatever order it
-   chooses and for each query parameter it does the following:
-
-   1.  Lowercases the header name.
-
-   2.  Adds the name of the header to the end of the list.
-
-   3.  Encodes the name and value of the header as "name: value" and
-       appends it to the string buffer separated by a newline "\n"
-       character.
-
-   Repeated header names are processed separately with no special
-   handling.  Headers MAY be skipped by the client if they are not
-   required (or desired) to be covered by the signature.
-
-
-
-Richer, et al.          Expires February 9, 2017                [Page 5]
-
-Internet-Draft            HTTP Signed Messages               August 2016
-
-
-   The client then calculates the hash over the resulting string buffer.
-   The list and the hash result are added to a list as the value of the
-   "h" member.
-
-   For example, the headers "Content-Type: application/json" and "Etag:
-   742-3u8f34-3r2nvv3" are concatenated into the string:
-
-   content-type: application/json
-   etag: 742-3u8f34-3r2nvv3
-
-   "h": [["content-type", "etag"],
-     "bZA981YJBrPlIzOvplbu3e7ueREXXr38vSkxIBYOaxI"]
+      "(path)"
 
 4.  Sending the signed object
 
-   In order to send the signed object to the protected resource, the
+   In order to attach the PoP Message Signature to the request, the
    client includes it in one of the following three places.
 
-4.1.  HTTP Authorization header
+4.1.  HTTP Signature header field
 
-   The client SHOULD send the signed object to the protected resource in
-   the Authorization header.  The value of the signed object in JWS
-   compact form is appended to the Authorization header as a PoP value.
-   This is the preferred method.  Note that if this method is used, the
-   Authorization header MUST NOT be included in the protected elements
-   of the signed object.
+   The client SHOULD send the object to the protected resource in the
+   Signature header field as described in
+   [I-D.richanna-http-message-signatures].  When doing so, the client
+   MUST include the "algorithm", "created", and "headers" parameters,
+   and MUST include the "expires" parameter if the signature has an
+   Expiration Time.
 
    GET /resource/foo
    Authorization: PoP eyJ....omitted for brevity...
+   Signature: algorithm="rsa-sha256", created=..., expires=...,
+       headers="...", signature=...
 
 4.2.  HTTP Form body
 
    If the client is sending the request as a form-encoded HTTP message
-   with parameters in the body, the client MAY send the signed object as
-   part of that form body.  The value of the signed object in JWS
-   compact form is sent as the form parameter pop_access_token.  Note
-   that if this method is used, the body hash cannot be included in the
-   protected elements of the signed object.
+   with parameters in the body, the client MAY send the PoP Message
+   Signature as part of that form body.  The client constructs a
+   Signature header field value as described in Section 4.1, percent-
+   encodes the value as described in [RFC3986], and sends the resulting
+   encoded value as the form parameter "pop_signature".  The access
+   token is sent as the form parameter "pop_access_token".  Note that if
+   this method is used the Digest header field cannot be included in the
+   signature's Covered Contents.
 
    POST /resource
    Content-type: application/www-form-encoded
 
-   pop_access_token=eyJ....omitted for brevity...
+   pop_access_token=eyJ....omitted for brevity...&pop_signature=...
 
 
 
 
 
-
-
-
-Richer, et al.          Expires February 9, 2017                [Page 6]
+Richer, et al.            Expires June 18, 2020                 [Page 4]
 
-Internet-Draft            HTTP Signed Messages               August 2016
+Internet-Draft     OAuth PoP Using Message Signatures      December 2019
 
 
 4.3.  HTTP Query parameter
 
    If neither the Authorization header nor the form-encoded body
-   parameter are available to the client, the client MAY send the signed
-   object as a query parameter.  The value of the signed object in JWS
-   compact form is sent as the query parameter pop_access_token.  Note
-   that if this method is used, the pop_access_token parameter MUST NOT
-   be included in the protected elements of the signed object.
+   parameter are available to the client, the client MAY send the PoP
+   Message Signature and access token as query parameters.  The PoP
+   Message Signature is encoded as described in Section 4.2 and sent as
+   the query parameter "pop_signature", and the the access token is sent
+   as the query parameter "pop_access_token".  Note that if this method
+   is used, the "pop_signature" parameter MUST NOT be included in the
+   signature's Covered Contents.
 
-   GET /resource?pop_access_token=eyJ....
+   GET /resource?pop_access_token=eyJ...&pop_signature=...
 
 5.  Validating the request
 
    Just like with a bearer token [RFC6750], while the access token value
-   included in the signed object is opaque to the client, it MUST be
+   included in the request is opaque to the client, it MUST be
    understood by the protected resource in order to fulfill the request.
    Also like a bearer token, the protected resource traditionally has
    several methods at its disposal for understanding the access token.
@@ -363,92 +253,10 @@ Internet-Draft            HTTP Signed Messages               August 2016
    the protected resource MUST have access to the key associated with
    the access token, as this key is required to validate the signature
    of the incoming request.  Validation of the signature is done using
-   normal JWS validation for the signature and key type.
-
-   Additionally, in order to trust any of the hashed components of the
-   HTTP request, the protected resource MUST re-create and verify a hash
-   for each component as described below.  This process is a mirror of
-   the process used to create the hashes in the first place, with a mind
-   toward the fact that order may have changed and that elements may
-   have been added or deleted.  The protected resource MUST similarly
-   compare the replicated values included in various JSON fields with
-   the corresponding actual values from the request.  Failure to do so
-   will allow an attacker to modify the underlying request while at the
-   same time having the application layer verify the signature
-   correctly.
-
-5.1.  Validating the query parameter list and hash
-
-   The client has at its disposal a map that indexes the query parameter
-   names to the values given.  The client creates a string buffer for
-   calculating the hash.  The client then iterates through the "list"
-   portion of the "p" parameter.  For each item in the list (in the
-   order of the list) it does the following:
-
-
-
-
-
-Richer, et al.          Expires February 9, 2017                [Page 7]
-
-Internet-Draft            HTTP Signed Messages               August 2016
-
-
-   1.  Fetch the value of the parameter from the HTTP request query
-       parameter map.  If a parameter is found in the list of signed
-       parameters but not in the map, the validation fails.
-
-   2.  Percent-encodes the name and value of the parameter as specified
-       in [RFC3986].  Note that if the name and value have already been
-       percent-encoded for transit, they are not re-encoded for this
-       step.
-
-   3.  Encode the parameter as "name=value" and concatenate it to the
-       end of the string buffer, separated by an ampersand character.
-
-   The client calculates the hash of the string buffer and base64url
-   encodes it.  The protected resource compares that string to the
-   string passed in as the hash.  If the two match, the hash validates,
-   and all named parameters and their values are considered covered by
-   the signature.
-
-   There MAY be additional query parameters that are not listed in the
-   list and are therefore not covered by the signature.  The client MUST
-   decide whether or not to accept a request with these uncovered
-   parameters.
-
-5.2.  Validating the header list and hash
-
-   The client has at its disposal a map that indexes the header names to
-   the values given.  The client creates a string buffer for calculating
-   the hash.  The client then iterates through the "list" portion of the
-   "h" parameter.  For each item in the list (in the order of the list)
-   it does the following:
-
-   1.  Fetch the value of the header from the HTTP request header map.
-       If a header is found in the list of signed parameters but not in
-       the map, the validation fails.
-
-   2.  Encode the parameter as "name: value" and concatenate it to the
-       end of the string buffer, separated by a newline character.
-
-   The client calculates the hash of the string buffer and base64url
-   encodes it.  The protected resource compares that string to the
-   string passed in as the hash.  If the two match, the hash validates,
-   and all named headers and their values are considered covered by the
-   signature.
-
-   There MAY be additional headers that are not listed in the list and
-   are therefore not covered by the signature.  The client MUST decide
-   whether or not to accept a request with these uncovered headers.
-
-
-
-
-Richer, et al.          Expires February 9, 2017                [Page 8]
-
-Internet-Draft            HTTP Signed Messages               August 2016
-
+   the verification process defined in
+   [I-D.richanna-http-message-signatures].  The resource MUST verify
+   that the algorithm and key used to generate the signature match those
+   to which the access token is bound.
 
 6.  IANA Considerations
 
@@ -466,51 +274,19 @@ Internet-Draft            HTTP Signed Messages               August 2016
 
    Change controller:  IETF
 
+
+
+
+Richer, et al.            Expires June 18, 2020                 [Page 5]
+
+Internet-Draft     OAuth PoP Using Message Signatures      December 2019
+
+
    Specification document(s):  [[ this document ]]
-
-6.2.  JSON Web Signature and Encryption Type Values Registration
-
-   This specification registers the "pop" type value in the IANA JSON
-   Web Signature and Encryption Type Values registry [RFC7515]:
-
-   o  "typ" Header Parameter Value: "pop"
-
-   o  Abbreviation for MIME Type: None
-
-   o  Change Controller: IETF
-
-   o  Specification Document(s): [[ this document ]]
 
 7.  Security Considerations
 
-7.1.  Offering Confidentiality Protection for Access to Protected
-      Resources
-
-   This specification can be used with and without Transport Layer
-   Security (TLS).
-
-   Without TLS this protocol provides a mechanism for verifying the
-   integrity of requests, it provides no confidentiality protection.
-   Consequently, eavesdroppers will have full access to communication
-   content and any further messages exchanged between the client and the
-   resource server.  This could be problematic when data is exchanged
-   that requires care, such as personal data.
-
-   When TLS is used then confidentiality of the transmission can be
-   ensured between endpoints, including both the request and the
-
-
-
-Richer, et al.          Expires February 9, 2017                [Page 9]
-
-Internet-Draft            HTTP Signed Messages               August 2016
-
-
-   response.  The use of TLS in combination with the signed HTTP request
-   mechanism is highly recommended to ensure the confidentiality of the
-   data returned from the protected resource.
-
-7.2.  Plaintext Storage of Credentials
+7.1.  Plaintext Storage of Credentials
 
    The mechanism described in this document works in a similar way to
    many three-party authentication and key exchange mechanisms.  In
@@ -525,7 +301,7 @@ Internet-Draft            HTTP Signed Messages               August 2016
    private keys associated with the access tokens are protected from
    unauthorized access.
 
-7.3.  Entropy of Keys
+7.2.  Entropy of Keys
 
    Unless TLS is used between the client and the resource server,
    eavesdroppers will have full access to requests sent by the client.
@@ -547,7 +323,7 @@ Internet-Draft            HTTP Signed Messages               August 2016
    day.  Of course, servers are urged to err on the side of caution, and
    use the longest key length possible within reason.
 
-7.4.  Denial of Service
+7.3.  Denial of Service
 
    This specification includes a number of features which may make
    resource exhaustion attacks against resource servers possible.  For
@@ -557,9 +333,9 @@ Internet-Draft            HTTP Signed Messages               August 2016
 
 
 
-Richer, et al.          Expires February 9, 2017               [Page 10]
+Richer, et al.            Expires June 18, 2020                 [Page 6]
 
-Internet-Draft            HTTP Signed Messages               August 2016
+Internet-Draft     OAuth PoP Using Message Signatures      December 2019
 
 
    authorization server before granting access to the protected
@@ -573,54 +349,8 @@ Internet-Draft            HTTP Signed Messages               August 2016
    computational overhead of verifying the keyed message digest alone is
    not likely sufficient to mount a denial of service attack.  To help
    combat this, it is RECOMMENDED that the protected resource validate
-   the access token (contained in the "at" member of the signed
-   structure) before performing any cryptographic verification
+   the access token before performing any cryptographic verification
    calculations.
-
-7.5.  Validating the integrity of HTTP message
-
-   This specification provides flexibility for selectively validating
-   the integrity of the HTTP request, including header fields, query
-   parameters, and message bodies.  Since all components of the HTTP
-   request are only optionally validated by this method, and even some
-   components may be validated only in part (e.g., some headers but not
-   others) it is up to protected resource developers to verify that any
-   vital parameters in a request are actually covered by the signature.
-   Failure to do so could allow an attacker to inject vital parameters
-   or headers into the request, ouside of the protection of the
-   signature.
-
-   The application verifying this signature MUST NOT assume that any
-   particular parameter is appropriately covered by the signature unless
-   it is included in the signed structure and the hash is verified.  Any
-   applications that are sensitive of header or query parameter order
-   MUST verify the order of the parameters on their own.  The
-   application MUST also compare the values in the JSON container with
-   the actual parameters received with the HTTP request (using a direct
-   comparison or a hash calculation, as appropriate).  Failure to make
-   this comparison will render the signature mechanism useless for
-   protecting these elements.
-
-   The behavior of repeated query parameters or repeated HTTP headers is
-   undefined by this specification.  If a header or query parameter is
-   repeated on either the outgoing request from the client or the
-   incoming request to the protected resource, that query parameter or
-   header name MUST NOT be covered by the hash and signature.
-
-   This specification records the order in which query parameters and
-   headers are hashed, but it does not guarantee that order is preserved
-   between the client and protected resource.  If the order of
-
-
-
-Richer, et al.          Expires February 9, 2017               [Page 11]
-
-Internet-Draft            HTTP Signed Messages               August 2016
-
-
-   parameters or headers are significant to the underlying application,
-   it MUST confirm their order on its own, apart from the signature and
-   HTTP message validation.
 
 8.  Privacy Considerations
 
@@ -645,10 +375,24 @@ Internet-Draft            HTTP Signed Messages               August 2016
               Server to Client Key Distribution", draft-ietf-oauth-pop-
               key-distribution-07 (work in progress), March 2019.
 
+   [I-D.richanna-http-message-signatures]
+              Backman, A., Richer, J., and M. Sporny, "Signing HTTP
+              Messages", draft-richanna-http-message-signatures-00 (work
+              in progress), December 2019.
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
+
+
+
+
+
+Richer, et al.            Expires June 18, 2020                 [Page 7]
+
+Internet-Draft     OAuth PoP Using Message Signatures      December 2019
+
 
    [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
               Resource Identifier (URI): Generic Syntax", STD 66,
@@ -663,24 +407,6 @@ Internet-Draft            HTTP Signed Messages               August 2016
               Framework: Bearer Token Usage", RFC 6750,
               DOI 10.17487/RFC6750, October 2012,
               <https://www.rfc-editor.org/info/rfc6750>.
-
-
-
-
-
-
-Richer, et al.          Expires February 9, 2017               [Page 12]
-
-Internet-Draft            HTTP Signed Messages               August 2016
-
-
-   [RFC7159]  Bray, T., Ed., "The JavaScript Object Notation (JSON) Data
-              Interchange Format", RFC 7159, DOI 10.17487/RFC7159, March
-              2014, <https://www.rfc-editor.org/info/rfc7159>.
-
-   [RFC7515]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web
-              Signature (JWS)", RFC 7515, DOI 10.17487/RFC7515, May
-              2015, <https://www.rfc-editor.org/info/rfc7515>.
 
    [RFC7519]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token
               (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015,
@@ -719,10 +445,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-Richer, et al.          Expires February 9, 2017               [Page 13]
+Richer, et al.            Expires June 18, 2020                 [Page 8]

@@ -5,7 +5,7 @@
 <head profile="http://www.w3.org/2006/03/hcard http://dublincore.org/documents/2008/08/04/dc-html/">
   <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
 
-  <title>A Method for Signing HTTP Requests for OAuth</title>
+  <title>Proof-of-Possession for OAuth 2.0 Using HTTP Message Signatures</title>
 
   <style type="text/css" title="Xml2Rfc (sans serif)">
   /*<![CDATA[*/
@@ -376,25 +376,18 @@
   <link href="#rfc.toc" rel="Contents">
 <link href="#rfc.section.1" rel="Chapter" title="1 Introduction">
 <link href="#rfc.section.2" rel="Chapter" title="2 Terminology">
-<link href="#rfc.section.3" rel="Chapter" title="3 Generating a JSON Object from an HTTP Request">
-<link href="#rfc.section.3.1" rel="Chapter" title="3.1 Calculating the query parameter list and hash">
-<link href="#rfc.section.3.2" rel="Chapter" title="3.2 Calculating the header list and hash">
+<link href="#rfc.section.3" rel="Chapter" title="3 Creating a PoP Message Signature for an HTTP Request">
 <link href="#rfc.section.4" rel="Chapter" title="4 Sending the signed object">
-<link href="#rfc.section.4.1" rel="Chapter" title="4.1 HTTP Authorization header">
+<link href="#rfc.section.4.1" rel="Chapter" title="4.1 HTTP Signature header field">
 <link href="#rfc.section.4.2" rel="Chapter" title="4.2 HTTP Form body">
 <link href="#rfc.section.4.3" rel="Chapter" title="4.3 HTTP Query parameter">
 <link href="#rfc.section.5" rel="Chapter" title="5 Validating the request">
-<link href="#rfc.section.5.1" rel="Chapter" title="5.1 Validating the query parameter list and hash">
-<link href="#rfc.section.5.2" rel="Chapter" title="5.2 Validating the header list and hash">
 <link href="#rfc.section.6" rel="Chapter" title="6 IANA Considerations">
 <link href="#rfc.section.6.1" rel="Chapter" title="6.1 The 'pop' OAuth Access Token Type">
-<link href="#rfc.section.6.2" rel="Chapter" title="6.2 JSON Web Signature and Encryption Type Values Registration">
 <link href="#rfc.section.7" rel="Chapter" title="7 Security Considerations">
-<link href="#rfc.section.7.1" rel="Chapter" title="7.1 Offering Confidentiality Protection for Access to Protected       Resources">
-<link href="#rfc.section.7.2" rel="Chapter" title="7.2 Plaintext Storage of Credentials">
-<link href="#rfc.section.7.3" rel="Chapter" title="7.3 Entropy of Keys">
-<link href="#rfc.section.7.4" rel="Chapter" title="7.4 Denial of Service">
-<link href="#rfc.section.7.5" rel="Chapter" title="7.5 Validating the integrity of HTTP message">
+<link href="#rfc.section.7.1" rel="Chapter" title="7.1 Plaintext Storage of Credentials">
+<link href="#rfc.section.7.2" rel="Chapter" title="7.2 Entropy of Keys">
+<link href="#rfc.section.7.3" rel="Chapter" title="7.3 Denial of Service">
 <link href="#rfc.section.8" rel="Chapter" title="8 Privacy Considerations">
 <link href="#rfc.section.9" rel="Chapter" title="9 Acknowledgements">
 <link href="#rfc.references" rel="Chapter" title="10 Normative References">
@@ -406,9 +399,9 @@
 
   <meta name="dct.creator" content="Richer, J., Ed., Bradley, J., and H. Tschofenig" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-oauth-signed-http-request-03" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-08-08" />
-  <meta name="dct.abstract" content="This document a method for offering data origin authentication and integrity protection of HTTP requests. To convey the relevant data items in the request a JSON-based encapsulation is used and the JSON Web Signature (JWS) technique is re-used. JWS offers integrity protection using symmetric as well as asymmetric cryptography." />
-  <meta name="description" content="This document a method for offering data origin authentication and integrity protection of HTTP requests. To convey the relevant data items in the request a JSON-based encapsulation is used and the JSON Web Signature (JWS) technique is re-used. JWS offers integrity protection using symmetric as well as asymmetric cryptography." />
+  <meta name="dct.issued" scheme="ISO8601" content="2019-16" />
+  <meta name="dct.abstract" content="This document defines a method for using HTTP Message Signatures as proof-of-possession for OAuth 2.0 access tokens that are bound to a cryptographic key." />
+  <meta name="description" content="This document defines a method for using HTTP Message Signatures as proof-of-possession for OAuth 2.0 access tokens that are bound to a cryptographic key." />
 
 </head>
 
@@ -430,7 +423,7 @@
 <td class="right">J. Bradley</td>
 </tr>
 <tr>
-<td class="left">Expires: February 9, 2017</td>
+<td class="left">Expires: June 18, 2020</td>
 <td class="right">Ping Identity</td>
 </tr>
 <tr>
@@ -443,26 +436,26 @@
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">August 08, 2016</td>
+<td class="right">December 16, 2019</td>
 </tr>
 
     	
     </tbody>
   </table>
 
-  <p class="title">A Method for Signing HTTP Requests for OAuth<br />
+  <p class="title">Proof-of-Possession for OAuth 2.0 Using HTTP Message Signatures<br />
   <span class="filename">draft-ietf-oauth-signed-http-request-03</span></p>
   
   <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
-<p>This document a method for offering data origin authentication and integrity protection of HTTP requests. To convey the relevant data items in the request a JSON-based encapsulation is used and the JSON Web Signature (JWS) technique is re-used. JWS offers integrity protection using symmetric as well as asymmetric cryptography.</p>
+<p>This document defines a method for using HTTP Message Signatures as proof-of-possession for OAuth 2.0 access tokens that are bound to a cryptographic key.</p>
 <h1 id="rfc.status"><a href="#rfc.status">Status of This Memo</a></h1>
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
-<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
+<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on February 9, 2017.</p>
+<p>This Internet-Draft will expire on June 18, 2020.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
-<p>Copyright (c) 2016 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
-<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
+<p>Copyright (c) 2019 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
 
   
   <hr class="noprint" />
@@ -473,15 +466,11 @@
 </li>
 <li>2.   <a href="#rfc.section.2">Terminology</a>
 </li>
-<li>3.   <a href="#rfc.section.3">Generating a JSON Object from an HTTP Request</a>
+<li>3.   <a href="#rfc.section.3">Creating a PoP Message Signature for an HTTP Request</a>
 </li>
-<ul><li>3.1.   <a href="#rfc.section.3.1">Calculating the query parameter list and hash</a>
+<li>4.   <a href="#rfc.section.4">Sending the signed object</a>
 </li>
-<li>3.2.   <a href="#rfc.section.3.2">Calculating the header list and hash</a>
-</li>
-</ul><li>4.   <a href="#rfc.section.4">Sending the signed object</a>
-</li>
-<ul><li>4.1.   <a href="#rfc.section.4.1">HTTP Authorization header</a>
+<ul><li>4.1.   <a href="#rfc.section.4.1">HTTP Signature header field</a>
 </li>
 <li>4.2.   <a href="#rfc.section.4.2">HTTP Form body</a>
 </li>
@@ -489,27 +478,17 @@
 </li>
 </ul><li>5.   <a href="#rfc.section.5">Validating the request</a>
 </li>
-<ul><li>5.1.   <a href="#rfc.section.5.1">Validating the query parameter list and hash</a>
-</li>
-<li>5.2.   <a href="#rfc.section.5.2">Validating the header list and hash</a>
-</li>
-</ul><li>6.   <a href="#rfc.section.6">IANA Considerations</a>
+<li>6.   <a href="#rfc.section.6">IANA Considerations</a>
 </li>
 <ul><li>6.1.   <a href="#rfc.section.6.1">The 'pop' OAuth Access Token Type</a>
 </li>
-<li>6.2.   <a href="#rfc.section.6.2">JSON Web Signature and Encryption Type Values Registration</a>
-</li>
 </ul><li>7.   <a href="#rfc.section.7">Security Considerations</a>
 </li>
-<ul><li>7.1.   <a href="#rfc.section.7.1">Offering Confidentiality Protection for Access to Protected       Resources</a>
+<ul><li>7.1.   <a href="#rfc.section.7.1">Plaintext Storage of Credentials</a>
 </li>
-<li>7.2.   <a href="#rfc.section.7.2">Plaintext Storage of Credentials</a>
+<li>7.2.   <a href="#rfc.section.7.2">Entropy of Keys</a>
 </li>
-<li>7.3.   <a href="#rfc.section.7.3">Entropy of Keys</a>
-</li>
-<li>7.4.   <a href="#rfc.section.7.4">Denial of Service</a>
-</li>
-<li>7.5.   <a href="#rfc.section.7.5">Validating the integrity of HTTP message</a>
+<li>7.3.   <a href="#rfc.section.7.3">Denial of Service</a>
 </li>
 </ul><li>8.   <a href="#rfc.section.8">Privacy Considerations</a>
 </li>
@@ -526,123 +505,65 @@
   <h1 id="rfc.section.1">
 <a href="#rfc.section.1">1.</a> Introduction</h1>
 <p id="rfc.section.1.p.1">In order to prove possession of an access token and its associated key, an OAuth 2.0 client needs to compute some cryptographic function and present the results to the protected resource as a signature. The protected resource then needs to verify the signature and compare that to the expected keys associated with the access token. This is in addition to the normal token protections provided by a <a href="#RFC6750" class="xref">bearer token</a> and transport layer security (TLS).</p>
-<p id="rfc.section.1.p.2">Furthermore, it is desirable to bind the signature to the HTTP request. Ideally, this should be done without replicating the information already present in the HTTP request more than required.  However, many HTTP application frameworks insert extra headers, query parameters, and otherwise manipulate the HTTP request on its way from the web server into the application code itself. It is the goal of this draft to have a signature protection mechanism that is sufficiently robust against such deployment constraints while still providing sufficient security benefits.</p>
-<p id="rfc.section.1.p.3">The key required for this signature calculation is distributed via mechanisms described in companion documents (see <a href="#I-D.ietf-oauth-pop-key-distribution" class="xref">[I-D.ietf-oauth-pop-key-distribution]</a> and <a href="#I-D.ietf-oauth-pop-architecture" class="xref">[I-D.ietf-oauth-pop-architecture]</a>). The JSON Web Signature (JWS) specification <a href="#RFC7515" class="xref">[RFC7515]</a> is used for computing a digital signature (which uses asymmetric cryptography) or a keyed message digest (in case of symmetric cryptography).</p>
-<p id="rfc.section.1.p.4">The mechanism described in this document assumes that a client is in possession of an access token and asociated key. That client then creates a JSON object including the access token, signs the JSON object using JWS, and issues an request to a resource server for access to a protected resource using the signed object as its authorization. The protected resource validates the JWS signature and parses the JSON object to obtain token information.</p>
+<p id="rfc.section.1.p.2">Furthermore, it is desirable to bind the signature to the HTTP request. Ideally, this should be done without replicating the information already present in the HTTP request more than required.  However, many HTTP application frameworks insert extra headers, query parameters, and otherwise manipulate the HTTP request on its way from the web server into the application code itself.  The proof-of-poession mechanism defined within this document uses the signing mechanism defined in <a href="#I-D.richanna-http-message-signatures" class="xref">[I-D.richanna-http-message-signatures]</a> for this purpose.</p>
+<p id="rfc.section.1.p.3">The key required for this signature calculation is distributed via mechanisms described in companion documents (see <a href="#I-D.ietf-oauth-pop-key-distribution" class="xref">[I-D.ietf-oauth-pop-key-distribution]</a> and <a href="#I-D.ietf-oauth-pop-architecture" class="xref">[I-D.ietf-oauth-pop-architecture]</a>).</p>
+<p id="rfc.section.1.p.4">The mechanism described in this document assumes that a client is in possession of an access token and asociated key. When using the access token to authorize requests for protected resources, the client additionally creates an HTTP Message Signature over the Authorization header field and other elements of the HTTP request, using the key to which the access token is bound.  The client then attaches it to the request using the Signature header field.  The protected resource verifies the HTTP Message Signature to confirm prossession of the key.</p>
 <h1 id="rfc.section.2">
 <a href="#rfc.section.2">2.</a> Terminology</h1>
 <p id="rfc.section.2.p.1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="#RFC2119" class="xref">RFC 2119</a>.</p>
 <p id="rfc.section.2.p.2">Other terms such as "client", "authorization server", "access token", and "protected resource" are inherited from <a href="#RFC6749" class="xref">OAuth 2.0</a>.</p>
-<p id="rfc.section.2.p.3">We use the term 'sign' (or 'signature') to denote both a keyed message digest and a digital signature operation.</p>
+<p id="rfc.section.2.p.3">The terms "HTTP Message Signature" and "Covered Content" are inherited from <a href="#I-D.richanna-http-message-signatures" class="xref">HTTP Message Signatures</a>.</p>
+<p id="rfc.section.2.p.4">We use the term 'sign' (or 'signature') to denote both a keyed message digest and a digital signature operation.</p>
 <h1 id="rfc.section.3">
-<a href="#rfc.section.3">3.</a> Generating a JSON Object from an HTTP Request</h1>
-<p id="rfc.section.3.p.1">This specification uses JSON Web Signatures <a href="#RFC7515" class="xref">[RFC7515]</a> to protect the access token and, optionally, parts of the request.</p>
-<p id="rfc.section.3.p.2">This section describes how to generate a <a href="#RFC7159" class="xref">JSON</a> object from the HTTP request. Each value below is included as a member of the JSON object at the top level.</p>
-<p></p>
+<a href="#rfc.section.3">3.</a> Creating a PoP Message Signature for an HTTP Request</h1>
+<p id="rfc.section.3.p.1">A PoP Message Signature is an HTTP Message Signature <a href="#I-D.richanna-http-message-signatures" class="xref">[I-D.richanna-http-message-signatures]</a> that provides proof of possession of the key to which an access token is bound, and optionally protects the access token and/or other parts of a request to a protected resource.</p>
+<p id="rfc.section.3.p.2">PoP Message Signatures are created according to the process defined in <a href="#I-D.richanna-http-message-signatures" class="xref">[I-D.richanna-http-message-signatures]</a>, and MUST comply with the additional requirements defined within this section.</p>
+<p id="rfc.section.3.p.3">The following content identifiers MUST be included within the signature's Covered Content, in any order: </p>
 
-<dl>
-<dt>at</dt>
-<dd style="margin-left: 8">REQUIRED. The access token value. This string is assumed to have no particular format or structure and remains opaque to the client.</dd>
-<dt>ts</dt>
-<dd style="margin-left: 8">RECOMMENDED. The timestamp. This integer provides replay protection of the signed JSON object. Its value MUST be a number containing an integer value representing number of whole integer seconds from midnight, January 1, 1970 GMT.</dd>
-<dt>m</dt>
-<dd style="margin-left: 8">OPTIONAL. The HTTP Method used to make this request.  This MUST be the uppercase HTTP verb as a JSON string.</dd>
-<dt>u</dt>
-<dd style="margin-left: 8">OPTIONAL. The HTTP URL host component as a JSON string. This MAY include the port separated from the host by a colon in host:port format.</dd>
-<dt>p</dt>
-<dd style="margin-left: 8">OPTIONAL. The HTTP URL path component of the request as an HTTP string.</dd>
-<dt>q</dt>
-<dd style="margin-left: 8">OPTIONAL. The hashed HTTP URL query parameter map of the request as a two-part JSON array. The first part of this array is a JSON array listing all query parameters that were used in the calculation of the hash in the order that they were added to the hashed value as described below. The second part of this array is a JSON string containing the Base64URL encoded hash itself, calculated as described below.</dd>
-<dt>h</dt>
-<dd style="margin-left: 8">OPTIONAL. The hashed HTTP request headers as a two-part JSON array. The first part of this array is a JSON array listing all headers that were used in the calculation of the hash in the order that they were added to the hashed value as described below. The second part of this array is a JSON string containing the Base64URL encoded hash itself, calculated as described below.</dd>
-<dt>b</dt>
-<dd style="margin-left: 8">OPTIONAL. The base64URL encoded hash of the HTTP Request body, calculated as the SHA256 of the byte array of the body</dd>
-</dl>
-<p id="rfc.section.3.p.4">All hashes SHALL be calculated using the SHA256 algorithm. [[ Note to WG: do we want crypto agility here? If so how do we signal this ]]</p>
-<p id="rfc.section.3.p.5">The JSON object is signed using the algorithm appropriate to the associated access token key, usually communicated as part of <a href="#I-D.ietf-oauth-pop-key-distribution" class="xref">key distribution</a>.</p>
-<h1 id="rfc.section.3.1">
-<a href="#rfc.section.3.1">3.1.</a> Calculating the query parameter list and hash</h1>
-<p id="rfc.section.3.1.p.1">To generate the query parameter list and hash, the client creates two data objects: an ordered list of strings to hold the query parameter names and a string buffer to hold the data to be hashed.</p>
-<p id="rfc.section.3.1.p.2">The client iterates through all query parameters in whatever order it chooses and for each query parameter it does the following:</p>
-<p></p>
+<ul class="empty">
+<li><samp>(created)</samp></li>
+<li>
+<samp>(expires)</samp>, if the signature has an Expiration Time.</li>
+<li><samp>authorization</samp></li>
+</ul>
 
-<ol>
-<li>Adds the name of the query parameter to the end of the list.</li>
-<li>Percent-encodes the name and value of the parameter as specified in <a href="#RFC3986" class="xref">[RFC3986]</a>. Note that if the name and value have already been percent-encoded for transit, they are not re-encoded for this step.</li>
-<li>Encodes the name and value of the query parameter as "name=value" and appends it to the string buffer separated by the ampersand <samp>&amp;</samp> character.</li>
-</ol>
+<p> </p>
+<p id="rfc.section.3.p.4">The following content identifiers SHOULD be included within the signature's Covered Content, in any order: </p>
 
-<p>Repeated parameter names are processed separately with no special handling. Parameters MAY be skipped by the client if they are not required (or desired) to be covered by the signature.</p>
-<p id="rfc.section.3.1.p.4">The client then calculates the hash over the resulting string buffer. The list and the hash result are added to a list as the value of the "q" member.</p>
-<p id="rfc.section.3.1.p.5">For example, the query parameter set of "b=bar", "a=foo", "c=duck" is concatenated into the string:</p>
-<pre>b=bar&amp;a=foo&amp;c=duck</pre>
-<p id="rfc.section.3.1.p.6">When added to the JSON structure using this process, the results are:</p>
-<pre>"q": [["b", "a", "c"], "u4LgkGUWhP9MsKrEjA4dizIllDXluDku6ZqCeyuR-JY"]</pre>
-<h1 id="rfc.section.3.2">
-<a href="#rfc.section.3.2">3.2.</a> Calculating the header list and hash</h1>
-<p id="rfc.section.3.2.p.1">To generate the header list and hash, the client creates two data objects: an ordered list of strings to hold the header names and a string buffer to hold the data to be hashed.</p>
-<p id="rfc.section.3.2.p.2">The client iterates through all query parameters in whatever order it chooses and for each query parameter it does the following:</p>
-<p></p>
+<ul class="empty">
+<li><samp>(method)</samp></li>
+<li><samp>(scheme)</samp></li>
+<li><samp>(authority)</samp></li>
+<li><samp>(path)</samp></li>
+</ul>
 
-<ol>
-<li>Lowercases the header name.</li>
-<li>Adds the name of the header to the end of the list.</li>
-<li>Encodes the name and value of the header as "name: value" and appends it to the string buffer separated by a newline <samp>\n</samp> character.</li>
-</ol>
-
-<p>Repeated header names are processed separately with no special handling. Headers MAY be skipped by the client if they are not required (or desired) to be covered by the signature.</p>
-<p id="rfc.section.3.2.p.4">The client then calculates the hash over the resulting string buffer. The list and the hash result are added to a list as the value of the "h" member.</p>
-<p id="rfc.section.3.2.p.5">For example, the headers "Content-Type: application/json" and "Etag: 742-3u8f34-3r2nvv3" are concatenated into the string:</p>
-<pre>content-type: application/json
-etag: 742-3u8f34-3r2nvv3</pre>
-<pre>"h": [["content-type", "etag"], 
-  "bZA981YJBrPlIzOvplbu3e7ueREXXr38vSkxIBYOaxI"]</pre>
+<p> </p>
 <h1 id="rfc.section.4">
 <a href="#rfc.section.4">4.</a> Sending the signed object</h1>
-<p id="rfc.section.4.p.1">In order to send the signed object to the protected resource, the client includes it in one of the following three places.</p>
+<p id="rfc.section.4.p.1">In order to attach the PoP Message Signature to the request, the client includes it in one of the following three places.</p>
 <h1 id="rfc.section.4.1">
-<a href="#rfc.section.4.1">4.1.</a> HTTP Authorization header</h1>
-<p id="rfc.section.4.1.p.1">The client SHOULD send the signed object to the protected resource in the Authorization header. The value of the signed object in JWS compact form is appended to the Authorization header as a PoP value.  This is the preferred method. Note that if this method is used, the Authorization header MUST NOT be included in the protected elements of the signed object.</p>
+<a href="#rfc.section.4.1">4.1.</a> <a href="#sig-header" id="sig-header">HTTP Signature header field</a>
+</h1>
+<p id="rfc.section.4.1.p.1">The client SHOULD send the object to the protected resource in the Signature header field as described in <a href="#I-D.richanna-http-message-signatures" class="xref">[I-D.richanna-http-message-signatures]</a>.  When doing so, the client MUST include the <samp>algorithm</samp>, <samp>created</samp>, and <samp>headers</samp> parameters, and MUST include the <samp>expires</samp> parameter if the signature has an Expiration Time.</p>
 <pre>GET /resource/foo
-Authorization: PoP eyJ....omitted for brevity...</pre>
+Authorization: PoP eyJ....omitted for brevity...
+Signature: algorithm="rsa-sha256", created=..., expires=...,
+    headers="...", signature=...</pre>
 <h1 id="rfc.section.4.2">
-<a href="#rfc.section.4.2">4.2.</a> HTTP Form body</h1>
-<p id="rfc.section.4.2.p.1">If the client is sending the request as a form-encoded HTTP message with parameters in the body, the client MAY send the signed object as part of that form body. The value of the signed object in JWS compact form is sent as the form parameter pop_access_token. Note that if this method is used, the body hash cannot be included in the protected elements of the signed object.</p>
+<a href="#rfc.section.4.2">4.2.</a> <a href="#sig-form-body" id="sig-form-body">HTTP Form body</a>
+</h1>
+<p id="rfc.section.4.2.p.1">If the client is sending the request as a form-encoded HTTP message with parameters in the body, the client MAY send the PoP Message Signature as part of that form body. The client constructs a Signature header field value as described in <a href="#sig-header" class="xref">Section 4.1</a>, percent-encodes the value as described in <a href="#RFC3986" class="xref">[RFC3986]</a>, and sends the resulting encoded value as the form parameter <samp>pop_signature</samp>.  The access token is sent as the form parameter <samp>pop_access_token</samp>.  Note that if this method is used the Digest header field cannot be included in the signature's Covered Contents.</p>
 <pre>POST /resource
 Content-type: application/www-form-encoded
 
-pop_access_token=eyJ....omitted for brevity...</pre>
+pop_access_token=eyJ....omitted for brevity...&amp;pop_signature=...</pre>
 <h1 id="rfc.section.4.3">
 <a href="#rfc.section.4.3">4.3.</a> HTTP Query parameter</h1>
-<p id="rfc.section.4.3.p.1">If neither the Authorization header nor the form-encoded body parameter are available to the client, the client MAY send the signed object as a query parameter. The value of the signed object in JWS compact form is sent as the query parameter pop_access_token. Note that if this method is used, the pop_access_token parameter MUST NOT be included in the protected elements of the signed object.</p>
-<pre>GET /resource?pop_access_token=eyJ....</pre>
+<p id="rfc.section.4.3.p.1">If neither the Authorization header nor the form-encoded body parameter are available to the client, the client MAY send the PoP Message Signature and access token as query parameters. The PoP Message Signature is encoded as described in <a href="#sig-form-body" class="xref">Section 4.2</a> and sent as the query parameter <samp>pop_signature</samp>, and the the access token is sent as the query parameter <samp>pop_access_token</samp>.  Note that if this method is used, the <samp>pop_signature</samp> parameter MUST NOT be included in the signature's Covered Contents.</p>
+<pre>GET /resource?pop_access_token=eyJ...&amp;pop_signature=...</pre>
 <h1 id="rfc.section.5">
 <a href="#rfc.section.5">5.</a> Validating the request</h1>
-<p id="rfc.section.5.p.1">Just like with a <a href="#RFC6750" class="xref">bearer token</a>, while the access token value included in the signed object is opaque to the client, it MUST be understood by the protected resource in order to fulfill the request. Also like a bearer token, the protected resource traditionally has several methods at its disposal for understanding the access token. It can look up the token locally (such as in a database), it can parse a structured token (such as <a href="#RFC7519" class="xref">JWT</a>), or it can use a service to look up token information (such as <a href="#RFC7662" class="xref">introspection</a>).  Whatever method is used to look up token information, the protected resource MUST have access to the key associated with the access token, as this key is required to validate the signature of the incoming request. Validation of the signature is done using normal JWS validation for the signature and key type.</p>
-<p id="rfc.section.5.p.2">Additionally, in order to trust any of the hashed components of the HTTP request, the protected resource MUST re-create and verify a hash for each component as described below. This process is a mirror of the process used to create the hashes in the first place, with a mind toward the fact that order may have changed and that elements may have been added or deleted. The protected resource MUST similarly compare the replicated values included in various JSON fields with the corresponding actual values from the request. Failure to do so will allow an attacker to modify the underlying request while at the same time having the application layer verify the signature correctly.</p>
-<h1 id="rfc.section.5.1">
-<a href="#rfc.section.5.1">5.1.</a> Validating the query parameter list and hash</h1>
-<p id="rfc.section.5.1.p.1">The client has at its disposal a map that indexes the query parameter names to the values given. The client creates a string buffer for calculating the hash. The client then iterates through the "list" portion of the "p" parameter. For each item in the list (in the order of the list) it does the following:</p>
-<p></p>
-
-<ol>
-<li>Fetch the value of the parameter from the HTTP request query parameter map. If a parameter is found in the list of signed parameters but not in the map, the validation fails.</li>
-<li>Percent-encodes the name and value of the parameter as specified in <a href="#RFC3986" class="xref">[RFC3986]</a>. Note that if the name and value have already been percent-encoded for transit, they are not re-encoded for this step.</li>
-<li>Encode the parameter as "name=value" and concatenate it to the end of the string buffer, separated by an ampersand character.</li>
-</ol>
-<p id="rfc.section.5.1.p.3">The client calculates the hash of the string buffer and base64url encodes it. The protected resource compares that string to the string passed in as the hash. If the two match, the hash validates, and all named parameters and their values are considered covered by the signature.</p>
-<p id="rfc.section.5.1.p.4">There MAY be additional query parameters that are not listed in the list and are therefore not covered by the signature. The client MUST decide whether or not to accept a request with these uncovered parameters.</p>
-<h1 id="rfc.section.5.2">
-<a href="#rfc.section.5.2">5.2.</a> Validating the header list and hash</h1>
-<p id="rfc.section.5.2.p.1">The client has at its disposal a map that indexes the header names to the values given. The client creates a string buffer for calculating the hash. The client then iterates through the "list" portion of the "h" parameter. For each item in the list (in the order of the list) it does the following:</p>
-<p></p>
-
-<ol>
-<li>Fetch the value of the header from the HTTP request header map.  If a header is found in the list of signed parameters but not in the map, the validation fails.</li>
-<li>Encode the parameter as "name: value" and concatenate it to the end of the string buffer, separated by a newline character.</li>
-</ol>
-<p id="rfc.section.5.2.p.3">The client calculates the hash of the string buffer and base64url encodes it. The protected resource compares that string to the string passed in as the hash. If the two match, the hash validates, and all named headers and their values are considered covered by the signature.</p>
-<p id="rfc.section.5.2.p.4">There MAY be additional headers that are not listed in the list and are therefore not covered by the signature. The client MUST decide whether or not to accept a request with these uncovered headers.</p>
+<p id="rfc.section.5.p.1">Just like with a <a href="#RFC6750" class="xref">bearer token</a>, while the access token value included in the request is opaque to the client, it MUST be understood by the protected resource in order to fulfill the request. Also like a bearer token, the protected resource traditionally has several methods at its disposal for understanding the access token. It can look up the token locally (such as in a database), it can parse a structured token (such as <a href="#RFC7519" class="xref">JWT</a>), or it can use a service to look up token information (such as <a href="#RFC7662" class="xref">introspection</a>).  Whatever method is used to look up token information, the protected resource MUST have access to the key associated with the access token, as this key is required to validate the signature of the incoming request. Validation of the signature is done using the verification process defined in <a href="#I-D.richanna-http-message-signatures" class="xref">[I-D.richanna-http-message-signatures]</a>.  The resource MUST verify that the algorithm and key used to generate the signature match those to which the access token is bound.</p>
 <h1 id="rfc.section.6">
 <a href="#rfc.section.6">6.</a> <a href="#IANA" id="IANA">IANA Considerations</a>
 </h1>
@@ -663,44 +584,22 @@ pop_access_token=eyJ....omitted for brevity...</pre>
 <dt>Specification document(s):</dt>
 <dd style="margin-left: 8">[[ this document ]]</dd>
 </dl>
-<h1 id="rfc.section.6.2">
-<a href="#rfc.section.6.2">6.2.</a> JSON Web Signature and Encryption Type Values Registration</h1>
-<p id="rfc.section.6.2.p.1">This specification registers the <samp>pop</samp> type value in the IANA JSON Web Signature and Encryption Type Values registry <a href="#RFC7515" class="xref">[RFC7515]</a>: </p>
-
-<ul>
-<li>"typ" Header Parameter Value: <samp>pop</samp>
-</li>
-<li>Abbreviation for MIME Type: None</li>
-<li>Change Controller: IETF</li>
-<li>Specification Document(s): [[ this document ]]</li>
-</ul>
 <h1 id="rfc.section.7">
 <a href="#rfc.section.7">7.</a> <a href="#Security" id="Security">Security Considerations</a>
 </h1>
 <h1 id="rfc.section.7.1">
-<a href="#rfc.section.7.1">7.1.</a> Offering Confidentiality Protection for Access to Protected       Resources</h1>
-<p id="rfc.section.7.1.p.1">This specification can be used with and without Transport Layer Security (TLS).</p>
-<p id="rfc.section.7.1.p.2">Without TLS this protocol provides a mechanism for verifying the integrity of requests, it provides no confidentiality protection.  Consequently, eavesdroppers will have full access to communication content and any further messages exchanged between the client and the resource server. This could be problematic when data is exchanged that requires care, such as personal data.</p>
-<p id="rfc.section.7.1.p.3">When TLS is used then confidentiality of the transmission can be ensured between endpoints, including both the request and the response. The use of TLS in combination with the signed HTTP request mechanism is highly recommended to ensure the confidentiality of the data returned from the protected resource.</p>
+<a href="#rfc.section.7.1">7.1.</a> Plaintext Storage of Credentials</h1>
+<p id="rfc.section.7.1.p.1">The mechanism described in this document works in a similar way to many three-party authentication and key exchange mechanisms. In order to compute the signature over the HTTP request, the client must have access to a key bound to the access token in plaintext form. If an attacker were to gain access to these stored secrets at the client or (in case of symmetric keys) at the resource server they would be able to perform any action on behalf of any client just as if they had stolen a bearer token.</p>
+<p id="rfc.section.7.1.p.2">It is therefore paramount to the security of the protocol that the private keys associated with the access tokens are protected from unauthorized access.</p>
 <h1 id="rfc.section.7.2">
-<a href="#rfc.section.7.2">7.2.</a> Plaintext Storage of Credentials</h1>
-<p id="rfc.section.7.2.p.1">The mechanism described in this document works in a similar way to many three-party authentication and key exchange mechanisms. In order to compute the signature over the HTTP request, the client must have access to a key bound to the access token in plaintext form. If an attacker were to gain access to these stored secrets at the client or (in case of symmetric keys) at the resource server they would be able to perform any action on behalf of any client just as if they had stolen a bearer token.</p>
-<p id="rfc.section.7.2.p.2">It is therefore paramount to the security of the protocol that the private keys associated with the access tokens are protected from unauthorized access.</p>
+<a href="#rfc.section.7.2">7.2.</a> Entropy of Keys</h1>
+<p id="rfc.section.7.2.p.1">Unless TLS is used between the client and the resource server, eavesdroppers will have full access to requests sent by the client.  They will thus be able to mount off-line brute-force attacks to attempt recovery of the session key or private key used to compute the keyed message digest or digital signature, respectively.</p>
+<p id="rfc.section.7.2.p.2">This specification assumes that the key used herein has been distributed via other mechanisms, such as <a href="#I-D.ietf-oauth-pop-key-distribution" class="xref">[I-D.ietf-oauth-pop-key-distribution]</a>. Hence, it is the responsibility of the authorization server and or the client to be careful when generating fresh and unique keys with sufficient entropy to resist such attacks for at least the length of time that the session keys (and the access tokens) are valid.</p>
+<p id="rfc.section.7.2.p.3">For example, if the key bound to the access token is valid for one day, authorization servers must ensure that it is not possible to mount a brute force attack that recovers that key in less than one day. Of course, servers are urged to err on the side of caution, and use the longest key length possible within reason.</p>
 <h1 id="rfc.section.7.3">
-<a href="#rfc.section.7.3">7.3.</a> Entropy of Keys</h1>
-<p id="rfc.section.7.3.p.1">Unless TLS is used between the client and the resource server, eavesdroppers will have full access to requests sent by the client.  They will thus be able to mount off-line brute-force attacks to attempt recovery of the session key or private key used to compute the keyed message digest or digital signature, respectively.</p>
-<p id="rfc.section.7.3.p.2">This specification assumes that the key used herein has been distributed via other mechanisms, such as <a href="#I-D.ietf-oauth-pop-key-distribution" class="xref">[I-D.ietf-oauth-pop-key-distribution]</a>. Hence, it is the responsibility of the authorization server and or the client to be careful when generating fresh and unique keys with sufficient entropy to resist such attacks for at least the length of time that the session keys (and the access tokens) are valid.</p>
-<p id="rfc.section.7.3.p.3">For example, if the key bound to the access token is valid for one day, authorization servers must ensure that it is not possible to mount a brute force attack that recovers that key in less than one day. Of course, servers are urged to err on the side of caution, and use the longest key length possible within reason.</p>
-<h1 id="rfc.section.7.4">
-<a href="#rfc.section.7.4">7.4.</a> Denial of Service</h1>
-<p id="rfc.section.7.4.p.1">This specification includes a number of features which may make resource exhaustion attacks against resource servers possible. For example, a resource server may need to process the incoming request, verify the access token, perform signature verification, and might (in certain circumstances) have to consult back-end databases or the authorization server before granting access to the protected resource.  Many of these actions are shared with bearer tokens, but the additional cryptographic overhead of validating the signed request needs to be taken into consideration with deployment of this specification.</p>
-<p id="rfc.section.7.4.p.2">An attacker may exploit this to perform a denial of service attack by sending a large number of invalid requests to the server. The computational overhead of verifying the keyed message digest alone is not likely sufficient to mount a denial of service attack. To help combat this, it is RECOMMENDED that the protected resource validate the access token (contained in the <samp>at</samp> member of the signed structure) before performing any cryptographic verification calculations.</p>
-<h1 id="rfc.section.7.5">
-<a href="#rfc.section.7.5">7.5.</a> Validating the integrity of HTTP message</h1>
-<p id="rfc.section.7.5.p.1">This specification provides flexibility for selectively validating the integrity of the HTTP request, including header fields, query parameters, and message bodies. Since all components of the HTTP request are only optionally validated by this method, and even some components may be validated only in part (e.g., some headers but not others) it is up to protected resource developers to verify that any vital parameters in a request are actually covered by the signature.  Failure to do so could allow an attacker to inject vital parameters or headers into the request, ouside of the protection of the signature.</p>
-<p id="rfc.section.7.5.p.2">The application verifying this signature MUST NOT assume that any particular parameter is appropriately covered by the signature unless it is included in the signed structure and the hash is verified. Any applications that are sensitive of header or query parameter order MUST verify the order of the parameters on their own. The application MUST also compare the values in the JSON container with the actual parameters received with the HTTP request (using a direct comparison or a hash calculation, as appropriate). Failure to make this comparison will render the signature mechanism useless for protecting these elements.</p>
-<p id="rfc.section.7.5.p.3">The behavior of repeated query parameters or repeated HTTP headers is undefined by this specification. If a header or query parameter is repeated on either the outgoing request from the client or the incoming request to the protected resource, that query parameter or header name MUST NOT be covered by the hash and signature.</p>
-<p id="rfc.section.7.5.p.4">This specification records the order in which query parameters and headers are hashed, but it does not guarantee that order is preserved between the client and protected resource. If the order of parameters or headers are significant to the underlying application, it MUST confirm their order on its own, apart from the signature and HTTP message validation.</p>
+<a href="#rfc.section.7.3">7.3.</a> Denial of Service</h1>
+<p id="rfc.section.7.3.p.1">This specification includes a number of features which may make resource exhaustion attacks against resource servers possible. For example, a resource server may need to process the incoming request, verify the access token, perform signature verification, and might (in certain circumstances) have to consult back-end databases or the authorization server before granting access to the protected resource.  Many of these actions are shared with bearer tokens, but the additional cryptographic overhead of validating the signed request needs to be taken into consideration with deployment of this specification.</p>
+<p id="rfc.section.7.3.p.2">An attacker may exploit this to perform a denial of service attack by sending a large number of invalid requests to the server. The computational overhead of verifying the keyed message digest alone is not likely sufficient to mount a denial of service attack. To help combat this, it is RECOMMENDED that the protected resource validate the access token before performing any cryptographic verification calculations.</p>
 <h1 id="rfc.section.8">
 <a href="#rfc.section.8">8.</a> Privacy Considerations</h1>
 <p id="rfc.section.8.p.1">This specification addresses machine to machine communications and raises no privacy considerations beyond existing OAuth transactions.</p>
@@ -722,6 +621,11 @@ pop_access_token=eyJ....omitted for brevity...</pre>
 <a>Bradley, J.</a>, <a>Hunt, P.</a>, <a>Jones, M.</a>, <a>Tschofenig, H.</a> and <a>M. Meszaros</a>, "<a href="https://tools.ietf.org/html/draft-ietf-oauth-pop-key-distribution-07">OAuth 2.0 Proof-of-Possession: Authorization Server to Client Key Distribution</a>", Internet-Draft draft-ietf-oauth-pop-key-distribution-07, March 2019.</td>
 </tr>
 <tr>
+<td class="reference"><b id="I-D.richanna-http-message-signatures">[I-D.richanna-http-message-signatures]</b></td>
+<td class="top">
+<a>Backman, A.</a>, <a>Richer, J.</a> and <a>M. Sporny</a>, "<a href="https://tools.ietf.org/html/draft-richanna-http-message-signatures-00">Signing HTTP Messages</a>", Internet-Draft draft-richanna-http-message-signatures-00, December 2019.</td>
+</tr>
+<tr>
 <td class="reference"><b id="RFC2119">[RFC2119]</b></td>
 <td class="top">
 <a>Bradner, S.</a>, "<a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.</td>
@@ -740,16 +644,6 @@ pop_access_token=eyJ....omitted for brevity...</pre>
 <td class="reference"><b id="RFC6750">[RFC6750]</b></td>
 <td class="top">
 <a>Jones, M.</a> and <a>D. Hardt</a>, "<a href="https://tools.ietf.org/html/rfc6750">The OAuth 2.0 Authorization Framework: Bearer Token Usage</a>", RFC 6750, DOI 10.17487/RFC6750, October 2012.</td>
-</tr>
-<tr>
-<td class="reference"><b id="RFC7159">[RFC7159]</b></td>
-<td class="top">
-<a>Bray, T.</a>, "<a href="https://tools.ietf.org/html/rfc7159">The JavaScript Object Notation (JSON) Data Interchange Format</a>", RFC 7159, DOI 10.17487/RFC7159, March 2014.</td>
-</tr>
-<tr>
-<td class="reference"><b id="RFC7515">[RFC7515]</b></td>
-<td class="top">
-<a>Jones, M.</a>, <a>Bradley, J.</a> and <a>N. Sakimura</a>, "<a href="https://tools.ietf.org/html/rfc7515">JSON Web Signature (JWS)</a>", RFC 7515, DOI 10.17487/RFC7515, May 2015.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC7519">[RFC7519]</b></td>
